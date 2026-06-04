@@ -3,866 +3,732 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dashboard OFCI — EsSalud 2026</title>
+<title>OFCI · POI 2026 · EsSalud</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --navy:   #1A3C5E;
-    --blue:   #2E75B6;
-    --sky:    #5BA4D4;
-    --light:  #D9E1F2;
-    --white:  #FFFFFF;
-    --bg:     #F0F4FA;
-    --surface:#FFFFFF;
-    --border: #D4DFF0;
-    --text:   #1A2B3C;
-    --muted:  #6B82A0;
-    --green:  #1A7A5E;
-    --greenl: #D4EDDF;
-    --amber:  #B8860B;
-    --amberl: #FFF3CD;
-    --red:    #C0392B;
-    --redl:   #FADBD8;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); font-size: 14px; }
+:root {
+  --navy:    #0B1E35;
+  --navy2:   #132840;
+  --blue:    #1B6CA8;
+  --sky:     #3B9EE0;
+  --accent:  #00C9A7;
+  --gold:    #F0A500;
+  --danger:  #E05263;
+  --white:   #FFFFFF;
+  --bg:      #F4F7FC;
+  --surface: #FFFFFF;
+  --border:  rgba(0,0,0,0.07);
+  --text:    #0D1B2A;
+  --muted:   #667A90;
+  --sidebar-w: 240px;
+  --topbar-h:  60px;
+}
 
-  /* ── TOP BAR ── */
-  .topbar {
-    background: var(--navy);
-    padding: 0 28px;
-    height: 56px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    position: sticky; top: 0; z-index: 100;
-  }
-  .topbar-left { display: flex; align-items: center; gap: 14px; }
-  .logo-badge {
-    background: var(--blue);
-    color: #fff;
-    font-weight: 600;
-    font-size: 11px;
-    letter-spacing: .06em;
-    padding: 5px 10px;
-    border-radius: 6px;
-  }
-  .topbar h1 { color: #fff; font-size: 15px; font-weight: 500; }
-  .topbar-right { display: flex; align-items: center; gap: 16px; }
-  #status-dot {
-    width: 8px; height: 8px; border-radius: 50%;
-    background: #aaa; display: inline-block;
-  }
-  #status-dot.ok  { background: #4CAF50; box-shadow: 0 0 6px #4CAF5088; }
-  #status-dot.err { background: #E53935; }
-  #last-update { color: #8BAEC8; font-size: 12px; font-family: 'DM Mono', monospace; }
-  .btn-refresh {
-    background: rgba(255,255,255,.12);
-    border: 1px solid rgba(255,255,255,.2);
-    color: #fff; font-size: 12px;
-    padding: 5px 12px; border-radius: 6px;
-    cursor: pointer; transition: background .15s;
-  }
-  .btn-refresh:hover { background: rgba(255,255,255,.22); }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  /* ── TABS ── */
-  .tabs {
-    background: var(--white);
-    border-bottom: 1px solid var(--border);
-    padding: 0 28px;
-    display: flex; gap: 0;
-  }
-  .tab {
-    padding: 12px 20px;
-    font-size: 13px; font-weight: 500;
-    color: var(--muted);
-    cursor: pointer;
-    border-bottom: 2px solid transparent;
-    transition: all .15s;
-    white-space: nowrap;
-  }
-  .tab:hover { color: var(--blue); }
-  .tab.active { color: var(--navy); border-bottom-color: var(--blue); }
+body {
+  font-family: 'Lato', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
 
-  /* ── MAIN LAYOUT ── */
-  .main { padding: 24px 28px; max-width: 1400px; margin: 0 auto; }
-  .section { display: none; }
-  .section.active { display: block; }
+/* ══ SIDEBAR ══ */
+.sidebar {
+  position: fixed; top: 0; left: 0;
+  width: var(--sidebar-w); height: 100vh;
+  background: var(--navy);
+  display: flex; flex-direction: column;
+  z-index: 200;
+  transition: transform .3s ease;
+}
+.sidebar-logo {
+  padding: 20px 22px 16px;
+  border-bottom: 1px solid rgba(255,255,255,.08);
+}
+.logo-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--blue); border-radius: 8px;
+  padding: 6px 12px; margin-bottom: 8px;
+}
+.logo-badge span {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800; font-size: 13px; color: #fff;
+  letter-spacing: .08em;
+}
+.logo-title { font-size: 11px; color: rgba(255,255,255,.45); letter-spacing: .04em; line-height: 1.4; }
 
-  /* ── KPI CARDS ── */
-  .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 14px; margin-bottom: 24px; }
-  .kpi {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 16px 18px;
-  }
-  .kpi-label { font-size: 11px; font-weight: 500; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; margin-bottom: 8px; }
-  .kpi-value { font-size: 28px; font-weight: 600; color: var(--navy); line-height: 1; }
-  .kpi-sub { font-size: 11px; color: var(--muted); margin-top: 4px; }
-  .kpi.accent { border-left: 3px solid var(--blue); }
-  .kpi.green  { border-left: 3px solid var(--green); }
-  .kpi.amber  { border-left: 3px solid var(--amber); }
+.sidebar-section { padding: 16px 12px 4px; }
+.sidebar-section-label {
+  font-size: 9px; font-weight: 700; letter-spacing: .12em;
+  color: rgba(255,255,255,.3); text-transform: uppercase;
+  padding: 0 10px; margin-bottom: 4px;
+}
+.nav-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 10px; border-radius: 8px;
+  cursor: pointer; transition: all .15s;
+  color: rgba(255,255,255,.55); font-size: 13px; font-weight: 400;
+  border: none; background: none; width: 100%; text-align: left;
+}
+.nav-item:hover { background: rgba(255,255,255,.07); color: #fff; }
+.nav-item.active { background: var(--blue); color: #fff; font-weight: 700; }
+.nav-item .ni-icon { font-size: 16px; width: 18px; flex-shrink: 0; }
+.nav-item .ni-badge {
+  margin-left: auto; background: var(--accent);
+  color: var(--navy); font-size: 9px; font-weight: 700;
+  padding: 2px 6px; border-radius: 10px; font-family: 'DM Mono', monospace;
+}
 
-  /* ── GRID 2 COL ── */
-  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 18px; }
-  .grid3 { display: grid; grid-template-columns: 2fr 1fr; gap: 18px; margin-bottom: 18px; }
-  @media(max-width: 900px) { .grid2, .grid3 { grid-template-columns: 1fr; } }
+.sidebar-footer {
+  margin-top: auto; padding: 14px 16px;
+  border-top: 1px solid rgba(255,255,255,.08);
+}
+.sync-status {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 11px; color: rgba(255,255,255,.35);
+}
+.sync-dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: #555; flex-shrink: 0;
+  transition: background .3s;
+}
+.sync-dot.live { background: var(--accent); box-shadow: 0 0 0 3px rgba(0,201,167,.2); }
+.sync-dot.err  { background: var(--danger); }
+#sync-time { font-family: 'DM Mono', monospace; }
 
-  /* ── CARD ── */
-  .card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    overflow: hidden;
-  }
-  .card-head {
-    padding: 14px 18px 10px;
-    border-bottom: 1px solid var(--border);
-    display: flex; align-items: center; justify-content: space-between;
-  }
-  .card-title { font-size: 13px; font-weight: 600; color: var(--navy); }
-  .card-sub   { font-size: 11px; color: var(--muted); margin-top: 2px; }
-  .card-body  { padding: 16px 18px; }
+/* ══ TOPBAR ══ */
+.topbar {
+  position: fixed; top: 0; left: var(--sidebar-w);
+  right: 0; height: var(--topbar-h);
+  background: var(--white);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center;
+  padding: 0 28px; gap: 16px;
+  z-index: 100;
+}
+.topbar-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 15px; font-weight: 700; color: var(--navy);
+  flex: 1;
+}
+.topbar-title span { color: var(--blue); }
 
-  /* ── TABLE ── */
-  .tbl-wrap { overflow-x: auto; }
-  table { width: 100%; border-collapse: collapse; font-size: 12px; }
-  thead th {
-    background: var(--light);
-    color: var(--navy);
-    font-weight: 600;
-    font-size: 11px;
-    letter-spacing: .04em;
-    text-transform: uppercase;
-    padding: 9px 12px;
-    text-align: left;
-    white-space: nowrap;
-  }
-  tbody tr { border-bottom: 1px solid var(--bg); }
-  tbody tr:hover { background: #F5F8FD; }
-  tbody td { padding: 9px 12px; color: var(--text); vertical-align: middle; }
+.filter-bar { display: flex; align-items: center; gap: 8px; }
+.filter-label { font-size: 11px; color: var(--muted); font-weight: 700; letter-spacing: .04em; }
+.chip {
+  padding: 5px 12px; border-radius: 20px;
+  font-size: 11px; font-weight: 700; cursor: pointer;
+  border: 1.5px solid var(--border); background: transparent;
+  color: var(--muted); transition: all .15s; font-family: 'Lato', sans-serif;
+}
+.chip:hover { border-color: var(--blue); color: var(--blue); }
+.chip.active { background: var(--navy); border-color: var(--navy); color: #fff; }
 
-  /* ── BADGES ── */
-  .badge {
-    display: inline-block;
-    padding: 2px 8px; border-radius: 4px;
-    font-size: 10px; font-weight: 600;
-    text-transform: uppercase; letter-spacing: .04em;
-    white-space: nowrap;
-  }
-  .badge-green  { background: var(--greenl); color: var(--green); }
-  .badge-amber  { background: var(--amberl); color: var(--amber); }
-  .badge-red    { background: var(--redl);   color: var(--red); }
-  .badge-blue   { background: var(--light);  color: var(--navy); }
-  .badge-sky    { background: #E3F2FD; color: #0D6EAD; }
+.btn-refresh {
+  display: flex; align-items: center; gap: 6px;
+  padding: 7px 14px; border-radius: 8px;
+  background: var(--navy); color: #fff;
+  font-size: 12px; font-weight: 700; cursor: pointer;
+  border: none; transition: all .15s; font-family: 'Lato', sans-serif;
+}
+.btn-refresh:hover { background: var(--blue); }
+.btn-refresh.spinning svg { animation: spin .7s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
 
-  /* ── CHART CONTAINERS ── */
-  .chart-wrap { position: relative; width: 100%; }
+/* ══ MAIN ══ */
+.main {
+  margin-left: var(--sidebar-w);
+  padding-top: var(--topbar-h);
+  min-height: 100vh;
+}
+.page { display: none; padding: 28px; animation: fadeUp .25s ease; }
+.page.active { display: block; }
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
 
-  /* ── MEMBRESÍAS ── */
-  .mem-list { display: flex; flex-direction: column; gap: 12px; }
-  .mem-item {
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 12px 14px;
-    display: flex; justify-content: space-between; align-items: flex-start; gap: 12px;
-  }
-  .mem-name { font-weight: 600; font-size: 12px; color: var(--navy); margin-bottom: 3px; }
-  .mem-meta { font-size: 11px; color: var(--muted); }
-  .mem-cost { font-size: 15px; font-weight: 600; color: var(--navy); white-space: nowrap; }
-  .mem-cost-label { font-size: 10px; color: var(--muted); text-align: right; }
+/* ══ KPI GRID ══ */
+.kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 14px; margin-bottom: 24px; }
+.kpi {
+  background: var(--surface); border-radius: 12px;
+  border: 1px solid var(--border); padding: 16px 18px;
+  cursor: pointer; transition: all .2s; position: relative; overflow: hidden;
+}
+.kpi::before {
+  content: ''; position: absolute; left: 0; top: 0; bottom: 0;
+  width: 3px; border-radius: 3px 0 0 3px;
+  background: var(--blue);
+}
+.kpi.green::before { background: var(--accent); }
+.kpi.gold::before  { background: var(--gold); }
+.kpi.danger::before{ background: var(--danger); }
+.kpi:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,.08); border-color: rgba(0,0,0,.12); }
+.kpi-label { font-size: 10px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+.kpi-value { font-family: 'Syne', sans-serif; font-size: 26px; font-weight: 800; color: var(--navy); line-height: 1; }
+.kpi-sub { font-size: 11px; color: var(--muted); margin-top: 4px; }
+.kpi-icon { position: absolute; right: 14px; top: 14px; font-size: 20px; color: rgba(0,0,0,.07); }
 
-  /* ── FILTROS ── */
-  .filters { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 16px; align-items: center; }
-  .filter-label { font-size: 12px; color: var(--muted); font-weight: 500; }
-  select, input[type="text"] {
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 6px 10px;
-    font-size: 12px;
-    font-family: 'DM Sans', sans-serif;
-    color: var(--text);
-    background: var(--white);
-    outline: none;
-  }
-  select:focus, input:focus { border-color: var(--blue); }
+/* ══ GRID LAYOUTS ══ */
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 18px; }
+.grid3 { display: grid; grid-template-columns: 2fr 1fr; gap: 18px; margin-bottom: 18px; }
+.grid-full { margin-bottom: 18px; }
+@media(max-width:900px) { .grid2,.grid3 { grid-template-columns: 1fr; } }
 
-  /* ── LOADING ── */
-  .loading {
-    text-align: center; padding: 40px;
-    color: var(--muted); font-size: 13px;
-  }
-  .spinner {
-    display: inline-block; width: 20px; height: 20px;
-    border: 2px solid var(--border);
-    border-top-color: var(--blue);
-    border-radius: 50%;
-    animation: spin .7s linear infinite;
-    vertical-align: middle; margin-right: 8px;
-  }
-  @keyframes spin { to { transform: rotate(360deg); } }
+/* ══ CARD ══ */
+.card {
+  background: var(--surface); border-radius: 14px;
+  border: 1px solid var(--border);
+}
+.card-head {
+  padding: 16px 20px 12px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.card-title { font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700; color: var(--navy); }
+.card-sub { font-size: 11px; color: var(--muted); margin-top: 2px; }
+.card-body { padding: 18px 20px; }
+.card-actions { display: flex; gap: 8px; align-items: center; }
 
-  /* ── CONFIG PANEL ── */
-  .config-box {
-    background: #FFF9E6;
-    border: 1px solid #FFD600;
-    border-radius: 10px;
-    padding: 18px 22px;
-    margin-bottom: 24px;
-  }
-  .config-box h3 { font-size: 13px; font-weight: 600; color: #7A5C00; margin-bottom: 10px; }
-  .config-box p  { font-size: 12px; color: #5C4A00; line-height: 1.6; }
-  .config-box code {
-    background: #FFF0B3; border-radius: 4px;
-    padding: 1px 6px; font-family: 'DM Mono', monospace;
-    font-size: 11px;
-  }
-  .url-row { display: flex; gap: 8px; margin-top: 10px; }
-  .url-row input { flex: 1; font-family: 'DM Mono', monospace; font-size: 11px; }
-  .btn-save {
-    background: var(--blue); color: #fff;
-    border: none; border-radius: 6px;
-    padding: 6px 14px; font-size: 12px; cursor: pointer;
-  }
-  .btn-save:hover { background: var(--navy); }
+/* ══ TABLE ══ */
+.tbl-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 12px; }
+thead th {
+  background: #F8FAFD; color: var(--navy);
+  font-weight: 700; font-size: 10px; letter-spacing: .07em;
+  text-transform: uppercase; padding: 10px 14px;
+  text-align: left; white-space: nowrap;
+  border-bottom: 1px solid var(--border);
+}
+tbody tr {
+  border-bottom: 1px solid rgba(0,0,0,.04);
+  cursor: pointer; transition: background .1s;
+}
+tbody tr:hover { background: #F0F6FF; }
+tbody td { padding: 10px 14px; vertical-align: middle; }
+tbody tr:last-child { border-bottom: none; }
 
-  /* ── MISIÓN CARDS ── */
-  .mission-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-  @media(max-width: 700px) { .mission-grid { grid-template-columns: 1fr; } }
-  .mission-card {
-    border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px;
-  }
-  .mission-card .mc-head { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
-  .mission-card .mc-id { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted); }
-  .mission-card .mc-title { font-size: 12px; font-weight: 600; color: var(--navy); margin-bottom: 4px; }
-  .mission-card .mc-row { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); margin-top: 6px; }
-  .mission-card .mc-stat { text-align: center; }
-  .mission-card .mc-num { font-size: 22px; font-weight: 600; color: var(--navy); }
-  .mission-card .mc-lbl { font-size: 10px; color: var(--muted); }
-  .mission-stats { display: flex; gap: 16px; margin-top: 10px; border-top: 1px solid var(--bg); padding-top: 10px; }
+/* ══ BADGES ══ */
+.badge {
+  display: inline-block; padding: 3px 9px; border-radius: 5px;
+  font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em;
+}
+.b-green  { background: #E0F7F1; color: #0A6B54; }
+.b-blue   { background: #E3F0FC; color: #0C4A8A; }
+.b-amber  { background: #FFF3D6; color: #8A5A00; }
+.b-red    { background: #FDEAEA; color: #9A1F1F; }
+.b-gray   { background: #F0F0F0; color: #444; }
+.b-sky    { background: #E3F4FF; color: #0B5E9C; }
 
-  /* timeline */
-  .timeline { display: flex; gap: 0; margin-bottom: 6px; }
-  .tq { flex: 1; text-align: center; font-size: 10px; font-weight: 600;
-    padding: 6px 2px; border-radius: 0; color: var(--muted);
-    border: 1px solid var(--border); }
-  .tq:first-child { border-radius: 6px 0 0 6px; }
-  .tq:last-child  { border-radius: 0 6px 6px 0; }
-  .tq.has { background: var(--light); color: var(--navy); }
-  .tq-lbl { font-size: 9px; display: block; font-weight: 400; margin-top: 1px; }
+/* ══ FILTROS INLINE ══ */
+.inline-filters { display: flex; gap: 8px; flex-wrap: wrap; }
+select, input[type="text"] {
+  border: 1px solid var(--border); border-radius: 7px;
+  padding: 6px 10px; font-size: 12px;
+  font-family: 'Lato', sans-serif; color: var(--text);
+  background: var(--surface); outline: none;
+}
+select:focus, input:focus { border-color: var(--blue); }
+
+/* ══ MODAL ══ */
+.modal-overlay {
+  display: none; position: fixed; inset: 0;
+  background: rgba(11,30,53,.6); z-index: 1000;
+  align-items: center; justify-content: center;
+  padding: 20px;
+}
+.modal-overlay.open { display: flex; }
+.modal {
+  background: var(--white); border-radius: 18px;
+  width: 100%; max-width: 580px; max-height: 90vh;
+  overflow-y: auto; animation: modalIn .2s ease;
+}
+@keyframes modalIn {
+  from { opacity:0; transform: scale(.95); }
+  to   { opacity:1; transform: scale(1); }
+}
+.modal-head {
+  padding: 20px 24px 16px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: flex-start; justify-content: space-between;
+}
+.modal-title { font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 800; color: var(--navy); }
+.modal-id { font-size: 11px; color: var(--muted); font-family: 'DM Mono', monospace; margin-top: 3px; }
+.modal-close {
+  background: #F4F7FC; border: none; border-radius: 8px;
+  width: 32px; height: 32px; cursor: pointer; font-size: 16px;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--muted); flex-shrink: 0; margin-left: 12px;
+}
+.modal-close:hover { background: #E8EEF8; color: var(--navy); }
+.modal-body { padding: 20px 24px; }
+.modal-field { margin-bottom: 14px; }
+.modal-field-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); margin-bottom: 4px; }
+.modal-field-value { font-size: 13px; color: var(--text); line-height: 1.5; }
+.modal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.modal-stat {
+  background: #F8FAFD; border-radius: 10px; padding: 14px 16px;
+  text-align: center;
+}
+.modal-stat-num { font-family: 'Syne', sans-serif; font-size: 28px; font-weight: 800; color: var(--navy); }
+.modal-stat-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; margin-top: 3px; }
+
+/* ══ TIMELINE TRIMESTRAL ══ */
+.trim-bar { display: flex; gap: 0; border-radius: 10px; overflow: hidden; border: 1px solid var(--border); }
+.trim-q { flex: 1; text-align: center; padding: 10px 4px; font-size: 10px; font-weight: 700; color: var(--muted); background: #F8FAFD; border-right: 1px solid var(--border); }
+.trim-q:last-child { border-right: none; }
+.trim-q.done { background: var(--navy); color: #fff; }
+.trim-q.active { background: var(--blue); color: #fff; }
+.trim-q span { display: block; font-size: 18px; font-weight: 800; font-family: 'Syne', sans-serif; margin-bottom: 2px; }
+
+/* ══ PROGRESO ══ */
+.progress-row { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+.progress-label { font-size: 12px; color: var(--text); min-width: 130px; font-weight: 700; }
+.progress-bar { flex: 1; height: 8px; background: #EEF2F8; border-radius: 4px; overflow: hidden; }
+.progress-fill { height: 100%; border-radius: 4px; background: var(--blue); transition: width .6s ease; }
+.progress-fill.green { background: var(--accent); }
+.progress-val { font-size: 11px; color: var(--muted); min-width: 32px; text-align: right; font-family: 'DM Mono', monospace; }
+
+/* ══ MISIÓN CARD ══ */
+.mission-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.mcard {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 14px; padding: 18px; cursor: pointer;
+  transition: all .2s;
+}
+.mcard:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,.08); }
+.mcard-head { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+.mcard-id { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted); }
+.mcard-org { font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700; color: var(--navy); margin-bottom: 4px; }
+.mcard-loc { font-size: 11px; color: var(--muted); margin-bottom: 12px; }
+.mcard-stats { display: flex; gap: 20px; padding-top: 12px; border-top: 1px solid var(--border); }
+.mcard-stat { text-align: center; }
+.mcard-num { font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 800; color: var(--navy); }
+.mcard-lbl { font-size: 9px; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
+
+/* ══ MEM CARDS ══ */
+.mem-cards { display: flex; flex-direction: column; gap: 12px; }
+.mem-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 12px; padding: 14px 16px;
+  display: flex; justify-content: space-between; align-items: center;
+  cursor: pointer; transition: all .15s;
+}
+.mem-card:hover { border-color: var(--blue); background: #F8FBFF; }
+.mem-name { font-family: 'Syne', sans-serif; font-size: 12px; font-weight: 700; color: var(--navy); }
+.mem-meta { font-size: 11px; color: var(--muted); margin-top: 2px; }
+.mem-cost { font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 800; color: var(--navy); text-align: right; }
+.mem-cost-label { font-size: 9px; color: var(--muted); text-align: right; }
+
+/* ══ LOADING ══ */
+.skeleton { background: linear-gradient(90deg, #F0F4FA 25%, #E4EAF4 50%, #F0F4FA 75%); background-size: 200%; animation: shimmer 1.2s infinite; border-radius: 8px; }
+@keyframes shimmer { to { background-position: -200% 0; } }
+.spinner-center { display: flex; align-items: center; justify-content: center; padding: 40px; gap: 10px; color: var(--muted); font-size: 13px; }
+.spin-ring { width: 20px; height: 20px; border: 2px solid #E0E8F4; border-top-color: var(--blue); border-radius: 50%; animation: spin .7s linear infinite; }
+
+/* ══ EMPTY ══ */
+.empty { text-align: center; padding: 40px; color: var(--muted); font-size: 13px; }
+
+/* ══ SECTION HEADER ══ */
+.section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
+.section-title { font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 800; color: var(--navy); }
+.section-sub { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+/* ══ DON CARD ══ */
+.don-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.don-card {
+  border: 1px solid var(--border); border-radius: 12px;
+  padding: 16px; cursor: pointer; transition: all .15s;
+  background: var(--surface);
+}
+.don-card:hover { border-color: var(--accent); background: #F4FFFB; }
+.don-org { font-family: 'Syne', sans-serif; font-size: 12px; font-weight: 700; color: var(--navy); margin-bottom: 4px; }
+.don-tipo { font-size: 11px; color: var(--muted); margin-bottom: 10px; }
+.don-value { font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 800; color: var(--accent); }
+.don-value-label { font-size: 10px; color: var(--muted); }
+
+/* ══ CHART WRAP ══ */
+.chart-wrap { position: relative; width: 100%; }
 </style>
 </head>
 <body>
 
-<!-- ══ TOP BAR ══ -->
-<div class="topbar">
-  <div class="topbar-left">
-    <span class="logo-badge">OFCI</span>
-    <h1>EsSalud · Cooperación Internacional · POI 2026</h1>
+<!-- ══ SIDEBAR ══ -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-badge">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6" stroke="#fff" stroke-width="1.5"/><path d="M7 4v3l2 1.5" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/></svg>
+      <span>OFCI</span>
+    </div>
+    <div class="logo-title">EsSalud · Cooperación Internacional<br>Plan Operativo 2026</div>
   </div>
-  <div class="topbar-right">
-    <span id="status-dot"></span>
-    <span id="last-update">Sin conexión</span>
-    <button class="btn-refresh" onclick="loadAll()">↺ Actualizar</button>
-  </div>
-</div>
 
-<!-- ══ TABS ══ -->
-<div class="tabs">
-  <div class="tab active" onclick="showTab('resumen')">Resumen POI</div>
-  <div class="tab" onclick="showTab('convenios')">Convenios</div>
-  <div class="tab" onclick="showTab('misiones')">Misiones</div>
-  <div class="tab" onclick="showTab('donaciones')">Donaciones</div>
-  <div class="tab" onclick="showTab('becas')">Becas y Pasantías</div>
-  <div class="tab" onclick="showTab('membresias')">Membresías</div>
-  <div class="tab" onclick="showTab('config')">⚙ Configuración</div>
-</div>
+  <div class="sidebar-section">
+    <div class="sidebar-section-label">Visión general</div>
+    <button class="nav-item active" onclick="showPage('resumen', this)">
+      <span class="ni-icon">◈</span> Resumen POI
+    </button>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-section-label">Procesos MS-01</div>
+    <button class="nav-item" onclick="showPage('convenios', this)">
+      <span class="ni-icon">📋</span> Convenios
+      <span class="ni-badge" id="nb-conv">—</span>
+    </button>
+    <button class="nav-item" onclick="showPage('misiones', this)">
+      <span class="ni-icon">🌍</span> Misiones
+      <span class="ni-badge" id="nb-mis">—</span>
+    </button>
+    <button class="nav-item" onclick="showPage('donaciones', this)">
+      <span class="ni-icon">🎁</span> Donaciones
+      <span class="ni-badge" id="nb-don">—</span>
+    </button>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-section-label">Procesos MS-03</div>
+    <button class="nav-item" onclick="showPage('becas', this)">
+      <span class="ni-icon">🎓</span> Becas y Pasantías
+      <span class="ni-badge" id="nb-bec">—</span>
+    </button>
+    <button class="nav-item" onclick="showPage('membresias', this)">
+      <span class="ni-icon">🏛</span> Membresías
+      <span class="ni-badge" id="nb-mem">—</span>
+    </button>
+  </div>
+
+  <div class="sidebar-footer">
+    <div class="sync-status">
+      <span class="sync-dot" id="sync-dot"></span>
+      <span id="sync-time">Conectando…</span>
+    </div>
+  </div>
+</aside>
+
+<!-- ══ TOPBAR ══ -->
+<header class="topbar">
+  <div class="topbar-title">POI 2026 · <span id="page-title">Resumen</span></div>
+  <div class="filter-bar">
+    <span class="filter-label">TRIMESTRE</span>
+    <button class="chip active" onclick="setTrim('todos', this)">Todos</button>
+    <button class="chip" onclick="setTrim('T1', this)">T1</button>
+    <button class="chip" onclick="setTrim('T2', this)">T2</button>
+    <button class="chip" onclick="setTrim('T3', this)">T3</button>
+    <button class="chip" onclick="setTrim('T4', this)">T4</button>
+  </div>
+  <button class="btn-refresh" id="btn-refresh" onclick="loadAll()">
+    <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M11.5 2A6 6 0 1 0 12 6.5"/><path d="M12 1v3h-3"/></svg>
+    Actualizar
+  </button>
+</header>
 
 <!-- ══ MAIN ══ -->
-<div class="main">
+<main class="main">
 
-  <!-- ┌────────────────── RESUMEN ──────────────────┐ -->
-  <div id="sec-resumen" class="section active">
-    <div id="kpi-resumen" class="kpis">
-      <div class="loading"><span class="spinner"></span>Cargando…</div>
+  <!-- ┌── RESUMEN ──┐ -->
+  <section id="page-resumen" class="page active">
+    <div class="section-header">
+      <div>
+        <div class="section-title">Resumen POI 2026</div>
+        <div class="section-sub">Vista consolidada de todos los procesos de cooperación internacional</div>
+      </div>
     </div>
+
+    <div class="kpi-grid" id="kpis-resumen">
+      <div class="skeleton" style="height:90px"></div>
+      <div class="skeleton" style="height:90px"></div>
+      <div class="skeleton" style="height:90px"></div>
+      <div class="skeleton" style="height:90px"></div>
+      <div class="skeleton" style="height:90px"></div>
+    </div>
+
     <div class="grid2">
       <div class="card">
         <div class="card-head">
-          <div><div class="card-title">Actividades por trimestre</div><div class="card-sub">POI 2026</div></div>
+          <div><div class="card-title">Actividades por trimestre</div><div class="card-sub">Ejecución acumulada POI 2026</div></div>
         </div>
         <div class="card-body">
-          <div class="chart-wrap" style="height:220px"><canvas id="chartTrimestral" role="img" aria-label="Actividades por trimestre 2026">Gráfico de actividades por trimestre.</canvas></div>
+          <div class="chart-wrap" style="height:210px">
+            <canvas id="chartTrim" role="img" aria-label="Actividades por trimestre">Gráfico trimestral.</canvas>
+          </div>
         </div>
       </div>
       <div class="card">
         <div class="card-head">
-          <div><div class="card-title">Distribución por proceso</div><div class="card-sub">Total de actividades</div></div>
+          <div><div class="card-title">Distribución por proceso</div><div class="card-sub">Total actividades 2026</div></div>
         </div>
         <div class="card-body">
-          <div class="chart-wrap" style="height:220px"><canvas id="chartProcesos" role="img" aria-label="Distribución por proceso">Gráfico de distribución por proceso.</canvas></div>
+          <div class="chart-wrap" style="height:210px">
+            <canvas id="chartProcesos" role="img" aria-label="Distribución por proceso">Gráfico de procesos.</canvas>
+          </div>
         </div>
       </div>
     </div>
-    <div class="card">
-      <div class="card-head"><div class="card-title">Estado de ejecución trimestral</div></div>
+
+    <div class="card grid-full">
+      <div class="card-head"><div class="card-title">Progreso de ejecución trimestral</div></div>
       <div class="card-body">
-        <div class="timeline">
-          <div class="tq has">T1 · Ene–Mar<span class="tq-lbl">20 actividades</span></div>
-          <div class="tq has">T2 · Abr–Jun<span class="tq-lbl">6 actividades</span></div>
-          <div class="tq">T3 · Jul–Sep<span class="tq-lbl">3 programadas</span></div>
-          <div class="tq">T4 · Oct–Dic<span class="tq-lbl">3 programadas</span></div>
-        </div>
-        <p style="font-size:11px;color:var(--muted);margin-top:8px">Las membresías (3) se mantienen activas todo el año. T3 y T4 reflejan la renovación trimestral de membresías.</p>
+        <div class="trim-bar" id="trim-visual"></div>
+        <div style="margin-top:20px" id="progress-section"></div>
       </div>
     </div>
-  </div>
+  </section>
 
-  <!-- ┌────────────────── CONVENIOS ──────────────────┐ -->
-  <div id="sec-convenios" class="section">
-    <div class="kpis" id="kpi-conv"></div>
-    <div class="card">
+  <!-- ┌── CONVENIOS ──┐ -->
+  <section id="page-convenios" class="page">
+    <div class="section-header">
+      <div>
+        <div class="section-title">Instrumentos de cooperación</div>
+        <div class="section-sub">Convenios y memorandos suscritos — MS-01</div>
+      </div>
+      <div class="inline-filters">
+        <select id="filt-conv-estado" onchange="renderConvenios()">
+          <option value="">Todos los estados</option>
+          <option value="Vigente">Vigente</option>
+          <option value="Cerrado">Cerrado</option>
+          <option value="Suspendido">Suspendido</option>
+        </select>
+        <input type="text" id="filt-conv-q" placeholder="Buscar organismo…" oninput="renderConvenios()" style="width:180px">
+      </div>
+    </div>
+    <div class="kpi-grid" id="kpis-conv"></div>
+    <div class="card grid-full">
       <div class="card-head">
-        <div><div class="card-title">Instrumentos de cooperación suscritos</div><div class="card-sub" id="conv-sub"></div></div>
-        <div class="filters">
-          <select id="filt-conv-estado" onchange="renderConvenios()">
-            <option value="">Todos los estados</option>
-            <option value="Vigente">Vigente</option>
-            <option value="Cerrado">Cerrado</option>
-            <option value="Suspendido">Suspendido</option>
-          </select>
+        <div><div class="card-title">Registro de convenios</div><div class="card-sub" id="conv-count"></div></div>
+      </div>
+      <div class="tbl-wrap" id="tbl-convenios"><div class="spinner-center"><div class="spin-ring"></div>Cargando…</div></div>
+    </div>
+  </section>
+
+  <!-- ┌── MISIONES ──┐ -->
+  <section id="page-misiones" class="page">
+    <div class="section-header">
+      <div>
+        <div class="section-title">Misiones humanitarias</div>
+        <div class="section-sub">Intervenciones ejecutadas en redes asistenciales — MS-01</div>
+      </div>
+    </div>
+    <div class="kpi-grid" id="kpis-mis"></div>
+    <div class="grid2">
+      <div id="cards-misiones" class="mission-cards"></div>
+      <div class="card">
+        <div class="card-head"><div class="card-title">Impacto acumulado</div></div>
+        <div class="card-body">
+          <div class="chart-wrap" style="height:200px">
+            <canvas id="chartMis" role="img" aria-label="Impacto misiones">Gráfico impacto.</canvas>
+          </div>
         </div>
       </div>
-      <div class="tbl-wrap"><div id="tbl-convenios" class="loading"><span class="spinner"></span>Cargando…</div></div>
     </div>
-  </div>
+  </section>
 
-  <!-- ┌────────────────── MISIONES ──────────────────┐ -->
-  <div id="sec-misiones" class="section">
-    <div class="kpis" id="kpi-mis"></div>
-    <div id="cards-misiones" class="mission-grid"></div>
-  </div>
-
-  <!-- ┌────────────────── DONACIONES ──────────────────┐ -->
-  <div id="sec-donaciones" class="section">
-    <div class="kpis" id="kpi-don"></div>
-    <div class="card">
-      <div class="card-head"><div class="card-title">Donaciones recibidas</div></div>
-      <div class="tbl-wrap"><div id="tbl-donaciones" class="loading"><span class="spinner"></span>Cargando…</div></div>
+  <!-- ┌── DONACIONES ──┐ -->
+  <section id="page-donaciones" class="page">
+    <div class="section-header">
+      <div>
+        <div class="section-title">Donaciones recibidas</div>
+        <div class="section-sub">Bienes y dispositivos recibidos por cooperación — MS-01</div>
+      </div>
     </div>
-  </div>
+    <div class="kpi-grid" id="kpis-don"></div>
+    <div class="don-grid" id="cards-don"></div>
+    <div class="card grid-full" style="margin-top:18px">
+      <div class="card-head"><div class="card-title">Detalle de donaciones</div></div>
+      <div class="tbl-wrap" id="tbl-don"></div>
+    </div>
+  </section>
 
-  <!-- ┌────────────────── BECAS ──────────────────┐ -->
-  <div id="sec-becas" class="section">
-    <div class="kpis" id="kpi-bec"></div>
+  <!-- ┌── BECAS ──┐ -->
+  <section id="page-becas" class="page">
+    <div class="section-header">
+      <div>
+        <div class="section-title">Becas y pasantías</div>
+        <div class="section-sub">Oportunidades de formación captadas — MS-03</div>
+      </div>
+      <div class="inline-filters">
+        <select id="filt-bec-estado" onchange="renderBecas()">
+          <option value="">Todos</option>
+          <option value="Cerrada">Cerrada</option>
+          <option value="Abierta">Abierta</option>
+        </select>
+        <select id="filt-bec-modal" onchange="renderBecas()">
+          <option value="">Modalidad</option>
+          <option value="Curso">Curso</option>
+          <option value="Diplomado">Diplomado</option>
+          <option value="Seminario">Seminario</option>
+          <option value="Microaprendizaje">Microaprendizaje</option>
+        </select>
+        <select id="filt-bec-org" onchange="renderBecas()">
+          <option value="">Organismo</option>
+          <option value="CISS">CISS</option>
+          <option value="OISS">OISS</option>
+        </select>
+        <input type="text" id="filt-bec-q" placeholder="Buscar…" oninput="renderBecas()" style="width:160px">
+      </div>
+    </div>
+    <div class="kpi-grid" id="kpis-bec"></div>
     <div class="grid3">
       <div class="card">
         <div class="card-head">
-          <div><div class="card-title">Registro de becas y pasantías</div></div>
-          <div class="filters">
-            <select id="filt-bec-estado" onchange="renderBecas()">
-              <option value="">Todos</option>
-              <option value="Cerrada">Cerrada</option>
-              <option value="Abierta">Abierta</option>
-            </select>
-            <select id="filt-bec-modal" onchange="renderBecas()">
-              <option value="">Modalidad</option>
-              <option value="Curso">Curso</option>
-              <option value="Diplomado">Diplomado</option>
-              <option value="Seminario">Seminario</option>
-              <option value="Microaprendizaje">Microaprendizaje</option>
-            </select>
+          <div><div class="card-title">Registro de becas</div><div class="card-sub" id="bec-count"></div></div>
+        </div>
+        <div class="tbl-wrap" id="tbl-becas"><div class="spinner-center"><div class="spin-ring"></div>Cargando…</div></div>
+      </div>
+      <div>
+        <div class="card" style="margin-bottom:14px">
+          <div class="card-head"><div class="card-title">Por modalidad</div></div>
+          <div class="card-body">
+            <div class="chart-wrap" style="height:160px">
+              <canvas id="chartModal" role="img" aria-label="Becas por modalidad">Gráfico modalidades.</canvas>
+            </div>
           </div>
         </div>
-        <div class="tbl-wrap"><div id="tbl-becas" class="loading"><span class="spinner"></span>Cargando…</div></div>
-      </div>
-      <div class="card">
-        <div class="card-head"><div class="card-title">Por modalidad</div></div>
-        <div class="card-body">
-          <div class="chart-wrap" style="height:200px"><canvas id="chartModalidad" role="img" aria-label="Becas por modalidad">Gráfico de becas por modalidad.</canvas></div>
+        <div class="card">
+          <div class="card-head"><div class="card-title">Por organismo</div></div>
+          <div class="card-body">
+            <div class="chart-wrap" style="height:130px">
+              <canvas id="chartOrg" role="img" aria-label="Becas por organismo">Gráfico organismos.</canvas>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-  </div>
+  </section>
 
-  <!-- ┌────────────────── MEMBRESÍAS ──────────────────┐ -->
-  <div id="sec-membresias" class="section">
-    <div class="kpis" id="kpi-mem"></div>
+  <!-- ┌── MEMBRESÍAS ──┐ -->
+  <section id="page-membresias" class="page">
+    <div class="section-header">
+      <div>
+        <div class="section-title">Membresías activas</div>
+        <div class="section-sub">Organismos internacionales — MS-03</div>
+      </div>
+    </div>
+    <div class="kpi-grid" id="kpis-mem"></div>
     <div class="grid2">
+      <div class="mem-cards" id="cards-mem"></div>
       <div class="card">
-        <div class="card-head"><div class="card-title">Organismos internacionales</div><div class="card-sub">Membresías activas</div></div>
-        <div class="card-body"><div id="mem-list" class="mem-list"></div></div>
-      </div>
-      <div class="card">
-        <div class="card-head"><div class="card-title">Distribución de costos</div><div class="card-sub">Costo anual por organismo (USD)</div></div>
+        <div class="card-head"><div class="card-title">Inversión anual</div><div class="card-sub">Distribución por organismo (USD)</div></div>
         <div class="card-body">
-          <div class="chart-wrap" style="height:220px"><canvas id="chartMem" role="img" aria-label="Distribución costos membresías">Gráfico de distribución de costos.</canvas></div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ┌────────────────── CONFIG ──────────────────┐ -->
-  <div id="sec-config" class="section">
-    <div class="config-box">
-      <h3>📋 Cómo vincular tu Google Sheets</h3>
-      <p>
-        1. Sube el archivo <code>OFCI_POI_2026_GoogleSheets.xlsx</code> a Google Drive.<br>
-        2. Ábrelo con Google Sheets (clic derecho → Abrir con → Google Sheets).<br>
-        3. Ve a <strong>Archivo → Compartir → Publicar en la web</strong>.<br>
-        4. Elige cada hoja y selecciona formato <code>CSV</code>. Copia la URL de cada una.<br>
-        5. Pega las URLs en los campos de abajo y guarda.<br><br>
-        El dashboard se actualizará automáticamente cada 60 segundos con los datos más recientes.
-      </p>
-    </div>
-    <div class="card">
-      <div class="card-head"><div class="card-title">URLs de Google Sheets (formato CSV)</div></div>
-      <div class="card-body" style="display:flex;flex-direction:column;gap:14px;">
-        <div>
-          <div style="font-size:12px;font-weight:600;color:var(--navy);margin-bottom:4px">📄 Hoja: Convenios</div>
-          <div class="url-row">
-            <input type="text" id="url-conv" placeholder="https://docs.google.com/spreadsheets/d/.../export?format=csv&gid=..." />
-            <button class="btn-save" onclick="saveURLs()">Guardar</button>
+          <div class="chart-wrap" style="height:240px">
+            <canvas id="chartMem" role="img" aria-label="Inversión membresías">Gráfico membresías.</canvas>
           </div>
         </div>
-        <div>
-          <div style="font-size:12px;font-weight:600;color:var(--navy);margin-bottom:4px">🌍 Hoja: Misiones</div>
-          <div class="url-row"><input type="text" id="url-mis" placeholder="https://docs.google.com/spreadsheets/d/.../export?format=csv&gid=..." /></div>
-        </div>
-        <div>
-          <div style="font-size:12px;font-weight:600;color:var(--navy);margin-bottom:4px">🎁 Hoja: Donaciones</div>
-          <div class="url-row"><input type="text" id="url-don" placeholder="https://docs.google.com/spreadsheets/d/.../export?format=csv&gid=..." /></div>
-        </div>
-        <div>
-          <div style="font-size:12px;font-weight:600;color:var(--navy);margin-bottom:4px">🎓 Hoja: Becas y Pasantías</div>
-          <div class="url-row"><input type="text" id="url-bec" placeholder="https://docs.google.com/spreadsheets/d/.../export?format=csv&gid=..." /></div>
-        </div>
-        <div>
-          <div style="font-size:12px;font-weight:600;color:var(--navy);margin-bottom:4px">🏛 Hoja: Membresías</div>
-          <div class="url-row"><input type="text" id="url-mem" placeholder="https://docs.google.com/spreadsheets/d/.../export?format=csv&gid=..." /></div>
-        </div>
       </div>
     </div>
-  </div>
+  </section>
 
-</div><!-- /main -->
+</main>
+
+<!-- ══ MODAL ══ -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
+  <div class="modal" id="modal">
+    <div class="modal-head">
+      <div>
+        <div class="modal-title" id="modal-title">Detalle</div>
+        <div class="modal-id" id="modal-id"></div>
+      </div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
 
 <script>
-// ════════════════════════════════════════════════════════════
-// ESTADO GLOBAL
-// ════════════════════════════════════════════════════════════
-let DATA = { conv: [], mis: [], don: [], bec: [], mem: [] };
+const BASE_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSq4jVuP0QbyGHNYWN2dbH67bFBsmQayQ4fUEAWfkUhD6TzFwG0kPT12kGD9WpX0pGJ6ETX3va7lwqz/pub';
+
+const URLS = {
+  conv: BASE_URL + '?gid=0&single=true&output=csv',
+  mis:  BASE_URL + '?gid=367800634&single=true&output=csv',
+  don:  BASE_URL + '?gid=531213617&single=true&output=csv',
+  bec:  BASE_URL + '?gid=1020970410&single=true&output=csv',
+  mem:  BASE_URL + '?gid=2056939474&single=true&output=csv',
+};
+
+let DATA = { conv:[], mis:[], don:[], bec:[], mem:[] };
+let TRIM = 'todos';
 let charts = {};
 
-// URLs — se reemplazan con las de Google Sheets desde config
-let URLS = {
-  conv: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSq4jVuP0QbyGHNYWN2dbH67bFBsmQayQ4fUEAWfkUhD6TzFwG0kPT12kGD9WpX0pGJ6ETX3va7lwqz/pub?gid=0&single=true&output=csv',
-  mis:  'https://docs.google.com/spreadsheets/d/e/2PACX-1vSq4jVuP0QbyGHNYWN2dbH67bFBsmQayQ4fUEAWfkUhD6TzFwG0kPT12kGD9WpX0pGJ6ETX3va7lwqz/pub?gid=367800634&single=true&output=csv',
-  don:  'https://docs.google.com/spreadsheets/d/e/2PACX-1vSq4jVuP0QbyGHNYWN2dbH67bFBsmQayQ4fUEAWfkUhD6TzFwG0kPT12kGD9WpX0pGJ6ETX3va7lwqz/pub?gid=531213617&single=true&output=csv',
-  bec:  'https://docs.google.com/spreadsheets/d/e/2PACX-1vSq4jVuP0QbyGHNYWN2dbH67bFBsmQayQ4fUEAWfkUhD6TzFwG0kPT12kGD9WpX0pGJ6ETX3va7lwqz/pub?gid=1020970410&single=true&output=csv',
-  mem:  'https://docs.google.com/spreadsheets/d/e/2PACX-1vSq4jVuP0QbyGHNYWN2dbH67bFBsmQayQ4fUEAWfkUhD6TzFwG0kPT12kGD9WpX0pGJ6ETX3va7lwqz/pub?gid=2056939474&single=true&output=csv',
-};
-
-// DATOS DEMO (se usan mientras no hay URLs configuradas)
-const DEMO = {
-  conv: [
-    {id_instrumento:'INS-002',tipo_instrumento:'Memorando de entendimiento',titulo:'Memorando con Socios en Salud',organismo_cooperante:'Socios en Salud Sucursal Perú',fecha_suscripcion:'06/03/2026',fecha_vencimiento:'06/03/2029',estado:'Vigente',pais:'Estados Unidos',descripcion:'Salud pública en TB, VIH, salud mental y ENT'},
-    {id_instrumento:'INS-020',tipo_instrumento:'Memorando de entendimiento',titulo:'Memorando con AstraZeneca',organismo_cooperante:'AstraZeneca',fecha_suscripcion:'16/04/2026',fecha_vencimiento:'16/04/2029',estado:'Vigente',pais:'Colombia',descripcion:'Fortalecimiento gestión de salud e innovación'},
-    {id_instrumento:'INS-021',tipo_instrumento:'Memorando de entendimiento',titulo:'Memorando con Clínica U. Navarra',organismo_cooperante:'Clínica Universidad Navarra',fecha_suscripcion:'05/05/2026',fecha_vencimiento:'05/05/2029',estado:'Vigente',pais:'España',descripcion:'Fortalecimiento en salud, docencia e investigación'},
-  ],
-  mis: [
-    {id_mision:'MIS-001',tipo_intervencion:'Quirúrgica',red_asistencial:'Red Asistencial Cusco',ipress_destino:'Hosp. Adolfo Guevara Velasco',fuente_cooperante:'HUGS',fecha_inicio:'08/02/2026',fecha_fin:'13/02/2026',n_profesionales:'22',n_pacientes_atendidos:'44',estado:'Finalizada',trimestre:'T1'},
-    {id_mision:'MIS-002',tipo_intervencion:'Quirúrgica',red_asistencial:'Red Asistencial Trujillo',ipress_destino:'Hospital Virgen de la Puerta',fuente_cooperante:'Global Smile Foundation',fecha_inicio:'22/05/2026',fecha_fin:'30/05/2026',n_profesionales:'34',n_pacientes_atendidos:'59',estado:'Finalizada',trimestre:'T2'},
-  ],
-  don: [
-    {id_donacion:'DON-001',fuente_cooperante:'World Federation of Hemophilia',tipo_bien:'Producto Farmacológico',especificacion:'Factor VIII y IX de coagulación',fecha:'20/03/2026',red_beneficiada:'Nacional',valor_usd:'13',impacto_asistencial:'Continuidad tratamiento hemofilia',estado:'Finalizado',trimestre:'T1'},
-    {id_donacion:'DON-002',fuente_cooperante:'Dr. Carlos Milla Comitre',tipo_bien:'Dispositivo Médico',especificacion:'Clorídometro',fecha:'02/03/2026',red_beneficiada:'Red Rebagliati',valor_usd:'18610',impacto_asistencial:'Diagnóstico de fibrosis quística',estado:'Finalizado',trimestre:'T1'},
-  ],
-  bec: [
-    {id_beca:'BEC-001',tipo:'Beca',modalidad:'Curso',nombre:'Técnicas actuariales para seguridad social',organismo_oferente:'CISS',pais_destino:'México',horas:'40',n_beneficiados:'1',fecha_convocatoria:'20/03/2026',fecha_cierre:'01/06/2026',estado:'Cerrada',trimestre:'T1'},
-    {id_beca:'BEC-002',tipo:'Beca',modalidad:'Curso',nombre:'Financiamiento de la seguridad social',organismo_oferente:'CISS',pais_destino:'México',horas:'40',n_beneficiados:'1',fecha_convocatoria:'21/03/2026',fecha_cierre:'26/05/2026',estado:'Cerrada',trimestre:'T1'},
-    {id_beca:'BEC-003',tipo:'Beca',modalidad:'Diplomado',nombre:'Gestión de servicios de salud en SS',organismo_oferente:'CISS',pais_destino:'México',horas:'120',n_beneficiados:'1',fecha_convocatoria:'22/03/2026',fecha_cierre:'19/05/2026',estado:'Cerrada',trimestre:'T1'},
-    {id_beca:'BEC-004',tipo:'Beca',modalidad:'Seminario',nombre:'Derecho internacional de la SS',organismo_oferente:'CISS',pais_destino:'México',horas:'20',n_beneficiados:'1',fecha_convocatoria:'23/03/2026',fecha_cierre:'24/07/2026',estado:'Abierta',trimestre:'T1'},
-    {id_beca:'BEC-005',tipo:'Beca',modalidad:'Curso',nombre:'Formulación de políticas públicas SS',organismo_oferente:'CISS',pais_destino:'México',horas:'40',n_beneficiados:'1',fecha_convocatoria:'23/03/2026',fecha_cierre:'08/06/2026',estado:'Abierta',trimestre:'T1'},
-    {id_beca:'BEC-006',tipo:'Beca',modalidad:'Microaprendizaje',nombre:'ABC de la Inteligencia Artificial',organismo_oferente:'CISS',pais_destino:'México',horas:'10',n_beneficiados:'1',fecha_convocatoria:'23/03/2026',fecha_cierre:'10/07/2026',estado:'Abierta',trimestre:'T1'},
-    {id_beca:'BEC-007',tipo:'Beca',modalidad:'Diplomado',nombre:'Sistema de Pensiones: modelos y desafíos',organismo_oferente:'CISS',pais_destino:'México',horas:'120',n_beneficiados:'1',fecha_convocatoria:'14/02/2026',fecha_cierre:'23/02/2026',estado:'Cerrada',trimestre:'T1'},
-    {id_beca:'BEC-008',tipo:'Beca',modalidad:'Curso',nombre:'Estadística aplicada a la SS',organismo_oferente:'CISS',pais_destino:'México',horas:'40',n_beneficiados:'1',fecha_convocatoria:'14/02/2026',fecha_cierre:'20/02/2026',estado:'Cerrada',trimestre:'T1'},
-    {id_beca:'BEC-009',tipo:'Beca',modalidad:'Curso',nombre:'Estrategias de mejora centradas en usuarios',organismo_oferente:'CISS',pais_destino:'México',horas:'40',n_beneficiados:'1',fecha_convocatoria:'14/02/2026',fecha_cierre:'24/02/2026',estado:'Cerrada',trimestre:'T1'},
-    {id_beca:'BEC-010',tipo:'Beca',modalidad:'Diplomado',nombre:'Alta dirección en instituciones SS',organismo_oferente:'CISS',pais_destino:'México',horas:'120',n_beneficiados:'1',fecha_convocatoria:'14/02/2026',fecha_cierre:'23/02/2026',estado:'Cerrada',trimestre:'T1'},
-    {id_beca:'BEC-011',tipo:'Beca',modalidad:'Diplomado',nombre:'Gestión en salud y seguridad en el trabajo',organismo_oferente:'CISS',pais_destino:'México',horas:'120',n_beneficiados:'1',fecha_convocatoria:'14/02/2026',fecha_cierre:'20/02/2026',estado:'Cerrada',trimestre:'T1'},
-    {id_beca:'BEC-012',tipo:'Beca',modalidad:'Curso',nombre:'Políticas públicas sociales iberoamérica',organismo_oferente:'OISS',pais_destino:'España',horas:'48',n_beneficiados:'1',fecha_convocatoria:'09/02/2026',fecha_cierre:'15/02/2026',estado:'Cerrada',trimestre:'T1'},
-    {id_beca:'BEC-013',tipo:'Beca',modalidad:'Curso',nombre:'Máster en Dirección y Gestión Servicios de Salud',organismo_oferente:'OISS',pais_destino:'España',horas:'1500',n_beneficiados:'1',fecha_convocatoria:'01/01/2026',fecha_cierre:'27/02/2026',estado:'Cerrada',trimestre:'T1'},
-  ],
-  mem: [
-    {id_membresia:'MEM-001',organismo:'CISS',tipo_membresia:'Miembro Titular / Fundador',ambito:'América y el Caribe',pais_sede:'México',anio_suscripcion:'1942',costo_anual_usd:'21837',estado:'Activa'},
-    {id_membresia:'MEM-002',organismo:'OISS',tipo_membresia:'Miembro Titular',ambito:'Iberoamérica',pais_sede:'España',anio_suscripcion:'1954',costo_anual_usd:'11000',estado:'Activa'},
-    {id_membresia:'MEM-003',organismo:'AISS',tipo_membresia:'Miembro Afiliado',ambito:'Global',pais_sede:'Suiza',anio_suscripcion:'1950',costo_anual_usd:'38390',estado:'Activa'},
-  ],
-};
-
-// ════════════════════════════════════════════════════════════
-// CSV PARSER
-// ════════════════════════════════════════════════════════════
 function parseCSV(txt) {
   const lines = txt.trim().split('\n');
-  // Saltar filas de título/encabezado de sección (fila 1 = título, fila 2 = headers)
-  // Detectar la fila de encabezados (la que tiene id_)
-  let headerIdx = 0;
-  for (let i = 0; i < Math.min(5, lines.length); i++) {
-    if (lines[i].includes('id_') || lines[i].toLowerCase().includes('id')) { headerIdx = i; break; }
-  }
-  const headers = lines[headerIdx].split(',').map(h => h.trim().replace(/"/g,''));
-  const rows = [];
-  for (let i = headerIdx+1; i < lines.length; i++) {
-    if (!lines[i].trim()) continue;
-    const vals = lines[i].split(',').map(v => v.trim().replace(/"/g,''));
-    if (vals.length < 2) continue;
+  const headers = lines[0].split(',').map(h => h.trim().replace(/^"|"$/g,''));
+  return lines.slice(1).filter(l => l.trim()).map(line => {
+    const vals = []; let cur = ''; let inQ = false;
+    for (let ch of line) {
+      if (ch === '"') { inQ = !inQ; }
+      else if (ch === ',' && !inQ) { vals.push(cur.trim()); cur = ''; }
+      else cur += ch;
+    }
+    vals.push(cur.trim());
     const obj = {};
-    headers.forEach((h, idx) => { obj[h] = vals[idx] || ''; });
-    rows.push(obj);
-  }
-  return rows;
+    headers.forEach((h,i) => obj[h] = vals[i] || '');
+    return obj;
+  });
 }
 
-// ════════════════════════════════════════════════════════════
-// CARGA DE DATOS
-// ════════════════════════════════════════════════════════════
 async function fetchSheet(url, key) {
-  if (!url) { DATA[key] = DEMO[key]; return true; }
   try {
-    const r = await fetch(url);
-    if (!r.ok) throw new Error('HTTP ' + r.status);
-    const txt = await r.text();
-    DATA[key] = parseCSV(txt);
+    const r = await fetch(url + '&_=' + Date.now());
+    if (!r.ok) throw new Error('HTTP '+r.status);
+    DATA[key] = parseCSV(await r.text());
     return true;
-  } catch(e) {
-    DATA[key] = DEMO[key];
-    return false;
-  }
+  } catch(e) { return false; }
 }
 
 async function loadAll() {
-  document.getElementById('status-dot').className = '';
-  document.getElementById('last-update').textContent = 'Actualizando…';
+  const btn = document.getElementById('btn-refresh');
+  btn.classList.add('spinning');
+  document.getElementById('sync-dot').className = 'sync-dot';
+  document.getElementById('sync-time').textContent = 'Actualizando…';
 
-  const results = await Promise.all([
-    fetchSheet(URLS.conv, 'conv'),
-    fetchSheet(URLS.mis,  'mis'),
-    fetchSheet(URLS.don,  'don'),
-    fetchSheet(URLS.bec,  'bec'),
-    fetchSheet(URLS.mem,  'mem'),
+  const res = await Promise.all([
+    fetchSheet(URLS.conv,'conv'), fetchSheet(URLS.mis,'mis'),
+    fetchSheet(URLS.don,'don'),  fetchSheet(URLS.bec,'bec'),
+    fetchSheet(URLS.mem,'mem'),
   ]);
 
-  const ok = results.every(r => r);
-  document.getElementById('status-dot').className = ok ? 'ok' : 'err';
-  const now = new Date();
-  document.getElementById('last-update').textContent =
-    now.toLocaleTimeString('es-PE', {hour:'2-digit', minute:'2-digit'});
+  btn.classList.remove('spinning');
+  const ok = res.every(r=>r);
+  document.getElementById('sync-dot').className = 'sync-dot ' + (ok ? 'live' : 'err');
+  document.getElementById('sync-time').textContent =
+    new Date().toLocaleTimeString('es-PE',{hour:'2-digit',minute:'2-digit'});
 
+  updateBadges();
   renderAll();
 }
 
-// ════════════════════════════════════════════════════════════
-// RENDER HELPERS
-// ════════════════════════════════════════════════════════════
-function badgeEstado(e) {
-  if (!e) return '';
-  const m = { 'Vigente':'green','Activa':'green','Finalizada':'green','Finalizado':'green','Cerrada':'blue','Cerrado':'blue','Abierta':'sky','Abierta':'sky','Suspendido':'red','Observado':'amber' };
-  const cl = Object.entries(m).find(([k]) => e.toLowerCase().includes(k.toLowerCase()));
-  return `<span class="badge badge-${cl ? cl[1] : 'blue'}">${e}</span>`;
+function filterByTrim(arr, campo='trimestre') {
+  if (TRIM === 'todos') return arr;
+  return arr.filter(r => (r[campo]||'').includes(TRIM));
 }
 
-function kpiCard(label, value, sub='', type='') {
-  return `<div class="kpi ${type}"><div class="kpi-label">${label}</div><div class="kpi-value">${value}</div>${sub ? `<div class="kpi-sub">${sub}</div>` : ''}</div>`;
+function setTrim(t, el) {
+  TRIM = t;
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  renderAll();
 }
 
-function destroyChart(id) {
-  if (charts[id]) { charts[id].destroy(); delete charts[id]; }
+function updateBadges() {
+  document.getElementById('nb-conv').textContent = DATA.conv.length;
+  document.getElementById('nb-mis').textContent  = DATA.mis.length;
+  document.getElementById('nb-don').textContent  = DATA.don.length;
+  document.getElementById('nb-bec').textContent  = DATA.bec.length;
+  document.getElementById('nb-mem').textContent  = DATA.mem.length;
 }
 
-// ════════════════════════════════════════════════════════════
-// RESUMEN
-// ════════════════════════════════════════════════════════════
-function renderResumen() {
-  const totalPac   = DATA.mis.reduce((s,r) => s + (parseInt(r.n_pacientes_atendidos)||0), 0);
-  const totalProf  = DATA.mis.reduce((s,r) => s + (parseInt(r.n_profesionales)||0), 0);
-  const totalDon   = DATA.don.reduce((s,r) => s + (parseFloat(r.valor_usd)||0), 0);
-  const totalMem   = DATA.mem.reduce((s,r) => s + (parseFloat(r.costo_anual_usd)||0), 0);
-  const totalBenef = DATA.bec.reduce((s,r) => s + (parseInt(r.n_beneficiados)||0), 0);
-
-  document.getElementById('kpi-resumen').innerHTML =
-    kpiCard('Convenios suscritos', DATA.conv.length, '2026', 'accent') +
-    kpiCard('Misiones humanitarias', DATA.mis.length, 'ejecutadas', 'accent') +
-    kpiCard('Donaciones recibidas', DATA.don.length, '2026', 'accent') +
-    kpiCard('Becas y pasantías', DATA.bec.length, 'captadas', 'green') +
-    kpiCard('Beneficiados en becas', totalBenef || '—', 'personas capacitadas', 'green') +
-    kpiCard('Membresías activas', DATA.mem.length, 'organismos', 'green') +
-    kpiCard('Pacientes atendidos', totalPac, 'misiones humanitarias') +
-    kpiCard('Profesionales enviados', totalProf, 'misiones') +
-    kpiCard('Inversión membresías', 'USD ' + totalMem.toLocaleString(), 'costo anual total', 'amber');
-
-  // Gráfico trimestral
-  destroyChart('chartTrimestral');
-  charts.chartTrimestral = new Chart(document.getElementById('chartTrimestral'), {
-    type: 'bar',
-    data: {
-      labels: ['T1 Ene–Mar','T2 Abr–Jun','T3 Jul–Sep','T4 Oct–Dic'],
-      datasets: [{
-        label: 'Actividades',
-        data: [20, 6, 3, 3],
-        backgroundColor: ['#2E75B6','#2E75B6','#8BAEC8','#8BAEC8'],
-        borderRadius: 5,
-      }]
-    },
-    options: {
-      responsive: true, maintainAspectRatio: false,
-      plugins: { legend: { display: false } },
-      scales: {
-        y: { beginAtZero: true, grid: { color: '#E8EEF7' }, ticks: { color: '#6B82A0', font: { size: 11 } } },
-        x: { grid: { display: false }, ticks: { color: '#1A3C5E', font: { size: 11 } } }
-      }
-    }
-  });
-
-  // Gráfico dona procesos
-  destroyChart('chartProcesos');
-  charts.chartProcesos = new Chart(document.getElementById('chartProcesos'), {
-    type: 'doughnut',
-    data: {
-      labels: ['Convenios','Misiones','Donaciones','Becas','Membresías'],
-      datasets: [{
-        data: [DATA.conv.length, DATA.mis.length, DATA.don.length, DATA.bec.length, DATA.mem.length],
-        backgroundColor: ['#1A3C5E','#2E75B6','#5BA4D4','#8BAEC8','#D9E1F2'],
-        borderWidth: 0,
-      }]
-    },
-    options: {
-      responsive: true, maintainAspectRatio: false,
-      plugins: {
-        legend: {
-          position: 'right',
-          labels: { font: { size: 11 }, color: '#1A2B3C', boxWidth: 12, padding: 10 }
-        }
-      },
-      cutout: '62%',
-    }
-  });
-}
-
-// ════════════════════════════════════════════════════════════
-// CONVENIOS
-// ════════════════════════════════════════════════════════════
-function renderConvenios() {
-  const filtroE = document.getElementById('filt-conv-estado').value;
-  let rows = DATA.conv.filter(r => !filtroE || r.estado === filtroE);
-
-  document.getElementById('kpi-conv').innerHTML =
-    kpiCard('Total convenios', DATA.conv.length, '2026', 'accent') +
-    kpiCard('Vigentes', DATA.conv.filter(r=>r.estado==='Vigente').length, '', 'green') +
-    kpiCard('Países', [...new Set(DATA.conv.map(r=>r.pais).filter(Boolean))].length, 'distintos');
-
-  document.getElementById('conv-sub').textContent = `${rows.length} registro(s)`;
-
-  if (!rows.length) { document.getElementById('tbl-convenios').innerHTML = '<p style="padding:20px;color:var(--muted);font-size:12px">Sin registros.</p>'; return; }
-
-  document.getElementById('tbl-convenios').innerHTML = `<table>
-    <thead><tr><th>ID</th><th>Tipo</th><th>Organismo cooperante</th><th>País</th><th>Suscripción</th><th>Vencimiento</th><th>Estado</th></tr></thead>
-    <tbody>
-    ${rows.map(r => `<tr>
-      <td><span style="font-family:'DM Mono',monospace;font-size:11px">${r.id_instrumento}</span></td>
-      <td>${r.tipo_instrumento||''}</td>
-      <td style="font-weight:500">${r.organismo_cooperante||r.titulo||''}</td>
-      <td>${r.pais||''}</td>
-      <td>${r.fecha_suscripcion||''}</td>
-      <td>${r.fecha_vencimiento||''}</td>
-      <td>${badgeEstado(r.estado)}</td>
-    </tr>`).join('')}
-    </tbody></table>`;
-}
-
-// ════════════════════════════════════════════════════════════
-// MISIONES
-// ════════════════════════════════════════════════════════════
-function renderMisiones() {
-  const totalPac = DATA.mis.reduce((s,r) => s + (parseInt(r.n_pacientes_atendidos)||0), 0);
-  const totalProf = DATA.mis.reduce((s,r) => s + (parseInt(r.n_profesionales)||0), 0);
-
-  document.getElementById('kpi-mis').innerHTML =
-    kpiCard('Misiones ejecutadas', DATA.mis.length, '2026', 'accent') +
-    kpiCard('Pacientes atendidos', totalPac, 'total acumulado', 'green') +
-    kpiCard('Profesionales', totalProf, 'voluntarios enviados') +
-    kpiCard('Tipo predominante', 'Quirúrgica', 'malformaciones craneofaciales');
-
-  document.getElementById('cards-misiones').innerHTML = DATA.mis.map(r => `
-    <div class="mission-card">
-      <div class="mc-head">
-        <span class="mc-id">${r.id_mision} · ${r.trimestre||''}</span>
-        ${badgeEstado(r.estado)}
-      </div>
-      <div class="mc-title">${r.fuente_cooperante||''}</div>
-      <div style="font-size:11px;color:var(--muted);margin-bottom:8px">${r.ipress_destino||r.red_asistencial||''}</div>
-      <div class="mission-stats">
-        <div class="mc-stat"><div class="mc-num">${r.n_profesionales||0}</div><div class="mc-lbl">Profesionales</div></div>
-        <div class="mc-stat"><div class="mc-num">${r.n_pacientes_atendidos||0}</div><div class="mc-lbl">Pacientes</div></div>
-        <div style="flex:1;padding-left:12px;border-left:1px solid var(--border)">
-          <div style="font-size:10px;color:var(--muted)">Período</div>
-          <div style="font-size:11px;font-weight:500;color:var(--navy)">${r.fecha_inicio} → ${r.fecha_fin}</div>
-          <div style="font-size:10px;color:var(--muted);margin-top:3px">${r.red_asistencial||''}</div>
-        </div>
-      </div>
-    </div>`).join('');
-}
-
-// ════════════════════════════════════════════════════════════
-// DONACIONES
-// ════════════════════════════════════════════════════════════
-function renderDonaciones() {
-  const total = DATA.don.reduce((s,r) => s + (parseFloat(r.valor_usd)||0), 0);
-  document.getElementById('kpi-don').innerHTML =
-    kpiCard('Donaciones', DATA.don.length, '2026', 'accent') +
-    kpiCard('Valor total', 'USD ' + total.toLocaleString(), 'acumulado 2026', 'green') +
-    kpiCard('Trimestre T1', DATA.don.filter(r=>r.trimestre==='T1').length, 'donaciones recibidas');
-
-  document.getElementById('tbl-donaciones').innerHTML = `<table>
-    <thead><tr><th>ID</th><th>Fuente cooperante</th><th>Tipo de bien</th><th>Especificación</th><th>Fecha</th><th>Red beneficiada</th><th>Valor (USD)</th><th>Estado</th></tr></thead>
-    <tbody>
-    ${DATA.don.map(r => `<tr>
-      <td><span style="font-family:'DM Mono',monospace;font-size:11px">${r.id_donacion}</span></td>
-      <td style="font-weight:500">${r.fuente_cooperante||''}</td>
-      <td>${r.tipo_bien||''}</td>
-      <td style="max-width:180px;white-space:normal">${r.especificacion||''}</td>
-      <td>${r.fecha||''}</td>
-      <td>${r.red_beneficiada||''}</td>
-      <td style="font-weight:600;color:var(--navy)">${parseFloat(r.valor_usd||0).toLocaleString()}</td>
-      <td>${badgeEstado(r.estado)}</td>
-    </tr>`).join('')}
-    </tbody></table>`;
-}
-
-// ════════════════════════════════════════════════════════════
-// BECAS
-// ════════════════════════════════════════════════════════════
-function renderBecas() {
-  const filtE = document.getElementById('filt-bec-estado').value;
-  const filtM = document.getElementById('filt-bec-modal').value;
-  let rows = DATA.bec.filter(r =>
-    (!filtE || r.estado === filtE) &&
-    (!filtM || r.modalidad === filtM)
-  );
-
-  const cerradas = DATA.bec.filter(r=>r.estado==='Cerrada').length;
-  const abiertas = DATA.bec.filter(r=>r.estado==='Abierta').length;
-  const totalHoras = DATA.bec.reduce((s,r) => s + (parseFloat(r.horas)||0), 0);
-  const totalBenef = DATA.bec.reduce((s,r) => s + (parseInt(r.n_beneficiados)||0), 0);
-
-  document.getElementById('kpi-bec').innerHTML =
-    kpiCard('Total becas', DATA.bec.length, '2026', 'accent') +
-    kpiCard('Beneficiados', totalBenef, 'personas capacitadas', 'green') +
-    kpiCard('Cerradas', cerradas, 'completadas', 'green') +
-    kpiCard('Abiertas', abiertas, 'en curso o convocadas', 'amber') +
-    kpiCard('Horas formación', totalHoras.toLocaleString(), 'total acumulado');
-
-  document.getElementById('tbl-becas').innerHTML = rows.length ? `<table>
-    <thead><tr><th>ID</th><th>Modalidad</th><th>Nombre</th><th>Organismo</th><th>País</th><th>Horas</th><th>Beneficiados</th><th>Cierre</th><th>Estado</th></tr></thead>
-    <tbody>
-    ${rows.map(r => `<tr>
-      <td><span style="font-family:'DM Mono',monospace;font-size:11px">${r.id_beca}</span></td>
-      <td><span class="badge badge-blue">${r.modalidad||''}</span></td>
-      <td style="max-width:200px;white-space:normal;font-size:11px">${r.nombre||''}</td>
-      <td>${r.organismo_oferente||''}</td>
-      <td>${r.pais_destino||''}</td>
-      <td style="text-align:right;font-family:'DM Mono',monospace">${r.horas||''}</td>
-      <td style="text-align:center;font-weight:600;color:var(--navy)">${r.n_beneficiados||'—'}</td>
-      <td>${r.fecha_cierre||''}</td>
-      <td>${badgeEstado(r.estado)}</td>
-    </tr>`).join('')}
-    </tbody></table>` : '<p style="padding:20px;color:var(--muted);font-size:12px">Sin registros.</p>';
-
-  // Gráfico modalidades
-  const modalCount = {};
-  DATA.bec.forEach(r => { modalCount[r.modalidad] = (modalCount[r.modalidad]||0) + 1; });
-  destroyChart('chartModalidad');
-  charts.chartModalidad = new Chart(document.getElementById('chartModalidad'), {
-    type: 'bar',
-    data: {
-      labels: Object.keys(modalCount),
-      datasets: [{ data: Object.values(modalCount), backgroundColor: '#2E75B6', borderRadius: 5 }]
-    },
-    options: {
-      indexAxis: 'y',
-      responsive: true, maintainAspectRatio: false,
-      plugins: { legend: { display: false } },
-      scales: {
-        x: { grid: { color: '#E8EEF7' }, ticks: { color: '#6B82A0', font:{size:11} } },
-        y: { grid: { display: false }, ticks: { color: '#1A3C5E', font:{size:11} } }
-      }
-    }
-  });
-}
-
-// ════════════════════════════════════════════════════════════
-// MEMBRESÍAS
-// ════════════════════════════════════════════════════════════
-function renderMembresias() {
-  const total = DATA.mem.reduce((s,r) => s + (parseFloat(r.costo_anual_usd)||0), 0);
-  document.getElementById('kpi-mem').innerHTML =
-    kpiCard('Membresías activas', DATA.mem.length, 'organismos internacionales', 'accent') +
-    kpiCard('Costo total anual', 'USD ' + total.toLocaleString(), '2026', 'amber') +
-    kpiCard('Ámbito global', 'AISS', 'Suiza — mayor membresía') +
-    kpiCard('Más antigua', '1942', 'CISS — Fundador');
-
-  document.getElementById('mem-list').innerHTML = DATA.mem.map(r => `
-    <div class="mem-item">
-      <div>
-        <div class="mem-name">${r.organismo||''}</div>
-        <div class="mem-meta">${r.tipo_membresia||''} · ${r.ambito||''} · Sede: ${r.pais_sede||''}</div>
-        <div style="margin-top:5px">${badgeEstado(r.estado)}</div>
-      </div>
-      <div>
-        <div class="mem-cost">USD ${parseFloat(r.costo_anual_usd||0).toLocaleString()}</div>
-        <div class="mem-cost-label">anual</div>
-      </div>
-    </div>`).join('');
-
-  destroyChart('chartMem');
-  charts.chartMem = new Chart(document.getElementById('chartMem'), {
-    type: 'doughnut',
-    data: {
-      labels: DATA.mem.map(r => r.organismo||r.id_membresia),
-      datasets: [{
-        data: DATA.mem.map(r => parseFloat(r.costo_anual_usd)||0),
-        backgroundColor: ['#1A3C5E','#2E75B6','#8BAEC8'],
-        borderWidth: 0,
-      }]
-    },
-    options: {
-      responsive: true, maintainAspectRatio: false,
-      plugins: {
-        legend: { position: 'bottom', labels: { font:{size:11}, color:'#1A2B3C', boxWidth:12, padding:10 } },
-        tooltip: { callbacks: { label: ctx => ` USD ${ctx.raw.toLocaleString()}` } }
-      },
-      cutout: '55%',
-    }
-  });
-}
-
-// ════════════════════════════════════════════════════════════
-// CONFIG — GUARDAR URLs
-// ════════════════════════════════════════════════════════════
-function saveURLs() {
-  URLS.conv = document.getElementById('url-conv').value.trim();
-  URLS.mis  = document.getElementById('url-mis').value.trim();
-  URLS.don  = document.getElementById('url-don').value.trim();
-  URLS.bec  = document.getElementById('url-bec').value.trim();
-  URLS.mem  = document.getElementById('url-mem').value.trim();
-  localStorage.setItem('ofci_url_conv', URLS.conv);
-  localStorage.setItem('ofci_url_mis',  URLS.mis);
-  localStorage.setItem('ofci_url_don',  URLS.don);
-  localStorage.setItem('ofci_url_bec',  URLS.bec);
-  localStorage.setItem('ofci_url_mem',  URLS.mem);
-  loadAll();
+function showPage(name, el) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
+  el.classList.add('active');
+  const titles = {resumen:'Resumen POI',convenios:'Convenios',misiones:'Misiones Humanitarias',donaciones:'Donaciones',becas:'Becas y Pasantías',membresias:'Membresías'};
+  document.getElementById('page-title').textContent = titles[name]||name;
+  const renders = {resumen:renderResumen,convenios:renderConvenios,misiones:renderMisiones,donaciones:renderDonaciones,becas:renderBecas,membresias:renderMembresias};
+  if(renders[name]) renders[name]();
 }
 
 function renderAll() {
@@ -874,34 +740,455 @@ function renderAll() {
   renderMembresias();
 }
 
-// ════════════════════════════════════════════════════════════
-// TABS
-// ════════════════════════════════════════════════════════════
-function showTab(name) {
-  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  document.getElementById('sec-' + name).classList.add('active');
-  event.target.classList.add('active');
+function badgeEstado(e) {
+  if (!e) return '';
+  const m = {'vigente':'b-green','activa':'b-green','finalizada':'b-green','finalizado':'b-green','cerrada':'b-blue','cerrado':'b-blue','abierta':'b-sky','suspendido':'b-red','observado':'b-amber'};
+  const key = Object.keys(m).find(k => e.toLowerCase().includes(k));
+  return `<span class="badge ${key?m[key]:'b-gray'}">${e}</span>`;
+}
 
-  // Re-render charts on tab switch (fixes canvas sizing)
-  if (name === 'resumen')    { destroyChart('chartTrimestral'); destroyChart('chartProcesos'); renderResumen(); }
-  if (name === 'becas')      { destroyChart('chartModalidad'); renderBecas(); }
-  if (name === 'membresias') { destroyChart('chartMem'); renderMembresias(); }
-  if (name === 'config') {
-    document.getElementById('url-conv').value = URLS.conv;
-    document.getElementById('url-mis').value  = URLS.mis;
-    document.getElementById('url-don').value  = URLS.don;
-    document.getElementById('url-bec').value  = URLS.bec;
-    document.getElementById('url-mem').value  = URLS.mem;
+function kpi(label, val, sub, type='', icon='') {
+  return `<div class="kpi ${type}" style="cursor:default">
+    <div class="kpi-label">${label}</div>
+    <div class="kpi-value">${val}</div>
+    ${sub?`<div class="kpi-sub">${sub}</div>`:''}
+    ${icon?`<div class="kpi-icon">${icon}</div>`:''}
+  </div>`;
+}
+
+function dc(id) { if(charts[id]){charts[id].destroy();delete charts[id];} }
+
+// ══ RESUMEN ══
+function renderResumen() {
+  const conv = filterByTrim(DATA.conv,'trimestre')||DATA.conv;
+  const mis  = filterByTrim(DATA.mis);
+  const don  = filterByTrim(DATA.don);
+  const bec  = filterByTrim(DATA.bec);
+
+  const totalPac   = DATA.mis.reduce((s,r)=>s+(parseInt(r.n_pacientes_atendidos)||0),0);
+  const totalProf  = DATA.mis.reduce((s,r)=>s+(parseInt(r.n_profesionales)||0),0);
+  const totalBenef = DATA.bec.reduce((s,r)=>s+(parseInt(r.n_beneficiados)||0),0);
+  const totalDon   = DATA.don.reduce((s,r)=>s+(parseFloat(r.valor_usd)||0),0);
+  const totalMem   = DATA.mem.reduce((s,r)=>s+(parseFloat(r.costo_anual_usd)||0),0);
+
+  document.getElementById('kpis-resumen').innerHTML =
+    kpi('Convenios suscritos', DATA.conv.length, '2026', '', '📋') +
+    kpi('Misiones ejecutadas', DATA.mis.length, 'humanitarias', '', '🌍') +
+    kpi('Pacientes atendidos', totalPac, 'por misiones', 'green', '🏥') +
+    kpi('Beneficiados becas', totalBenef||'—', 'personas capacitadas', 'green', '🎓') +
+    kpi('Donaciones recibidas', DATA.don.length, `USD ${totalDon.toLocaleString()}`, 'gold', '🎁') +
+    kpi('Membresías activas', DATA.mem.length, `USD ${totalMem.toLocaleString()} / año`, '', '🏛') +
+    kpi('Profesionales enviados', totalProf, 'voluntarios en misiones', '', '👨‍⚕️');
+
+  // Gráfico trimestral
+  dc('chartTrim');
+  charts.chartTrim = new Chart(document.getElementById('chartTrim'), {
+    type: 'bar',
+    data: {
+      labels: ['T1 Ene–Mar','T2 Abr–Jun','T3 Jul–Sep','T4 Oct–Dic'],
+      datasets: [{
+        label: 'Actividades',
+        data: [20,6,3,3],
+        backgroundColor: ['#1B6CA8','#1B6CA8','#B5D4F0','#B5D4F0'],
+        borderRadius: 6, borderSkipped: false,
+      }]
+    },
+    options: {
+      responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{display:false} },
+      scales:{
+        y:{beginAtZero:true, grid:{color:'#F0F4FA'}, ticks:{color:'#667A90',font:{size:10}}},
+        x:{grid:{display:false}, ticks:{color:'#0B1E35',font:{size:10,weight:'bold'}}}
+      }
+    }
+  });
+
+  // Dona procesos
+  dc('chartProcesos');
+  charts.chartProcesos = new Chart(document.getElementById('chartProcesos'), {
+    type: 'doughnut',
+    data: {
+      labels: ['Convenios','Misiones','Donaciones','Becas','Membresías'],
+      datasets:[{
+        data:[DATA.conv.length,DATA.mis.length,DATA.don.length,DATA.bec.length,DATA.mem.length],
+        backgroundColor:['#0B1E35','#1B6CA8','#3B9EE0','#00C9A7','#F0A500'],
+        borderWidth:0
+      }]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false, cutout:'65%',
+      plugins:{
+        legend:{position:'right',labels:{font:{size:11},color:'#0D1B2A',boxWidth:10,padding:8}}
+      }
+    }
+  });
+
+  // Timeline visual
+  const tqs = [
+    {label:'T1 · Ene–Mar', n:20, cls:'done'},
+    {label:'T2 · Abr–Jun', n:6,  cls:'done'},
+    {label:'T3 · Jul–Sep', n:3,  cls:''},
+    {label:'T4 · Oct–Dic', n:3,  cls:''},
+  ];
+  document.getElementById('trim-visual').innerHTML = tqs.map(q =>
+    `<div class="trim-q ${q.cls}"><span>${q.n}</span>${q.label}</div>`
+  ).join('');
+
+  // Barras de progreso
+  const procesos = [
+    {label:'Convenios', val:DATA.conv.length, max:5, color:''},
+    {label:'Misiones',  val:DATA.mis.length,  max:4, color:''},
+    {label:'Donaciones',val:DATA.don.length,  max:4, color:'green'},
+    {label:'Becas',     val:DATA.bec.length,  max:15,color:'green'},
+    {label:'Membresías',val:DATA.mem.length,  max:3, color:''},
+  ];
+  document.getElementById('progress-section').innerHTML = procesos.map(p => {
+    const pct = Math.round((p.val/p.max)*100);
+    return `<div class="progress-row">
+      <div class="progress-label">${p.label}</div>
+      <div class="progress-bar"><div class="progress-fill ${p.color}" style="width:${Math.min(pct,100)}%"></div></div>
+      <div class="progress-val">${p.val}/${p.max}</div>
+    </div>`;
+  }).join('');
+}
+
+// ══ CONVENIOS ══
+function renderConvenios() {
+  const filtE = document.getElementById('filt-conv-estado')?.value||'';
+  const filtQ = (document.getElementById('filt-conv-q')?.value||'').toLowerCase();
+  let rows = DATA.conv.filter(r =>
+    (!filtE || r.estado===filtE) &&
+    (!filtQ || (r.organismo_cooperante||'').toLowerCase().includes(filtQ) || (r.titulo||'').toLowerCase().includes(filtQ))
+  );
+
+  document.getElementById('kpis-conv').innerHTML =
+    kpi('Total convenios', DATA.conv.length, '2026', '') +
+    kpi('Vigentes', DATA.conv.filter(r=>r.estado==='Vigente').length, 'activos', 'green') +
+    kpi('Países', [...new Set(DATA.conv.map(r=>r.pais).filter(Boolean))].length, 'distintos');
+
+  document.getElementById('conv-count').textContent = `${rows.length} registro(s)`;
+
+  if (!rows.length) { document.getElementById('tbl-convenios').innerHTML = '<div class="empty">Sin registros para los filtros seleccionados</div>'; return; }
+
+  document.getElementById('tbl-convenios').innerHTML = `<table>
+    <thead><tr><th>ID</th><th>Tipo</th><th>Organismo cooperante</th><th>País</th><th>Suscripción</th><th>Vencimiento</th><th>Estado</th></tr></thead>
+    <tbody>
+    ${rows.map(r=>`<tr onclick="showModal('conv','${r.id_instrumento}')">
+      <td><span style="font-family:'DM Mono',monospace;font-size:10px;color:#667A90">${r.id_instrumento}</span></td>
+      <td style="font-size:11px;color:#667A90">${r.tipo_instrumento||''}</td>
+      <td style="font-weight:700">${r.organismo_cooperante||''}</td>
+      <td>${r.pais||''}</td>
+      <td style="font-family:'DM Mono',monospace;font-size:11px">${r.fecha_suscripcion||''}</td>
+      <td style="font-family:'DM Mono',monospace;font-size:11px">${r.fecha_vencimiento||''}</td>
+      <td>${badgeEstado(r.estado)}</td>
+    </tr>`).join('')}
+    </tbody></table>`;
+}
+
+// ══ MISIONES ══
+function renderMisiones() {
+  const mis = filterByTrim(DATA.mis);
+  const totalPac  = mis.reduce((s,r)=>s+(parseInt(r.n_pacientes_atendidos)||0),0);
+  const totalProf = mis.reduce((s,r)=>s+(parseInt(r.n_profesionales)||0),0);
+
+  document.getElementById('kpis-mis').innerHTML =
+    kpi('Misiones', mis.length, 'ejecutadas', '') +
+    kpi('Pacientes atendidos', totalPac, 'total acumulado', 'green') +
+    kpi('Profesionales', totalProf, 'voluntarios enviados', '') +
+    kpi('Tipo', 'Quirúrgica', 'modalidad predominante', 'gold');
+
+  document.getElementById('cards-misiones').innerHTML = mis.map(r=>`
+    <div class="mcard" onclick="showModal('mis','${r.id_mision}')">
+      <div class="mcard-head">
+        <span class="mcard-id">${r.id_mision} · ${r.trimestre||''}</span>
+        ${badgeEstado(r.estado)}
+      </div>
+      <div class="mcard-org">${r.fuente_cooperante||''}</div>
+      <div class="mcard-loc">📍 ${r.ipress_destino||r.red_asistencial||''}</div>
+      <div class="mcard-stats">
+        <div class="mcard-stat"><div class="mcard-num">${r.n_profesionales||0}</div><div class="mcard-lbl">Profesionales</div></div>
+        <div class="mcard-stat"><div class="mcard-num">${r.n_pacientes_atendidos||0}</div><div class="mcard-lbl">Pacientes</div></div>
+        <div class="mcard-stat" style="text-align:left;flex:1;padding-left:12px;border-left:1px solid #E8EEF8">
+          <div style="font-size:10px;color:#667A90">Período</div>
+          <div style="font-size:11px;font-weight:700;color:#0B1E35;margin-top:2px">${r.fecha_inicio} – ${r.fecha_fin}</div>
+        </div>
+      </div>
+    </div>`).join('') || '<div class="empty">Sin misiones para este filtro</div>';
+
+  dc('chartMis');
+  charts.chartMis = new Chart(document.getElementById('chartMis'), {
+    type: 'bar',
+    data: {
+      labels: mis.map(r=>r.id_mision||''),
+      datasets: [
+        {label:'Profesionales', data:mis.map(r=>parseInt(r.n_profesionales)||0), backgroundColor:'#1B6CA8', borderRadius:5},
+        {label:'Pacientes',     data:mis.map(r=>parseInt(r.n_pacientes_atendidos)||0), backgroundColor:'#00C9A7', borderRadius:5},
+      ]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{display:false}},
+      scales:{
+        y:{beginAtZero:true, grid:{color:'#F0F4FA'}, ticks:{font:{size:10},color:'#667A90'}},
+        x:{grid:{display:false}, ticks:{font:{size:10},color:'#0B1E35'}}
+      }
+    }
+  });
+}
+
+// ══ DONACIONES ══
+function renderDonaciones() {
+  const don = filterByTrim(DATA.don);
+  const total = don.reduce((s,r)=>s+(parseFloat(r.valor_usd)||0),0);
+
+  document.getElementById('kpis-don').innerHTML =
+    kpi('Donaciones', don.length, '2026', '') +
+    kpi('Valor total', 'USD '+total.toLocaleString(), 'acumulado 2026', 'green') +
+    kpi('Bienes distintos', [...new Set(don.map(r=>r.tipo_bien).filter(Boolean))].length, 'tipos de bien');
+
+  document.getElementById('cards-don').innerHTML = don.map(r=>`
+    <div class="don-card" onclick="showModal('don','${r.id_donacion}')">
+      <div class="don-org">${r.fuente_cooperante||''}</div>
+      <div class="don-tipo">${r.tipo_bien||''} · ${r.especificacion||''}</div>
+      <div class="don-value">USD ${parseFloat(r.valor_usd||0).toLocaleString()}</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px">
+        <span style="font-size:10px;color:#667A90">${r.fecha||''} · ${r.red_beneficiada||''}</span>
+        ${badgeEstado(r.estado)}
+      </div>
+    </div>`).join('') || '<div class="empty">Sin donaciones para este filtro</div>';
+
+  document.getElementById('tbl-don').innerHTML = don.length ? `<table>
+    <thead><tr><th>ID</th><th>Fuente cooperante</th><th>Tipo</th><th>Especificación</th><th>Fecha</th><th>Red</th><th>Valor (USD)</th><th>Estado</th></tr></thead>
+    <tbody>${don.map(r=>`<tr onclick="showModal('don','${r.id_donacion}')">
+      <td><span style="font-family:'DM Mono',monospace;font-size:10px;color:#667A90">${r.id_donacion}</span></td>
+      <td style="font-weight:700">${r.fuente_cooperante||''}</td>
+      <td>${r.tipo_bien||''}</td>
+      <td style="max-width:160px;white-space:normal;font-size:11px">${r.especificacion||''}</td>
+      <td style="font-family:'DM Mono',monospace;font-size:11px">${r.fecha||''}</td>
+      <td>${r.red_beneficiada||''}</td>
+      <td style="font-weight:700;color:#0B1E35;font-family:'DM Mono',monospace">${parseFloat(r.valor_usd||0).toLocaleString()}</td>
+      <td>${badgeEstado(r.estado)}</td>
+    </tr>`).join('')}</tbody></table>` : '';
+}
+
+// ══ BECAS ══
+function renderBecas() {
+  const filtE = document.getElementById('filt-bec-estado')?.value||'';
+  const filtM = document.getElementById('filt-bec-modal')?.value||'';
+  const filtO = document.getElementById('filt-bec-org')?.value||'';
+  const filtQ = (document.getElementById('filt-bec-q')?.value||'').toLowerCase();
+
+  let rows = filterByTrim(DATA.bec);
+  rows = rows.filter(r =>
+    (!filtE || r.estado===filtE) &&
+    (!filtM || r.modalidad===filtM) &&
+    (!filtO || r.organismo_oferente===filtO) &&
+    (!filtQ || (r.nombre||'').toLowerCase().includes(filtQ))
+  );
+
+  const totalH = DATA.bec.reduce((s,r)=>s+(parseFloat(r.horas)||0),0);
+  const totalB = DATA.bec.reduce((s,r)=>s+(parseInt(r.n_beneficiados)||0),0);
+  const cerradas = DATA.bec.filter(r=>r.estado==='Cerrada').length;
+  const abiertas = DATA.bec.filter(r=>r.estado==='Abierta').length;
+
+  document.getElementById('kpis-bec').innerHTML =
+    kpi('Total becas', DATA.bec.length, '2026', '') +
+    kpi('Beneficiados', totalB||'—', 'personas capacitadas', 'green') +
+    kpi('Horas formación', totalH.toLocaleString(), 'total acumulado', 'gold') +
+    kpi('Cerradas', cerradas, 'completadas', 'green') +
+    kpi('Abiertas', abiertas, 'en curso', 'danger');
+
+  document.getElementById('bec-count').textContent = `${rows.length} registro(s) filtrados`;
+
+  document.getElementById('tbl-becas').innerHTML = rows.length ? `<table>
+    <thead><tr><th>ID</th><th>Modalidad</th><th>Nombre</th><th>Organismo</th><th>Horas</th><th>Beneficiados</th><th>Cierre</th><th>Estado</th></tr></thead>
+    <tbody>${rows.map(r=>`<tr onclick="showModal('bec','${r.id_beca}')">
+      <td><span style="font-family:'DM Mono',monospace;font-size:10px;color:#667A90">${r.id_beca}</span></td>
+      <td><span class="badge b-blue">${r.modalidad||''}</span></td>
+      <td style="max-width:200px;white-space:normal;font-size:11px;font-weight:700">${r.nombre||''}</td>
+      <td>${r.organismo_oferente||''}</td>
+      <td style="text-align:right;font-family:'DM Mono',monospace">${r.horas||''}</td>
+      <td style="text-align:center;font-weight:700;color:#0B1E35">${r.n_beneficiados||'—'}</td>
+      <td style="font-family:'DM Mono',monospace;font-size:11px">${r.fecha_cierre||''}</td>
+      <td>${badgeEstado(r.estado)}</td>
+    </tr>`).join('')}</tbody></table>` :
+    '<div class="empty">Sin registros para los filtros seleccionados</div>';
+
+  const modalCount = {};
+  DATA.bec.forEach(r=>{ modalCount[r.modalidad]=(modalCount[r.modalidad]||0)+1; });
+  dc('chartModal');
+  charts.chartModal = new Chart(document.getElementById('chartModal'), {
+    type:'bar',
+    data:{ labels:Object.keys(modalCount), datasets:[{data:Object.values(modalCount),backgroundColor:'#1B6CA8',borderRadius:5}] },
+    options:{ indexAxis:'y', responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{ x:{grid:{color:'#F0F4FA'},ticks:{font:{size:10},color:'#667A90'}}, y:{grid:{display:false},ticks:{font:{size:10},color:'#0B1E35'}} } }
+  });
+
+  const orgCount = {};
+  DATA.bec.forEach(r=>{ orgCount[r.organismo_oferente]=(orgCount[r.organismo_oferente]||0)+1; });
+  dc('chartOrg');
+  charts.chartOrg = new Chart(document.getElementById('chartOrg'), {
+    type:'doughnut',
+    data:{ labels:Object.keys(orgCount), datasets:[{data:Object.values(orgCount),backgroundColor:['#1B6CA8','#00C9A7'],borderWidth:0}] },
+    options:{ responsive:true, maintainAspectRatio:false, cutout:'55%', plugins:{ legend:{position:'right',labels:{font:{size:11},color:'#0D1B2A',boxWidth:10,padding:6}} } }
+  });
+}
+
+// ══ MEMBRESÍAS ══
+function renderMembresias() {
+  const total = DATA.mem.reduce((s,r)=>s+(parseFloat(r.costo_anual_usd)||0),0);
+
+  document.getElementById('kpis-mem').innerHTML =
+    kpi('Membresías activas', DATA.mem.length, 'organismos internacionales', '') +
+    kpi('Inversión anual', 'USD '+total.toLocaleString(), 'costo total 2026', 'gold') +
+    kpi('Cobertura', 'Global', 'AISS · América · Iberoamérica', 'green') +
+    kpi('Más antigua', '1942', 'CISS — Miembro Fundador');
+
+  document.getElementById('cards-mem').innerHTML = DATA.mem.map(r=>`
+    <div class="mem-card" onclick="showModal('mem','${r.id_membresia}')">
+      <div>
+        <div class="mem-name">${r.organismo||''}</div>
+        <div class="mem-meta">${r.tipo_membresia||''} · ${r.pais_sede||''} · desde ${r.anio_suscripcion||''}</div>
+        <div style="margin-top:6px">${badgeEstado(r.estado)}</div>
+      </div>
+      <div>
+        <div class="mem-cost">USD ${parseFloat(r.costo_anual_usd||0).toLocaleString()}</div>
+        <div class="mem-cost-label">por año</div>
+      </div>
+    </div>`).join('');
+
+  dc('chartMem');
+  charts.chartMem = new Chart(document.getElementById('chartMem'), {
+    type:'doughnut',
+    data:{
+      labels:DATA.mem.map(r=>r.organismo||r.id_membresia),
+      datasets:[{data:DATA.mem.map(r=>parseFloat(r.costo_anual_usd)||0),backgroundColor:['#0B1E35','#1B6CA8','#3B9EE0'],borderWidth:0}]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false, cutout:'55%',
+      plugins:{
+        legend:{position:'bottom',labels:{font:{size:11},color:'#0D1B2A',boxWidth:10,padding:10}},
+        tooltip:{callbacks:{label:ctx=>' USD '+ctx.raw.toLocaleString()}}
+      }
+    }
+  });
+}
+
+// ══ MODAL ══
+function showModal(type, id) {
+  let r, title, body='';
+
+  if (type==='conv') {
+    r = DATA.conv.find(x=>x.id_instrumento===id);
+    if(!r) return;
+    title = r.organismo_cooperante||r.titulo||'Convenio';
+    body = `
+      <div class="modal-grid" style="margin-bottom:16px">
+        <div class="modal-field"><div class="modal-field-label">Tipo de instrumento</div><div class="modal-field-value">${r.tipo_instrumento||'—'}</div></div>
+        <div class="modal-field"><div class="modal-field-label">País</div><div class="modal-field-value">${r.pais||'—'}</div></div>
+        <div class="modal-field"><div class="modal-field-label">Fecha suscripción</div><div class="modal-field-value">${r.fecha_suscripcion||'—'}</div></div>
+        <div class="modal-field"><div class="modal-field-label">Fecha vencimiento</div><div class="modal-field-value">${r.fecha_vencimiento||'—'}</div></div>
+      </div>
+      <div class="modal-field"><div class="modal-field-label">Estado</div><div class="modal-field-value">${badgeEstado(r.estado)}</div></div>
+      <div class="modal-field"><div class="modal-field-label">Red asistencial</div><div class="modal-field-value">${r.red_asistencial||'—'}</div></div>
+      <div class="modal-field"><div class="modal-field-label">Descripción / Alcance</div><div class="modal-field-value" style="color:#667A90">${r.descripcion||'—'}</div></div>
+      ${r.monto_comprometido?`<div class="modal-field"><div class="modal-field-label">Monto comprometido</div><div class="modal-field-value" style="font-family:'DM Mono',monospace">USD ${parseFloat(r.monto_comprometido).toLocaleString()}</div></div>`:''}`;
+  }
+
+  else if (type==='mis') {
+    r = DATA.mis.find(x=>x.id_mision===id);
+    if(!r) return;
+    title = r.fuente_cooperante||'Misión humanitaria';
+    body = `
+      <div class="modal-grid" style="margin-bottom:16px">
+        <div class="modal-stat"><div class="modal-stat-num">${r.n_profesionales||0}</div><div class="modal-stat-label">Profesionales</div></div>
+        <div class="modal-stat"><div class="modal-stat-num">${r.n_pacientes_atendidos||0}</div><div class="modal-stat-label">Pacientes</div></div>
+      </div>
+      <div class="modal-grid">
+        <div class="modal-field"><div class="modal-field-label">Tipo</div><div class="modal-field-value">${r.tipo_intervencion||'—'}</div></div>
+        <div class="modal-field"><div class="modal-field-label">Trimestre</div><div class="modal-field-value">${r.trimestre||'—'}</div></div>
+        <div class="modal-field"><div class="modal-field-label">Inicio</div><div class="modal-field-value">${r.fecha_inicio||'—'}</div></div>
+        <div class="modal-field"><div class="modal-field-label">Fin</div><div class="modal-field-value">${r.fecha_fin||'—'}</div></div>
+      </div>
+      <div class="modal-field"><div class="modal-field-label">Red asistencial</div><div class="modal-field-value">${r.red_asistencial||'—'}</div></div>
+      <div class="modal-field"><div class="modal-field-label">IPRESS destino</div><div class="modal-field-value">${r.ipress_destino||'—'}</div></div>
+      <div class="modal-field"><div class="modal-field-label">Línea de acción</div><div class="modal-field-value" style="color:#667A90">${r.linea_accion||'—'}</div></div>
+      <div class="modal-field"><div class="modal-field-label">Estado</div><div class="modal-field-value">${badgeEstado(r.estado)}</div></div>`;
+  }
+
+  else if (type==='don') {
+    r = DATA.don.find(x=>x.id_donacion===id);
+    if(!r) return;
+    title = r.fuente_cooperante||'Donación';
+    body = `
+      <div class="modal-stat" style="margin-bottom:16px;text-align:center">
+        <div class="modal-stat-num" style="color:#00C9A7">USD ${parseFloat(r.valor_usd||0).toLocaleString()}</div>
+        <div class="modal-stat-label">Valor de la donación</div>
+      </div>
+      <div class="modal-grid">
+        <div class="modal-field"><div class="modal-field-label">Tipo de bien</div><div class="modal-field-value">${r.tipo_bien||'—'}</div></div>
+        <div class="modal-field"><div class="modal-field-label">Fecha</div><div class="modal-field-value">${r.fecha||'—'}</div></div>
+      </div>
+      <div class="modal-field"><div class="modal-field-label">Especificación</div><div class="modal-field-value">${r.especificacion||'—'}</div></div>
+      <div class="modal-field"><div class="modal-field-label">Red beneficiada</div><div class="modal-field-value">${r.red_beneficiada||'—'}</div></div>
+      <div class="modal-field"><div class="modal-field-label">Impacto asistencial</div><div class="modal-field-value" style="color:#667A90">${r.impacto_asistencial||'—'}</div></div>
+      <div class="modal-field"><div class="modal-field-label">Estado</div><div class="modal-field-value">${badgeEstado(r.estado)}</div></div>`;
+  }
+
+  else if (type==='bec') {
+    r = DATA.bec.find(x=>x.id_beca===id);
+    if(!r) return;
+    title = r.nombre||'Beca';
+    body = `
+      <div class="modal-grid" style="margin-bottom:16px">
+        <div class="modal-stat"><div class="modal-stat-num">${r.horas||0}</div><div class="modal-stat-label">Horas</div></div>
+        <div class="modal-stat"><div class="modal-stat-num">${r.n_beneficiados||'—'}</div><div class="modal-stat-label">Beneficiados</div></div>
+      </div>
+      <div class="modal-grid">
+        <div class="modal-field"><div class="modal-field-label">Modalidad</div><div class="modal-field-value"><span class="badge b-blue">${r.modalidad||'—'}</span></div></div>
+        <div class="modal-field"><div class="modal-field-label">Tipo</div><div class="modal-field-value">${r.tipo||'—'}</div></div>
+        <div class="modal-field"><div class="modal-field-label">Organismo oferente</div><div class="modal-field-value">${r.organismo_oferente||'—'}</div></div>
+        <div class="modal-field"><div class="modal-field-label">País destino</div><div class="modal-field-value">${r.pais_destino||'—'}</div></div>
+        <div class="modal-field"><div class="modal-field-label">Convocatoria</div><div class="modal-field-value">${r.fecha_convocatoria||'—'}</div></div>
+        <div class="modal-field"><div class="modal-field-label">Cierre</div><div class="modal-field-value">${r.fecha_cierre||'—'}</div></div>
+      </div>
+      <div class="modal-field"><div class="modal-field-label">Estado</div><div class="modal-field-value">${badgeEstado(r.estado)}</div></div>
+      <div class="modal-field"><div class="modal-field-label">Trimestre</div><div class="modal-field-value">${r.trimestre||'—'}</div></div>`;
+  }
+
+  else if (type==='mem') {
+    r = DATA.mem.find(x=>x.id_membresia===id);
+    if(!r) return;
+    title = r.organismo||'Membresía';
+    body = `
+      <div class="modal-stat" style="margin-bottom:16px;text-align:center">
+        <div class="modal-stat-num" style="color:#F0A500">USD ${parseFloat(r.costo_anual_usd||0).toLocaleString()}</div>
+        <div class="modal-stat-label">Costo anual</div>
+      </div>
+      <div class="modal-grid">
+        <div class="modal-field"><div class="modal-field-label">Tipo membresía</div><div class="modal-field-value">${r.tipo_membresia||'—'}</div></div>
+        <div class="modal-field"><div class="modal-field-label">Ámbito</div><div class="modal-field-value">${r.ambito||'—'}</div></div>
+        <div class="modal-field"><div class="modal-field-label">País sede</div><div class="modal-field-value">${r.pais_sede||'—'}</div></div>
+        <div class="modal-field"><div class="modal-field-label">Año suscripción</div><div class="modal-field-value">${r.anio_suscripcion||'—'}</div></div>
+      </div>
+      <div class="modal-field"><div class="modal-field-label">Estado</div><div class="modal-field-value">${badgeEstado(r.estado)}</div></div>`;
+  }
+
+  document.getElementById('modal-title').textContent = title;
+  document.getElementById('modal-id').textContent = id;
+  document.getElementById('modal-body').innerHTML = body;
+  document.getElementById('modal-overlay').classList.add('open');
+}
+
+function closeModal(e) {
+  if (!e || e.target === document.getElementById('modal-overlay')) {
+    document.getElementById('modal-overlay').classList.remove('open');
   }
 }
 
-// ════════════════════════════════════════════════════════════
-// INIT
-// ════════════════════════════════════════════════════════════
+document.addEventListener('keydown', e => { if(e.key==='Escape') closeModal(); });
+
 loadAll();
-// Auto-refresh cada 60 segundos si hay URLs configuradas
-setInterval(() => { if (URLS.conv) loadAll(); }, 60000);
+setInterval(loadAll, 60000);
 </script>
 </body>
 </html>
