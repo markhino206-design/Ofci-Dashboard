@@ -15,7 +15,7 @@
   --sw:216px;--th:52px;
 }
 body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);font-size:13px;line-height:1.5;overflow-x:hidden}
- 
+
 /* ─── SIDEBAR ─── */
 .sb{position:fixed;top:0;left:0;width:var(--sw);height:100vh;background:var(--navy);display:flex;flex-direction:column;z-index:300;overflow-y:auto}
 .sb-logo{padding:16px 16px 12px;border-bottom:1px solid rgba(255,255,255,.07)}
@@ -35,7 +35,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);font-
 .sdot{width:6px;height:6px;border-radius:50%;background:#3d5068;flex-shrink:0;transition:all .3s}
 .sdot.ok{background:var(--accent);box-shadow:0 0 0 3px rgba(0,201,167,.15)}
 .sdot.err{background:var(--red)}
- 
+
 /* ─── TOPBAR ─── */
 .tb{position:fixed;top:0;left:var(--sw);right:0;height:var(--th);background:var(--white);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 22px;gap:12px;z-index:200}
 .tb-title{font-family:'Syne',sans-serif;font-size:13px;font-weight:800;color:var(--navy);flex:1;white-space:nowrap}
@@ -49,13 +49,13 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);font-
 .btn-upd:hover{background:var(--blue)}
 .btn-upd.spin svg{animation:rot .7s linear infinite}
 @keyframes rot{to{transform:rotate(360deg)}}
- 
+
 /* ─── MAIN ─── */
 .main{margin-left:var(--sw);padding-top:var(--th);min-height:100vh}
 .page{display:none;padding:20px 22px;animation:fu .2s ease}
 .page.on{display:block}
 @keyframes fu{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
- 
+
 /* ─── KPI CARDS ─── */
 .krow{display:grid;gap:10px;margin-bottom:14px}
 .krow.k4{grid-template-columns:repeat(4,1fr)}
@@ -69,20 +69,20 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);font-
 .kc-val{font-family:'Inter',sans-serif;font-size:20px;font-weight:700;color:var(--navy);line-height:1.1;letter-spacing:-.02em}
 .kc-sub{font-size:10px;color:var(--muted);margin-top:3px}
 .kc-ico{position:absolute;right:11px;top:11px;font-size:16px;opacity:.1}
- 
+
 /* ─── LAYOUT ─── */
 .g2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
 .g31{display:grid;grid-template-columns:3fr 2fr;gap:14px;margin-bottom:14px}
 .gf{margin-bottom:14px}
 @media(max-width:960px){.g2,.g31{grid-template-columns:1fr}}
- 
+
 /* ─── CARD ─── */
 .card{background:var(--surface);border-radius:12px;border:1px solid var(--border)}
 .ch{padding:12px 16px 9px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:10px}
 .ct{font-family:'Syne',sans-serif;font-size:12px;font-weight:700;color:var(--navy)}
 .cs{font-size:10px;color:var(--muted);margin-top:1px}
 .cb{padding:14px 16px}
- 
+
 /* ─── TABLE ─── */
 .tw{overflow-x:auto}
 table{width:100%;border-collapse:collapse;font-size:11px}
@@ -91,18 +91,18 @@ tbody tr{border-bottom:1px solid rgba(0,0,0,.03);cursor:pointer;transition:backg
 tbody tr:hover{background:#EEF5FF}
 tbody td{padding:8px 11px;vertical-align:middle}
 tbody tr:last-child{border-bottom:none}
- 
+
 /* ─── BADGES ─── */
 .b{display:inline-block;padding:2px 7px;border-radius:4px;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;white-space:nowrap}
 .bg{background:#E0F7F1;color:#0A6B54}.bb{background:#E3F0FC;color:#0C4A8A}
 .ba{background:#FFF3D6;color:#8A5A00}.br{background:#FDEAEA;color:#9A1F1F}
 .bgr{background:#F0F2F5;color:#444}.bsk{background:#E3F4FF;color:#0B5E9C}
- 
+
 /* ─── INPUTS ─── */
 select,input[type="text"]{border:1px solid var(--border);border-radius:6px;padding:5px 8px;font-size:11px;font-family:'Inter',sans-serif;color:var(--text);background:var(--surface);outline:none}
 select:focus,input:focus{border-color:var(--blue)}
 .iflt{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
- 
+
 /* ─── MODAL ─── */
 .mov{display:none;position:fixed;inset:0;background:rgba(11,30,53,.5);z-index:900;align-items:center;justify-content:center;padding:16px}
 .mov.on{display:flex}
@@ -121,7 +121,7 @@ select:focus,input:focus{border-color:var(--blue)}
 .msn{font-family:'Inter',sans-serif;font-size:24px;font-weight:700;color:var(--navy);letter-spacing:-.02em}
 .msl{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-top:2px}
 .mf{margin-bottom:11px}
- 
+
 /* ─── TRIM BAR ─── */
 .trim-bar{display:grid;grid-template-columns:repeat(4,1fr);border-radius:9px;overflow:hidden;border:1px solid var(--border);margin-bottom:16px}
 .tq{text-align:center;padding:10px 6px;font-size:10px;font-weight:600;color:var(--muted);background:#F8FAFD;border-right:1px solid var(--border);cursor:pointer;transition:all .14s;user-select:none}
@@ -133,7 +133,7 @@ select:focus,input:focus{border-color:var(--blue)}
 .tq-n{display:block;font-family:'Inter',sans-serif;font-size:17px;font-weight:700;line-height:1.1;margin-bottom:2px;letter-spacing:-.02em}
 .tq-n.done-n{color:#fff}
 .tq-n.muted-n{color:#C5CFD8}
- 
+
 /* ─── PROGRESS ─── */
 .prow{display:flex;align-items:center;gap:8px;margin-bottom:8px}
 .plbl{font-size:11px;color:var(--text);min-width:110px;font-weight:500}
@@ -141,7 +141,7 @@ select:focus,input:focus{border-color:var(--blue)}
 .pfill{height:100%;border-radius:3px;background:var(--blue);transition:width .5s ease}
 .pfill.g{background:var(--accent)}.pfill.au{background:var(--gold)}.pfill.r{background:var(--red)}
 .pval{font-size:10px;color:var(--muted);min-width:36px;text-align:right;font-family:'DM Mono',monospace}
- 
+
 /* ─── POI TABLE ─── */
 .poi-bar-wrap{width:120px;height:6px;background:#E8EEF8;border-radius:3px;overflow:hidden;display:inline-block;vertical-align:middle}
 .poi-bar{height:100%;border-radius:3px;transition:width .5s ease}
@@ -149,7 +149,7 @@ select:focus,input:focus{border-color:var(--blue)}
 .poi-pct{font-family:'DM Mono',monospace;font-size:9.5px;color:var(--muted);margin-left:6px}
 .falta{font-family:'Inter',sans-serif;font-size:11px;font-weight:700;letter-spacing:-.01em}
 .falta.ok{color:var(--accent)}.falta.md{color:var(--gold)}.falta.lo{color:var(--red)}
- 
+
 /* ─── MISSION CARDS ─── */
 .mcards{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .mcard{background:var(--surface);border:1px solid var(--border);border-radius:11px;padding:14px;cursor:pointer;transition:all .17s}
@@ -162,7 +162,7 @@ select:focus,input:focus{border-color:var(--blue)}
 .mc-s{text-align:center}
 .mc-n{font-family:'Inter',sans-serif;font-size:18px;font-weight:700;color:var(--navy);letter-spacing:-.02em}
 .mc-l{font-size:8.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
- 
+
 /* ─── DON CARDS ─── */
 .dcards{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:13px}
 .dcard{border:1px solid var(--border);border-radius:10px;padding:13px;cursor:pointer;transition:all .14s;background:var(--surface)}
@@ -170,7 +170,7 @@ select:focus,input:focus{border-color:var(--blue)}
 .dc-org{font-family:'Syne',sans-serif;font-size:11px;font-weight:700;color:var(--navy);margin-bottom:2px}
 .dc-tipo{font-size:10px;color:var(--muted);margin-bottom:7px}
 .dc-val{font-family:'Inter',sans-serif;font-size:18px;font-weight:700;color:var(--accent);letter-spacing:-.02em}
- 
+
 /* ─── MEM CARDS ─── */
 .memcards{display:flex;flex-direction:column;gap:9px}
 .memcard{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;transition:all .14s}
@@ -178,7 +178,7 @@ select:focus,input:focus{border-color:var(--blue)}
 .mem-nm{font-family:'Syne',sans-serif;font-size:11px;font-weight:700;color:var(--navy)}
 .mem-mt{font-size:10px;color:var(--muted);margin-top:1px}
 .mem-cost{font-family:'Inter',sans-serif;font-size:14px;font-weight:700;color:var(--navy);text-align:right;letter-spacing:-.01em}
- 
+
 /* ─── MISC ─── */
 .sh{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px;gap:12px}
 .sh-t{font-family:'Syne',sans-serif;font-size:16px;font-weight:800;color:var(--navy)}
@@ -196,7 +196,7 @@ select:focus,input:focus{border-color:var(--blue)}
 </style>
 </head>
 <body>
- 
+
 <!-- ══ SIDEBAR ══ -->
 <aside class="sb">
   <div class="sb-logo">
@@ -206,7 +206,7 @@ select:focus,input:focus{border-color:var(--blue)}
     </div>
     <div class="sb-tag">EsSalud · Cooperación Internacional<br>Plan Operativo 2026</div>
   </div>
- 
+
   <div class="sb-grp">
     <div class="sb-grp-lbl">Visión general</div>
     <button class="ni on" onclick="nav('resumen',this)"><span class="ico">◈</span> Resumen POI</button>
@@ -229,7 +229,7 @@ select:focus,input:focus{border-color:var(--blue)}
     <button class="ni" onclick="nav('eventos',this)"><span class="ico">🌐</span> Eventos Int. <span class="nb" id="nb-evt">—</span></button>
     <button class="ni" onclick="nav('premios',this)"><span class="ico">🏆</span> Premios y Reconoc. <span class="nb" id="nb-prm">—</span></button>
   </div>
- 
+
   <div class="sb-foot">
     <div class="sync">
       <span class="sdot" id="sdot"></span>
@@ -237,7 +237,7 @@ select:focus,input:focus{border-color:var(--blue)}
     </div>
   </div>
 </aside>
- 
+
 <!-- ══ TOPBAR ══ -->
 <header class="tb">
   <div class="tb-title">POI 2026 · <em id="page-ttl">Resumen</em></div>
@@ -254,10 +254,10 @@ select:focus,input:focus{border-color:var(--blue)}
     Actualizar
   </button>
 </header>
- 
+
 <!-- ══ PAGES ══ -->
 <main class="main">
- 
+
 <!-- RESUMEN -->
 <section id="pg-resumen" class="page on">
   <div class="sh"><div><div class="sh-t">Resumen POI 2026</div><div class="sh-s">Vista consolidada · Cooperación Internacional EsSalud</div></div></div>
@@ -284,7 +284,7 @@ select:focus,input:focus{border-color:var(--blue)}
     </div>
   </div>
 </section>
- 
+
 <!-- POI ANUAL -->
 <section id="pg-poi" class="page">
   <div class="sh"><div><div class="sh-t">Avance POI Anual 2026</div><div class="sh-s">Seguimiento de metas comprometidas en el POI</div></div></div>
@@ -304,7 +304,7 @@ select:focus,input:focus{border-color:var(--blue)}
     </div>
   </div>
 </section>
- 
+
 <!-- CONVENIOS -->
 <section id="pg-convenios" class="page">
   <div class="sh">
@@ -320,7 +320,7 @@ select:focus,input:focus{border-color:var(--blue)}
     <div class="tw" id="tconv"><div class="spin-c"><div class="sring"></div>Cargando…</div></div>
   </div>
 </section>
- 
+
 <!-- MISIONES -->
 <section id="pg-misiones" class="page">
   <div class="sh"><div><div class="sh-t">Misiones humanitarias</div><div class="sh-s">Intervenciones ejecutadas · MS-01</div></div></div>
@@ -336,7 +336,7 @@ select:focus,input:focus{border-color:var(--blue)}
     </div>
   </div>
 </section>
- 
+
 <!-- DONACIONES -->
 <section id="pg-donaciones" class="page">
   <div class="sh"><div><div class="sh-t">Donaciones recibidas</div><div class="sh-s">Bienes y dispositivos · MS-01</div></div></div>
@@ -347,7 +347,7 @@ select:focus,input:focus{border-color:var(--blue)}
     <div class="tw" id="tdon"></div>
   </div>
 </section>
- 
+
 <!-- BECAS -->
 <section id="pg-becas" class="page">
   <div class="sh">
@@ -365,7 +365,7 @@ select:focus,input:focus{border-color:var(--blue)}
     <div class="tw" id="tbec"><div class="spin-c"><div class="sring"></div>Cargando…</div></div>
   </div>
 </section>
- 
+
 <!-- MEMBRESÍAS -->
 <section id="pg-membresias" class="page">
   <div class="sh"><div><div class="sh-t">Membresías activas</div><div class="sh-s">Organismos internacionales · MS-03</div></div></div>
@@ -381,7 +381,7 @@ select:focus,input:focus{border-color:var(--blue)}
     </div>
   </div>
 </section>
- 
+
 <!-- VISITAS -->
 <section id="pg-visitas" class="page">
   <div class="sh"><div><div class="sh-t">Visitas profesionales</div><div class="sh-s">Intercambios y visitas de cooperación técnica · 2026</div></div></div>
@@ -391,7 +391,7 @@ select:focus,input:focus{border-color:var(--blue)}
     <div class="tw" id="tvis"><div class="spin-c"><div class="sring"></div>Cargando…</div></div>
   </div>
 </section>
- 
+
 <!-- EVENTOS -->
 <section id="pg-eventos" class="page">
   <div class="sh"><div><div class="sh-t">Eventos internacionales</div><div class="sh-s">Participación en foros y eventos · 2026</div></div></div>
@@ -401,7 +401,7 @@ select:focus,input:focus{border-color:var(--blue)}
     <div class="tw" id="tevt"><div class="spin-c"><div class="sring"></div>Cargando…</div></div>
   </div>
 </section>
- 
+
 <!-- PREMIOS -->
 <section id="pg-premios" class="page">
   <div class="sh"><div><div class="sh-t">Premios y reconocimientos</div><div class="sh-s">Distinciones recibidas por EsSalud · 2026</div></div></div>
@@ -411,9 +411,9 @@ select:focus,input:focus{border-color:var(--blue)}
     <div class="tw" id="tprm"><div class="spin-c"><div class="sring"></div>Cargando…</div></div>
   </div>
 </section>
- 
+
 </main>
- 
+
 <!-- MODAL -->
 <div class="mov" id="mov" onclick="closeMod(event)">
   <div class="mod">
@@ -424,20 +424,21 @@ select:focus,input:focus{border-color:var(--blue)}
     <div class="mb" id="mod-b"></div>
   </div>
 </div>
- 
+
 <script>
+// Todas las hojas del archivo maestro OFCI_POI_2026_DASHBOARD
 const BASE='https://docs.google.com/spreadsheets/d/e/2PACX-1vSq4jVuP0QbyGHNYWN2dbH67bFBsmQayQ4fUEAWfkUhD6TzFwG0kPT12kGD9WpX0pGJ6ETX3va7lwqz/pub';
 const URLS={
-  conv:BASE+'?gid=0&single=true&output=csv',
-  mis: BASE+'?gid=367800634&single=true&output=csv',
-  don: BASE+'?gid=531213617&single=true&output=csv',
-  bec: BASE+'?gid=1020970410&single=true&output=csv',
-  mem: BASE+'?gid=2056939474&single=true&output=csv',
-  vis: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSq4jVuP0QbyGHNYWN2dbH67bFBsmQayQ4fUEAWfkUhD6TzFwG0kPT12kGD9WpX0pGJ6ETX3va7lwqz/pub?gid=877031401&single=true&output=csv',
-  evt: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSq4jVuP0QbyGHNYWN2dbH67bFBsmQayQ4fUEAWfkUhD6TzFwG0kPT12kGD9WpX0pGJ6ETX3va7lwqz/pub?gid=2075582924&single=true&output=csv',
-  prm: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSq4jVuP0QbyGHNYWN2dbH67bFBsmQayQ4fUEAWfkUhD6TzFwG0kPT12kGD9WpX0pGJ6ETX3va7lwqz/pub?gid=29455211&single=true&output=csv',
+  conv: BASE+'?gid=0&single=true&output=csv',
+  mis:  BASE+'?gid=367800634&single=true&output=csv',
+  don:  BASE+'?gid=531213617&single=true&output=csv',
+  bec:  BASE+'?gid=1020970410&single=true&output=csv',
+  mem:  BASE+'?gid=2056939474&single=true&output=csv',
+  vis:  BASE+'?gid=877031401&single=true&output=csv',
+  evt:  BASE+'?gid=2075582924&single=true&output=csv',
+  prm:  BASE+'?gid=29455211&single=true&output=csv',
 };
- 
+
 const METAS=[
   {key:'convenios', label:'Convenios',           meta:6,  ico:'📋'},
   {key:'misiones',  label:'Misiones humanitarias',meta:4,  ico:'🌍'},
@@ -448,12 +449,12 @@ const METAS=[
   {key:'premios',   label:'Premios y reconoc.',    meta:2,  ico:'🏆'},
   {key:'membresias',label:'Membresías',            meta:4,  ico:'🏛'},
 ];
- 
+
 let D={conv:[],mis:[],don:[],bec:[],mem:[],vis:[],evt:[],prm:[]};
 let TRIM='all';
 let CH={};
 let CUR_PAGE='resumen';
- 
+
 // ── PARSE CSV ──
 function parseCSV(txt){
   const lines=txt.trim().split('\n');
@@ -470,7 +471,7 @@ function parseCSV(txt){
     return o;
   });
 }
- 
+
 async function fetchSheet(url,key){
   try{
     const r=await fetch(url+'&_='+Date.now());
@@ -479,7 +480,7 @@ async function fetchSheet(url,key){
     return true;
   }catch{return false;}
 }
- 
+
 async function loadAll(){
   const btn=document.getElementById('btn-upd');
   btn.classList.add('spin');
@@ -494,27 +495,42 @@ async function loadAll(){
   updateBadges();
   renderPage(CUR_PAGE);
 }
- 
+
 // ── FILTER BY TRIM ──
 // Filtros que tienen campo trimestre
 function ft(arr){
   if(TRIM==='all')return arr;
-  return arr.filter(r=>(r.trimestre||'').toUpperCase()===TRIM);
+  return arr.filter(r=>inferTrim(r)===TRIM);
 }
- 
+
 // Contar actividades por trimestre (conv+mis+don+bec)
+// Infiere trimestre de una fecha DD/MM/YYYY si no hay campo trimestre
+function inferTrim(r){
+  if(r.trimestre&&r.trimestre.trim()) return r.trimestre.trim().toUpperCase();
+  // Intentar inferir de fecha_suscripcion, fecha, fecha_inicio, fecha_convocatoria
+  const raw=r.fecha_suscripcion||r.fecha||r.fecha_inicio||r.fecha_convocatoria||'';
+  if(!raw) return '';
+  const parts=raw.split('/');
+  if(parts.length<2) return '';
+  const mes=parseInt(parts[1]);
+  if(mes>=1&&mes<=3) return 'T1';
+  if(mes>=4&&mes<=6) return 'T2';
+  if(mes>=7&&mes<=9) return 'T3';
+  return 'T4';
+}
+
 function countTrim(t){
   return [...D.conv,...D.mis,...D.don,...D.bec]
-    .filter(r=>(r.trimestre||'').toUpperCase()===t).length;
+    .filter(r=>inferTrim(r)===t).length;
 }
- 
+
 function setTrim(t,el){
   TRIM=t;
   document.querySelectorAll('.chip').forEach(c=>c.classList.remove('on'));
   el.classList.add('on');
   renderPage(CUR_PAGE);
 }
- 
+
 function updateBadges(){
   document.getElementById('nb-conv').textContent=D.conv.length;
   document.getElementById('nb-mis').textContent=D.mis.length;
@@ -525,10 +541,10 @@ function updateBadges(){
   document.getElementById('nb-evt').textContent=D.evt.length||'0';
   document.getElementById('nb-prm').textContent=D.prm.length||'0';
 }
- 
+
 // ── NAVIGATION ──
 const PAGE_TITLES={resumen:'Resumen POI',poi:'Avance POI Anual',convenios:'Convenios',misiones:'Misiones',donaciones:'Donaciones',becas:'Becas y Pasantías',membresias:'Membresías',visitas:'Visitas Profesionales',eventos:'Eventos Internacionales',premios:'Premios y Reconocimientos'};
- 
+
 function nav(name,el){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
   document.querySelectorAll('.ni').forEach(n=>n.classList.remove('on'));
@@ -538,12 +554,12 @@ function nav(name,el){
   CUR_PAGE=name;
   renderPage(name);
 }
- 
+
 function renderPage(name){
   const R={resumen:rResumen,poi:rPOI,convenios:rConvenios,misiones:rMisiones,donaciones:rDonaciones,becas:rBecas,membresias:rMembresias,visitas:rVisitas,eventos:rEventos,premios:rPremios};
   if(R[name])R[name]();
 }
- 
+
 // ── HELPERS ──
 function bs(e){
   if(!e)return'';
@@ -555,43 +571,43 @@ function kc(lbl,val,sub,cls='',ico=''){
   return`<div class="kc ${cls}"><div class="kc-ico">${ico}</div><div class="kc-lbl">${lbl}</div><div class="kc-val">${val}</div>${sub?`<div class="kc-sub">${sub}</div>`:''}</div>`;
 }
 function dc(id){if(CH[id]){CH[id].destroy();delete CH[id];}}
- 
+
 // ── RESUMEN ──
 function rResumen(){
   const conv=ft(D.conv);
   const mis=ft(D.mis);
   const don=ft(D.don);
   const bec=ft(D.bec);
- 
+
   const totalPac=mis.reduce((s,r)=>s+(parseInt(r.n_pacientes_atendidos)||0),0);
   const totalProf=mis.reduce((s,r)=>s+(parseInt(r.n_profesionales)||0),0);
   const totalBenef=D.bec.reduce((s,r)=>s+(parseInt(r.n_beneficiados)||0),0);
   const totalDon=don.reduce((s,r)=>s+(parseFloat(r.valor_usd)||0),0);
   const totalMem=D.mem.reduce((s,r)=>s+(parseFloat(r.costo_anual_usd)||0),0);
   const totalH=D.bec.reduce((s,r)=>s+(parseFloat(r.horas)||0),0);
- 
+
   const trimLabel=TRIM==='all'?'Todos los trimestres':TRIM;
- 
+
   document.getElementById('kr1').innerHTML=
     kc('Convenios suscritos',conv.length,trimLabel,'','📋')+
     kc('Misiones ejecutadas',mis.length,trimLabel,'','🌍')+
     kc('Pacientes atendidos',totalPac,'por misiones','g','🏥')+
     kc('Becados',totalBenef||'—','personas capacitadas','g','🎓')+
     kc('Donaciones',don.length,'USD '+totalDon.toLocaleString(),'au','🎁');
- 
+
   document.getElementById('kr2').innerHTML=
     kc('Membresías activas',D.mem.length,'USD '+totalMem.toLocaleString()+'/año','','')+
     kc('Profesionales enviados',totalProf,'en misiones','','')+
     kc('Horas de formación',totalH.toLocaleString(),'total becas','au','')+
     kc('Países cooperantes',[...new Set(D.conv.map(r=>r.pais).filter(Boolean))].length,'distintos','','');
- 
+
   // Calcular conteos por trimestre dinámicamente
   const tCounts={T1:0,T2:0,T3:0,T4:0};
   [...D.conv,...D.mis,...D.don,...D.bec].forEach(r=>{
-    const t=(r.trimestre||'').toUpperCase();
+    const t=inferTrim(r);
     if(tCounts[t]!==undefined)tCounts[t]++;
   });
- 
+
   // Datos del gráfico según filtro
   let chartData,chartLabels;
   if(TRIM==='all'){
@@ -601,19 +617,19 @@ function rResumen(){
   } else {
     const allInTrim=[...D.conv,...D.mis,...D.don,...D.bec].filter(r=>(r.trimestre||'').toUpperCase()===TRIM);
     const byProc={Convenios:0,Misiones:0,Donaciones:0,Becas:0};
-    D.conv.filter(r=>(r.trimestre||'').toUpperCase()===TRIM).forEach(()=>byProc.Convenios++);
-    D.mis.filter(r=>(r.trimestre||'').toUpperCase()===TRIM).forEach(()=>byProc.Misiones++);
-    D.don.filter(r=>(r.trimestre||'').toUpperCase()===TRIM).forEach(()=>byProc.Donaciones++);
-    D.bec.filter(r=>(r.trimestre||'').toUpperCase()===TRIM).forEach(()=>byProc.Becas++);
+    D.conv.filter(r=>inferTrim(r)===TRIM).forEach(()=>byProc.Convenios++);
+    D.mis.filter(r=>inferTrim(r)===TRIM).forEach(()=>byProc.Misiones++);
+    D.don.filter(r=>inferTrim(r)===TRIM).forEach(()=>byProc.Donaciones++);
+    D.bec.filter(r=>inferTrim(r)===TRIM).forEach(()=>byProc.Becas++);
     chartLabels=Object.keys(byProc);
     chartData=Object.values(byProc);
     document.getElementById('trim-chart-sub').textContent='Desglose por proceso · '+TRIM;
   }
- 
+
   const barColors=TRIM==='all'
     ?['#0B1E35','#1A6CB0','#8EB8DA','#C5D9EC']
     :['#0B1E35','#1A6CB0','#00C9A7','#F0A500'];
- 
+
   dc('cTrim');
   CH.cTrim=new Chart(document.getElementById('cTrim'),{
     type:'bar',
@@ -633,7 +649,7 @@ function rResumen(){
       }
     }
   });
- 
+
   // Dona — siempre total, no filtrada
   const procCols=['#0B1E35','#1A6CB0','#3B9EE0','#00C9A7','#F0A500'];
   const procLabs=['Convenios','Misiones','Donaciones','Becas','Membresías'];
@@ -647,7 +663,7 @@ function rResumen(){
     options:{responsive:true,maintainAspectRatio:false,cutout:'66%',
       plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>` ${ctx.label}: ${ctx.raw}`}}}}
   });
- 
+
   // Trim visual bar — clicable
   const tqDefs=[
     {t:'T1',label:'T1 · Ene–Mar',n:tCounts.T1,done:true},
@@ -663,7 +679,7 @@ function rResumen(){
       <span class="${nCls}">${q.n}</span>${q.label}
     </div>`;
   }).join('');
- 
+
   // Progress rows
   const procs2=[
     {l:'Convenios',v:D.conv.length,m:6},
@@ -682,7 +698,7 @@ function rResumen(){
     </div>`;
   }).join('');
 }
- 
+
 function setTrimFromBar(t){
   // Toggle: si ya está seleccionado, vuelve a todos
   const newTrim=TRIM===t?'all':t;
@@ -691,7 +707,7 @@ function setTrimFromBar(t){
   document.getElementById(newTrim==='all'?'chip-all':'chip-'+newTrim).classList.add('on');
   rResumen();
 }
- 
+
 // ── POI ANUAL ──
 function rPOI(){
   const ej={
@@ -702,13 +718,13 @@ function rPOI(){
   const completos=METAS.filter(m=>ej[m.key]>=m.meta).length;
   const enCurso=METAS.filter(m=>ej[m.key]>0&&ej[m.key]<m.meta).length;
   const pendientes=METAS.filter(m=>ej[m.key]===0).length;
- 
+
   document.getElementById('kpoi').innerHTML=
     kc('Metas completadas',completos,'de '+METAS.length+' totales','g')+
     kc('En curso',enCurso,'con avance parcial','au')+
     kc('Sin iniciar',pendientes,'pendientes','r')+
     kc('Becas otorgadas',ej.becas,'personas beneficiadas','g');
- 
+
   const rows=METAS.map(m=>{
     const e=ej[m.key]||0;
     const pct=Math.min(Math.round((e/m.meta)*100),100);
@@ -726,11 +742,11 @@ function rPOI(){
       <td><span class="falta ${fcls}">${falta===0?'✓ Completo':'Faltan '+falta}</span></td>
     </tr>`;
   }).join('');
- 
+
   document.getElementById('tpoi').innerHTML=`
     <thead><tr><th>Proceso</th><th>Ejecutado</th><th>Meta</th><th>Progreso</th><th>Estado</th></tr></thead>
     <tbody>${rows}</tbody>`;
- 
+
   dc('cPOI');
   CH.cPOI=new Chart(document.getElementById('cPOI'),{
     type:'bar',
@@ -749,7 +765,7 @@ function rPOI(){
       }
     }
   });
- 
+
   document.getElementById('poi-semaforo').innerHTML=`
     <div style="display:flex;flex-direction:column;gap:8px">
       ${METAS.map(m=>{
@@ -764,7 +780,7 @@ function rPOI(){
       }).join('')}
     </div>`;
 }
- 
+
 // ── CONVENIOS ──
 function rConvenios(){
   const fe=document.getElementById('fc-e')?.value||'';
@@ -787,7 +803,7 @@ function rConvenios(){
       <td>${bs(r.estado)}</td>
     </tr>`).join('')}</tbody></table>`:'<div class="empty">Sin registros para los filtros seleccionados</div>';
 }
- 
+
 // ── MISIONES ──
 function rMisiones(){
   const mis=ft(D.mis);
@@ -824,7 +840,7 @@ function rMisiones(){
         x:{grid:{display:false},border:{display:false},ticks:{font:{size:10},color:'#0B1E35'}}}}
   });
 }
- 
+
 // ── DONACIONES ──
 function rDonaciones(){
   const don=ft(D.don);
@@ -856,7 +872,7 @@ function rDonaciones(){
       <td>${bs(r.estado)}</td>
     </tr>`).join('')}</tbody></table>`:'';
 }
- 
+
 // ── BECAS ──
 function rBecas(){
   const fe=document.getElementById('fb-e')?.value||'';
@@ -887,7 +903,7 @@ function rBecas(){
       <td>${bs(r.estado)}</td>
     </tr>`).join('')}</tbody></table>`:'<div class="empty">Sin registros para los filtros seleccionados</div>';
 }
- 
+
 // ── MEMBRESÍAS ──
 function rMembresias(){
   const total=D.mem.reduce((s,r)=>s+(parseFloat(r.costo_anual_usd)||0),0);
@@ -921,14 +937,14 @@ function rMembresias(){
       plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>' USD '+ctx.raw.toLocaleString()}}}}
   });
 }
- 
+
 // ── VISITAS / EVENTOS / PREMIOS ──
 function genericTable(rows,cols,emptyMsg){
   if(!rows.length)return`<div class="empty">${emptyMsg}<br><small>Agregá los datos en Google Sheets y se actualizarán aquí automáticamente.</small></div>`;
   return`<table><thead><tr>${cols.map(c=>`<th>${c.label}</th>`).join('')}</tr></thead>
     <tbody>${rows.map(r=>`<tr>${cols.map(c=>`<td ${c.style||''}>${c.fmt?c.fmt(r[c.key]):r[c.key]||'—'}</td>`).join('')}</tr>`).join('')}</tbody></table>`;
 }
- 
+
 function rVisitas(){
   const rows=ft(D.vis);
   document.getElementById('kvis').innerHTML=
@@ -944,7 +960,7 @@ function rVisitas(){
     {key:'estado',label:'Estado',fmt:e=>bs(e)},
   ],'Sin visitas registradas aún');
 }
- 
+
 function rEventos(){
   const rows=ft(D.evt);
   document.getElementById('kevt').innerHTML=
@@ -961,7 +977,7 @@ function rEventos(){
     {key:'estado',label:'Estado',fmt:e=>bs(e)},
   ],'Sin eventos registrados aún');
 }
- 
+
 function rPremios(){
   const rows=ft(D.prm);
   document.getElementById('kprm').innerHTML=
@@ -977,13 +993,13 @@ function rPremios(){
     {key:'beneficiario',label:'Beneficiario'},{key:'estado',label:'Estado',fmt:e=>bs(e)},
   ],'Sin premios registrados aún');
 }
- 
+
 // ── MODAL ──
 function openMod(type,id){
   let r,title,body='';
   const field=(lbl,val)=>`<div class="mf"><div class="mfl">${lbl}</div><div class="mfv">${val||'—'}</div></div>`;
   const stat=(n,lbl,col='')=>`<div class="mst"><div class="msn"${col?` style="color:${col}"`:''}>${n}</div><div class="msl">${lbl}</div></div>`;
- 
+
   if(type==='conv'){
     r=D.conv.find(x=>x.id_instrumento===id);if(!r)return;
     title=r.organismo_cooperante||'Convenio';
@@ -1014,19 +1030,19 @@ function openMod(type,id){
     <div class="mg">${field('Tipo membresía',r.tipo_membresia)}${field('Ámbito',r.ambito)}${field('País sede',r.pais_sede)}${field('Año suscripción',r.anio_suscripcion)}</div>
     ${field('Estado',bs(r.estado))}`;
   }
- 
+
   document.getElementById('mod-t').textContent=title;
   document.getElementById('mod-i').textContent=id;
   document.getElementById('mod-b').innerHTML=body;
   document.getElementById('mov').classList.add('on');
 }
- 
+
 function closeMod(e){
   if(!e||e.target===document.getElementById('mov'))
     document.getElementById('mov').classList.remove('on');
 }
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeMod();});
- 
+
 loadAll();
 setInterval(loadAll,60000);
 </script>
