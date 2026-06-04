@@ -5,1207 +5,998 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>OFCI · POI 2026 · EsSalud</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@400;500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 :root {
-  --navy:    #0B1E35;
-  --navy2:   #132840;
-  --blue:    #1B6CA8;
-  --sky:     #3B9EE0;
-  --accent:  #00C9A7;
-  --gold:    #F0A500;
-  --danger:  #E05263;
-  --white:   #FFFFFF;
-  --bg:      #F4F7FC;
-  --surface: #FFFFFF;
-  --border:  rgba(0,0,0,0.07);
-  --text:    #0D1B2A;
-  --muted:   #667A90;
-  --sidebar-w: 240px;
-  --topbar-h:  60px;
+  --navy:   #0B1E35;
+  --navy2:  #132840;
+  --blue:   #1B6CA8;
+  --sky:    #3B9EE0;
+  --accent: #00C9A7;
+  --gold:   #F0A500;
+  --danger: #E05263;
+  --white:  #FFFFFF;
+  --bg:     #F2F5FA;
+  --surface:#FFFFFF;
+  --border: rgba(0,0,0,0.07);
+  --text:   #0D1B2A;
+  --muted:  #667A90;
+  --sw: 220px;
+  --th: 56px;
 }
- 
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
- 
-body {
-  font-family: 'Lato', 'Segoe UI', system-ui, -apple-system, sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  min-height: 100vh;
-  overflow-x: hidden;
-}
- 
-/* ══ SIDEBAR ══ */
-.sidebar {
-  position: fixed; top: 0; left: 0;
-  width: var(--sidebar-w); height: 100vh;
-  background: var(--navy);
-  display: flex; flex-direction: column;
-  z-index: 200;
-  transition: transform .3s ease;
-}
-.sidebar-logo {
-  padding: 20px 22px 16px;
-  border-bottom: 1px solid rgba(255,255,255,.08);
-}
-.logo-badge {
-  display: inline-flex; align-items: center; gap: 8px;
-  background: var(--blue); border-radius: 8px;
-  padding: 6px 12px; margin-bottom: 8px;
-}
-.logo-badge span {
-  font-family: 'Syne', 'Segoe UI', system-ui, sans-serif;
-  font-weight: 800; font-size: 13px; color: #fff;
-  letter-spacing: .08em;
-}
-.logo-title { font-size: 11px; color: rgba(255,255,255,.45); letter-spacing: .04em; line-height: 1.4; }
- 
-.sidebar-section { padding: 16px 12px 4px; }
-.sidebar-section-label {
-  font-size: 9px; font-weight: 700; letter-spacing: .12em;
-  color: rgba(255,255,255,.3); text-transform: uppercase;
-  padding: 0 10px; margin-bottom: 4px;
-}
-.nav-item {
-  display: flex; align-items: center; gap: 10px;
-  padding: 9px 10px; border-radius: 8px;
-  cursor: pointer; transition: all .15s;
-  color: rgba(255,255,255,.55); font-size: 13px; font-weight: 400;
-  border: none; background: none; width: 100%; text-align: left;
-}
-.nav-item:hover { background: rgba(255,255,255,.07); color: #fff; }
-.nav-item.active { background: var(--blue); color: #fff; font-weight: 700; }
-.nav-item .ni-icon { font-size: 16px; width: 18px; flex-shrink: 0; }
-.nav-item .ni-badge {
-  margin-left: auto; background: var(--accent);
-  color: var(--navy); font-size: 9px; font-weight: 700;
-  padding: 2px 6px; border-radius: 10px; font-family: 'DM Mono', 'Consolas', 'Courier New', monospace;
-}
- 
-.sidebar-footer {
-  margin-top: auto; padding: 14px 16px;
-  border-top: 1px solid rgba(255,255,255,.08);
-}
-.sync-status {
-  display: flex; align-items: center; gap: 8px;
-  font-size: 11px; color: rgba(255,255,255,.35);
-}
-.sync-dot {
-  width: 7px; height: 7px; border-radius: 50%;
-  background: #555; flex-shrink: 0;
-  transition: background .3s;
-}
-.sync-dot.live { background: var(--accent); box-shadow: 0 0 0 3px rgba(0,201,167,.2); }
-.sync-dot.err  { background: var(--danger); }
-#sync-time { font-family: 'DM Mono', 'Consolas', 'Courier New', monospace; }
- 
-/* ══ TOPBAR ══ */
-.topbar {
-  position: fixed; top: 0; left: var(--sidebar-w);
-  right: 0; height: var(--topbar-h);
-  background: var(--white);
-  border-bottom: 1px solid var(--border);
-  display: flex; align-items: center;
-  padding: 0 28px; gap: 16px;
-  z-index: 100;
-}
-.topbar-title {
-  font-family: 'Syne', 'Segoe UI', system-ui, sans-serif;
-  font-size: 15px; font-weight: 700; color: var(--navy);
-  flex: 1;
-}
-.topbar-title span { color: var(--blue); }
- 
-.filter-bar { display: flex; align-items: center; gap: 8px; }
-.filter-label { font-size: 11px; color: var(--muted); font-weight: 700; letter-spacing: .04em; }
-.chip {
-  padding: 5px 12px; border-radius: 20px;
-  font-size: 11px; font-weight: 700; cursor: pointer;
-  border: 1.5px solid var(--border); background: transparent;
-  color: var(--muted); transition: all .15s; font-family: 'Lato', 'Segoe UI', system-ui, -apple-system, sans-serif;
-}
-.chip:hover { border-color: var(--blue); color: var(--blue); }
-.chip.active { background: var(--navy); border-color: var(--navy); color: #fff; }
- 
-.btn-refresh {
-  display: flex; align-items: center; gap: 6px;
-  padding: 7px 14px; border-radius: 8px;
-  background: var(--navy); color: #fff;
-  font-size: 12px; font-weight: 700; cursor: pointer;
-  border: none; transition: all .15s; font-family: 'Lato', 'Segoe UI', system-ui, -apple-system, sans-serif;
-}
-.btn-refresh:hover { background: var(--blue); }
-.btn-refresh.spinning svg { animation: spin .7s linear infinite; }
-@keyframes spin { to { transform: rotate(360deg); } }
- 
-/* ══ MAIN ══ */
-.main {
-  margin-left: var(--sidebar-w);
-  padding-top: var(--topbar-h);
-  min-height: 100vh;
-}
-.page { display: none; padding: 28px; animation: fadeUp .25s ease; }
-.page.active { display: block; }
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(10px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
- 
-/* ══ KPI GRID ══ */
-.kpi-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px; margin-bottom: 24px; }
-.kpi {
-  background: var(--surface); border-radius: 12px;
-  border: 1px solid var(--border); padding: 16px 18px;
-  cursor: pointer; transition: all .2s; position: relative; overflow: hidden;
-}
-.kpi::before {
-  content: ''; position: absolute; left: 0; top: 0; bottom: 0;
-  width: 3px; border-radius: 3px 0 0 3px;
-  background: var(--blue);
-}
-.kpi.green::before { background: var(--accent); }
-.kpi.gold::before  { background: var(--gold); }
-.kpi.danger::before{ background: var(--danger); }
-.kpi:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,.08); border-color: rgba(0,0,0,.12); }
-.kpi-label { font-size: 10px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
-.kpi-value { font-family: 'Syne', 'Segoe UI', system-ui, sans-serif; font-size: 26px; font-weight: 800; color: var(--navy); line-height: 1; }
-.kpi-sub { font-size: 11px; color: var(--muted); margin-top: 4px; }
-.kpi-icon { position: absolute; right: 14px; top: 14px; font-size: 20px; color: rgba(0,0,0,.07); }
- 
-/* ══ GRID LAYOUTS ══ */
-.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 18px; }
-.grid3 { display: grid; grid-template-columns: 2fr 1fr; gap: 18px; margin-bottom: 18px; }
-.grid-full { margin-bottom: 18px; }
-@media(max-width:900px) { .grid2,.grid3 { grid-template-columns: 1fr; } }
- 
-/* ══ CARD ══ */
-.card {
-  background: var(--surface); border-radius: 14px;
-  border: 1px solid var(--border);
-}
-.card-head {
-  padding: 16px 20px 12px;
-  border-bottom: 1px solid var(--border);
-  display: flex; align-items: center; justify-content: space-between;
-}
-.card-title { font-family: 'Syne', 'Segoe UI', system-ui, sans-serif; font-size: 13px; font-weight: 700; color: var(--navy); }
-.card-sub { font-size: 11px; color: var(--muted); margin-top: 2px; }
-.card-body { padding: 18px 20px; }
-.card-actions { display: flex; gap: 8px; align-items: center; }
- 
-/* ══ TABLE ══ */
-.tbl-wrap { overflow-x: auto; }
-table { width: 100%; border-collapse: collapse; font-size: 12px; }
-thead th {
-  background: #F8FAFD; color: var(--navy);
-  font-weight: 700; font-size: 10px; letter-spacing: .07em;
-  text-transform: uppercase; padding: 10px 14px;
-  text-align: left; white-space: nowrap;
-  border-bottom: 1px solid var(--border);
-}
-tbody tr {
-  border-bottom: 1px solid rgba(0,0,0,.04);
-  cursor: pointer; transition: background .1s;
-}
-tbody tr:hover { background: #F0F6FF; }
-tbody td { padding: 10px 14px; vertical-align: middle; }
-tbody tr:last-child { border-bottom: none; }
- 
-/* ══ BADGES ══ */
-.badge {
-  display: inline-block; padding: 3px 9px; border-radius: 5px;
-  font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em;
-}
-.b-green  { background: #E0F7F1; color: #0A6B54; }
-.b-blue   { background: #E3F0FC; color: #0C4A8A; }
-.b-amber  { background: #FFF3D6; color: #8A5A00; }
-.b-red    { background: #FDEAEA; color: #9A1F1F; }
-.b-gray   { background: #F0F0F0; color: #444; }
-.b-sky    { background: #E3F4FF; color: #0B5E9C; }
- 
-/* ══ FILTROS INLINE ══ */
-.inline-filters { display: flex; gap: 8px; flex-wrap: wrap; }
-select, input[type="text"] {
-  border: 1px solid var(--border); border-radius: 7px;
-  padding: 6px 10px; font-size: 12px;
-  font-family: 'Lato', 'Segoe UI', system-ui, -apple-system, sans-serif; color: var(--text);
-  background: var(--surface); outline: none;
-}
-select:focus, input:focus { border-color: var(--blue); }
- 
-/* ══ MODAL ══ */
-.modal-overlay {
-  display: none; position: fixed; inset: 0;
-  background: rgba(11,30,53,.6); z-index: 1000;
-  align-items: center; justify-content: center;
-  padding: 20px;
-}
-.modal-overlay.open { display: flex; }
-.modal {
-  background: var(--white); border-radius: 18px;
-  width: 100%; max-width: 580px; max-height: 90vh;
-  overflow-y: auto; animation: modalIn .2s ease;
-}
-@keyframes modalIn {
-  from { opacity:0; transform: scale(.95); }
-  to   { opacity:1; transform: scale(1); }
-}
-.modal-head {
-  padding: 20px 24px 16px;
-  border-bottom: 1px solid var(--border);
-  display: flex; align-items: flex-start; justify-content: space-between;
-}
-.modal-title { font-family: 'Syne', 'Segoe UI', system-ui, sans-serif; font-size: 15px; font-weight: 800; color: var(--navy); }
-.modal-id { font-size: 11px; color: var(--muted); font-family: 'DM Mono', 'Consolas', 'Courier New', monospace; margin-top: 3px; }
-.modal-close {
-  background: #F4F7FC; border: none; border-radius: 8px;
-  width: 32px; height: 32px; cursor: pointer; font-size: 16px;
-  display: flex; align-items: center; justify-content: center;
-  color: var(--muted); flex-shrink: 0; margin-left: 12px;
-}
-.modal-close:hover { background: #E8EEF8; color: var(--navy); }
-.modal-body { padding: 20px 24px; }
-.modal-field { margin-bottom: 14px; }
-.modal-field-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); margin-bottom: 4px; }
-.modal-field-value { font-size: 13px; color: var(--text); line-height: 1.5; }
-.modal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-.modal-stat {
-  background: #F8FAFD; border-radius: 10px; padding: 14px 16px;
-  text-align: center;
-}
-.modal-stat-num { font-family: 'Syne', 'Segoe UI', system-ui, sans-serif; font-size: 28px; font-weight: 800; color: var(--navy); }
-.modal-stat-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; margin-top: 3px; }
- 
-/* ══ TIMELINE TRIMESTRAL ══ */
-.trim-bar { display: flex; gap: 0; border-radius: 10px; overflow: hidden; border: 1px solid var(--border); }
-.trim-q { flex: 1; text-align: center; padding: 10px 4px; font-size: 10px; font-weight: 700; color: var(--muted); background: #F8FAFD; border-right: 1px solid var(--border); }
-.trim-q:last-child { border-right: none; }
-.trim-q.done { background: var(--navy); color: #fff; }
-.trim-q.active { background: var(--blue); color: #fff; }
-.trim-q span { display: block; font-size: 18px; font-weight: 800; font-family: 'Syne', 'Segoe UI', system-ui, sans-serif; margin-bottom: 2px; }
- 
-/* ══ PROGRESO ══ */
-.progress-row { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
-.progress-label { font-size: 12px; color: var(--text); min-width: 130px; font-weight: 700; }
-.progress-bar { flex: 1; height: 8px; background: #EEF2F8; border-radius: 4px; overflow: hidden; }
-.progress-fill { height: 100%; border-radius: 4px; background: var(--blue); transition: width .6s ease; }
-.progress-fill.green { background: var(--accent); }
-.progress-val { font-size: 11px; color: var(--muted); min-width: 32px; text-align: right; font-family: 'DM Mono', 'Consolas', 'Courier New', monospace; }
- 
-/* ══ MISIÓN CARD ══ */
-.mission-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-.mcard {
-  background: var(--surface); border: 1px solid var(--border);
-  border-radius: 14px; padding: 18px; cursor: pointer;
-  transition: all .2s;
-}
-.mcard:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,.08); }
-.mcard-head { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
-.mcard-id { font-family: 'DM Mono', 'Consolas', 'Courier New', monospace; font-size: 10px; color: var(--muted); }
-.mcard-org { font-family: 'Syne', 'Segoe UI', system-ui, sans-serif; font-size: 13px; font-weight: 700; color: var(--navy); margin-bottom: 4px; }
-.mcard-loc { font-size: 11px; color: var(--muted); margin-bottom: 12px; }
-.mcard-stats { display: flex; gap: 20px; padding-top: 12px; border-top: 1px solid var(--border); }
-.mcard-stat { text-align: center; }
-.mcard-num { font-family: 'Syne', 'Segoe UI', system-ui, sans-serif; font-size: 22px; font-weight: 800; color: var(--navy); }
-.mcard-lbl { font-size: 9px; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
- 
-/* ══ MEM CARDS ══ */
-.mem-cards { display: flex; flex-direction: column; gap: 12px; }
-.mem-card {
-  background: var(--surface); border: 1px solid var(--border);
-  border-radius: 12px; padding: 14px 16px;
-  display: flex; justify-content: space-between; align-items: center;
-  cursor: pointer; transition: all .15s;
-}
-.mem-card:hover { border-color: var(--blue); background: #F8FBFF; }
-.mem-name { font-family: 'Syne', 'Segoe UI', system-ui, sans-serif; font-size: 12px; font-weight: 700; color: var(--navy); }
-.mem-meta { font-size: 11px; color: var(--muted); margin-top: 2px; }
-.mem-cost { font-family: 'Syne', 'Segoe UI', system-ui, sans-serif; font-size: 16px; font-weight: 800; color: var(--navy); text-align: right; }
-.mem-cost-label { font-size: 9px; color: var(--muted); text-align: right; }
- 
-/* ══ LOADING ══ */
-.skeleton { background: linear-gradient(90deg, #F0F4FA 25%, #E4EAF4 50%, #F0F4FA 75%); background-size: 200%; animation: shimmer 1.2s infinite; border-radius: 8px; }
-@keyframes shimmer { to { background-position: -200% 0; } }
-.spinner-center { display: flex; align-items: center; justify-content: center; padding: 40px; gap: 10px; color: var(--muted); font-size: 13px; }
-.spin-ring { width: 20px; height: 20px; border: 2px solid #E0E8F4; border-top-color: var(--blue); border-radius: 50%; animation: spin .7s linear infinite; }
- 
-/* ══ EMPTY ══ */
-.empty { text-align: center; padding: 40px; color: var(--muted); font-size: 13px; }
- 
-/* ══ SECTION HEADER ══ */
-.section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
-.section-title { font-family: 'Syne', 'Segoe UI', system-ui, sans-serif; font-size: 18px; font-weight: 800; color: var(--navy); }
-.section-sub { font-size: 12px; color: var(--muted); margin-top: 2px; }
- 
-/* ══ DON CARD ══ */
-.don-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-.don-card {
-  border: 1px solid var(--border); border-radius: 12px;
-  padding: 16px; cursor: pointer; transition: all .15s;
-  background: var(--surface);
-}
-.don-card:hover { border-color: var(--accent); background: #F4FFFB; }
-.don-org { font-family: 'Syne', 'Segoe UI', system-ui, sans-serif; font-size: 12px; font-weight: 700; color: var(--navy); margin-bottom: 4px; }
-.don-tipo { font-size: 11px; color: var(--muted); margin-bottom: 10px; }
-.don-value { font-family: 'Syne', 'Segoe UI', system-ui, sans-serif; font-size: 22px; font-weight: 800; color: var(--accent); }
-.don-value-label { font-size: 10px; color: var(--muted); }
- 
-/* ══ CHART WRAP ══ */
-.chart-wrap { position: relative; width: 100%; }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;font-size:13px}
+
+/* SIDEBAR */
+.sidebar{position:fixed;top:0;left:0;width:var(--sw);height:100vh;background:var(--navy);display:flex;flex-direction:column;z-index:200}
+.sb-logo{padding:18px 18px 14px;border-bottom:1px solid rgba(255,255,255,.08)}
+.sb-badge{display:inline-flex;align-items:center;gap:7px;background:var(--blue);border-radius:7px;padding:5px 11px;margin-bottom:7px}
+.sb-badge span{font-family:'Syne',sans-serif;font-weight:800;font-size:12px;color:#fff;letter-spacing:.07em}
+.sb-tagline{font-size:10px;color:rgba(255,255,255,.38);line-height:1.5}
+.sb-sec{padding:12px 10px 2px}
+.sb-sec-lbl{font-size:9px;font-weight:600;letter-spacing:.12em;color:rgba(255,255,255,.28);text-transform:uppercase;padding:0 8px;margin-bottom:3px}
+.nav-item{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:7px;cursor:pointer;transition:all .15s;color:rgba(255,255,255,.5);font-size:12px;font-weight:400;border:none;background:none;width:100%;text-align:left}
+.nav-item:hover{background:rgba(255,255,255,.07);color:#fff}
+.nav-item.active{background:var(--blue);color:#fff;font-weight:600}
+.nav-item .ico{font-size:14px;width:16px;flex-shrink:0}
+.nav-item .nb{margin-left:auto;background:var(--accent);color:var(--navy);font-size:9px;font-weight:700;padding:1px 6px;border-radius:8px;font-family:'DM Mono',monospace}
+.nb.warn{background:var(--gold)}
+.sb-foot{margin-top:auto;padding:12px 14px;border-top:1px solid rgba(255,255,255,.08)}
+.sync-row{display:flex;align-items:center;gap:7px;font-size:10px;color:rgba(255,255,255,.32)}
+.sdot{width:6px;height:6px;border-radius:50%;background:#555;flex-shrink:0;transition:background .3s}
+.sdot.live{background:var(--accent);box-shadow:0 0 0 3px rgba(0,201,167,.18)}
+.sdot.err{background:var(--danger)}
+
+/* TOPBAR */
+.topbar{position:fixed;top:0;left:var(--sw);right:0;height:var(--th);background:var(--white);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 24px;gap:14px;z-index:100}
+.tb-title{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:var(--navy);flex:1}
+.tb-title span{color:var(--blue)}
+.filter-bar{display:flex;align-items:center;gap:6px}
+.fl{font-size:10px;color:var(--muted);font-weight:600;letter-spacing:.05em}
+.chip{padding:4px 11px;border-radius:16px;font-size:11px;font-weight:600;cursor:pointer;border:1.5px solid var(--border);background:transparent;color:var(--muted);transition:all .15s;font-family:'Inter',sans-serif}
+.chip:hover{border-color:var(--blue);color:var(--blue)}
+.chip.active{background:var(--navy);border-color:var(--navy);color:#fff}
+.btn-ref{display:flex;align-items:center;gap:5px;padding:6px 13px;border-radius:7px;background:var(--navy);color:#fff;font-size:11px;font-weight:600;cursor:pointer;border:none;transition:all .15s;font-family:'Inter',sans-serif}
+.btn-ref:hover{background:var(--blue)}
+.btn-ref.spin svg{animation:rot .7s linear infinite}
+@keyframes rot{to{transform:rotate(360deg)}}
+
+/* MAIN */
+.main{margin-left:var(--sw);padding-top:var(--th);min-height:100vh}
+.page{display:none;padding:22px 24px;animation:fu .22s ease}
+.page.active{display:block}
+@keyframes fu{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* KPI GRID — 4 col max */
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+.kpi-grid.g3{grid-template-columns:repeat(3,1fr)}
+.kpi-grid.g5{grid-template-columns:repeat(5,1fr)}
+.kpi{background:var(--surface);border-radius:11px;border:1px solid var(--border);padding:14px 16px;position:relative;overflow:hidden;cursor:default}
+.kpi::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--blue)}
+.kpi.g::before{background:var(--accent)}
+.kpi.au::before{background:var(--gold)}
+.kpi.r::before{background:var(--danger)}
+.kpi-lbl{font-size:9px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin-bottom:7px}
+.kpi-val{font-family:'Syne',sans-serif;font-size:24px;font-weight:800;color:var(--navy);line-height:1}
+.kpi-sub{font-size:10px;color:var(--muted);margin-top:3px}
+.kpi-ico{position:absolute;right:12px;top:12px;font-size:18px;opacity:.12}
+
+/* LAYOUT */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+.g31{display:grid;grid-template-columns:2fr 1fr;gap:16px;margin-bottom:16px}
+.gfull{margin-bottom:16px}
+@media(max-width:1000px){.g2,.g31{grid-template-columns:1fr}}
+
+/* CARD */
+.card{background:var(--surface);border-radius:12px;border:1px solid var(--border)}
+.card-h{padding:14px 18px 10px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.card-t{font-family:'Syne',sans-serif;font-size:12px;font-weight:700;color:var(--navy)}
+.card-s{font-size:10px;color:var(--muted);margin-top:1px}
+.card-b{padding:16px 18px}
+
+/* TABLE */
+.tw{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:11px}
+thead th{background:#F7FAFD;color:var(--navy);font-weight:600;font-size:9px;letter-spacing:.07em;text-transform:uppercase;padding:9px 12px;text-align:left;white-space:nowrap;border-bottom:1px solid var(--border)}
+tbody tr{border-bottom:1px solid rgba(0,0,0,.035);cursor:pointer;transition:background .1s}
+tbody tr:hover{background:#EFF6FF}
+tbody td{padding:9px 12px;vertical-align:middle}
+tbody tr:last-child{border-bottom:none}
+
+/* BADGES */
+.badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.04em}
+.bg{background:#E0F7F1;color:#0A6B54}
+.bb{background:#E3F0FC;color:#0C4A8A}
+.ba{background:#FFF3D6;color:#8A5A00}
+.br{background:#FDEAEA;color:#9A1F1F}
+.bgr{background:#F0F0F0;color:#444}
+.bsk{background:#E3F4FF;color:#0B5E9C}
+
+/* FILTROS */
+select,input[type="text"]{border:1px solid var(--border);border-radius:6px;padding:5px 9px;font-size:11px;font-family:'Inter',sans-serif;color:var(--text);background:var(--surface);outline:none}
+select:focus,input:focus{border-color:var(--blue)}
+.ifilters{display:flex;gap:7px;flex-wrap:wrap;align-items:center}
+
+/* MODAL */
+.moverlay{display:none;position:fixed;inset:0;background:rgba(11,30,53,.55);z-index:1000;align-items:center;justify-content:center;padding:20px}
+.moverlay.open{display:flex}
+.modal{background:var(--white);border-radius:16px;width:100%;max-width:560px;max-height:88vh;overflow-y:auto;animation:mi .18s ease}
+@keyframes mi{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:scale(1)}}
+.mh{padding:18px 22px 14px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;justify-content:space-between}
+.mt{font-family:'Syne',sans-serif;font-size:14px;font-weight:800;color:var(--navy)}
+.mid{font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;margin-top:2px}
+.mcl{background:#F4F7FC;border:none;border-radius:7px;width:30px;height:30px;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;color:var(--muted);flex-shrink:0;margin-left:10px}
+.mcl:hover{background:#E8EEF8;color:var(--navy)}
+.mb{padding:18px 22px}
+.mfl{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:3px}
+.mfv{font-size:12px;color:var(--text);line-height:1.5}
+.mgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+.mstat{background:#F8FAFD;border-radius:9px;padding:12px 14px;text-align:center}
+.msn{font-family:'Syne',sans-serif;font-size:26px;font-weight:800;color:var(--navy)}
+.msl{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-top:2px}
+.mf{margin-bottom:12px}
+
+/* POI PROGRESS TABLE */
+.poi-table{width:100%;border-collapse:collapse}
+.poi-table th{font-size:9px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);padding:8px 12px;text-align:left;border-bottom:1px solid var(--border);background:#F7FAFD}
+.poi-table td{padding:10px 12px;border-bottom:1px solid rgba(0,0,0,.04);font-size:11px;vertical-align:middle}
+.poi-table tr:last-child td{border-bottom:none}
+.poi-bar-wrap{width:160px;height:7px;background:#EEF2F8;border-radius:4px;overflow:hidden;display:inline-block;vertical-align:middle}
+.poi-bar{height:100%;border-radius:4px;background:var(--blue);transition:width .6s ease}
+.poi-bar.done{background:var(--accent)}
+.poi-bar.warn{background:var(--gold)}
+.poi-bar.danger{background:var(--danger)}
+.poi-pct{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);margin-left:8px}
+.poi-falta{font-family:'DM Mono',monospace;font-size:11px;font-weight:600}
+.poi-falta.ok{color:var(--accent)}
+.poi-falta.warn{color:var(--gold)}
+.poi-falta.danger{color:var(--danger)}
+
+/* MISIONES */
+.mcards{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.mcard{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;cursor:pointer;transition:all .2s}
+.mcard:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.07)}
+.mc-hd{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px}
+.mc-id{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted)}
+.mc-org{font-family:'Syne',sans-serif;font-size:12px;font-weight:700;color:var(--navy);margin-bottom:3px}
+.mc-loc{font-size:10px;color:var(--muted);margin-bottom:10px}
+.mc-stats{display:flex;gap:16px;padding-top:10px;border-top:1px solid var(--border)}
+.mc-stat{text-align:center}
+.mc-num{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:var(--navy)}
+.mc-lbl{font-size:8px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+
+/* DONACIONES CARDS */
+.dcards{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+.dcard{border:1px solid var(--border);border-radius:11px;padding:14px;cursor:pointer;transition:all .15s;background:var(--surface)}
+.dcard:hover{border-color:var(--accent);background:#F4FFFB}
+.dcard-org{font-family:'Syne',sans-serif;font-size:11px;font-weight:700;color:var(--navy);margin-bottom:3px}
+.dcard-tipo{font-size:10px;color:var(--muted);margin-bottom:8px}
+.dcard-val{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:var(--accent)}
+
+/* MEM */
+.memcards{display:flex;flex-direction:column;gap:10px}
+.memcard{background:var(--surface);border:1px solid var(--border);border-radius:11px;padding:13px 15px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;transition:all .15s}
+.memcard:hover{border-color:var(--blue);background:#F8FBFF}
+.mem-nm{font-family:'Syne',sans-serif;font-size:11px;font-weight:700;color:var(--navy)}
+.mem-mt{font-size:10px;color:var(--muted);margin-top:1px}
+.mem-cost{font-family:'Syne',sans-serif;font-size:15px;font-weight:800;color:var(--navy);text-align:right}
+.mem-cl{font-size:9px;color:var(--muted);text-align:right}
+
+/* SECTION HEADER */
+.sh{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px}
+.sh-t{font-family:'Syne',sans-serif;font-size:17px;font-weight:800;color:var(--navy)}
+.sh-s{font-size:11px;color:var(--muted);margin-top:2px}
+
+/* CHART */
+.cw{position:relative;width:100%}
+
+/* TRIM BAR */
+.trim-bar{display:flex;border-radius:9px;overflow:hidden;border:1px solid var(--border)}
+.tq{flex:1;text-align:center;padding:9px 4px;font-size:9px;font-weight:700;color:var(--muted);background:#F8FAFD;border-right:1px solid var(--border)}
+.tq:last-child{border-right:none}
+.tq.done{background:var(--navy);color:#fff}
+.tq.cur{background:var(--blue);color:#fff}
+.tq span{display:block;font-size:17px;font-weight:800;font-family:'Syne',sans-serif;margin-bottom:1px}
+
+/* PROGRESS */
+.prow{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.plbl{font-size:11px;color:var(--text);min-width:120px;font-weight:600}
+.pbar{flex:1;height:7px;background:#EEF2F8;border-radius:4px;overflow:hidden}
+.pfill{height:100%;border-radius:4px;background:var(--blue);transition:width .6s ease}
+.pfill.g{background:var(--accent)}
+.pval{font-size:10px;color:var(--muted);min-width:30px;text-align:right;font-family:'DM Mono',monospace}
+
+/* LOADING */
+.skel{background:linear-gradient(90deg,#F0F4FA 25%,#E4EAF4 50%,#F0F4FA 75%);background-size:200%;animation:sh 1.2s infinite;border-radius:8px}
+@keyframes sh{to{background-position:-200% 0}}
+.spin-c{display:flex;align-items:center;justify-content:center;padding:36px;gap:8px;color:var(--muted);font-size:12px}
+.sring{width:18px;height:18px;border:2px solid #E0E8F4;border-top-color:var(--blue);border-radius:50%;animation:rot .7s linear infinite}
+.empty{text-align:center;padding:36px;color:var(--muted);font-size:12px}
+
+/* LEGEND */
+.legend{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:8px;font-size:11px;color:var(--muted)}
+.legend span{display:flex;align-items:center;gap:4px}
+.legend i{width:9px;height:9px;border-radius:2px;flex-shrink:0}
 </style>
 </head>
 <body>
- 
-<!-- ══ SIDEBAR ══ -->
+
 <aside class="sidebar">
-  <div class="sidebar-logo">
-    <div class="logo-badge">
-      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6" stroke="#fff" stroke-width="1.5"/><path d="M7 4v3l2 1.5" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/></svg>
+  <div class="sb-logo">
+    <div class="sb-badge">
+      <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><circle cx="6.5" cy="6.5" r="5.5" stroke="#fff" stroke-width="1.4"/><path d="M6.5 3.5v3l1.8 1.3" stroke="#fff" stroke-width="1.4" stroke-linecap="round"/></svg>
       <span>OFCI</span>
     </div>
-    <div class="logo-title">EsSalud · Cooperación Internacional<br>Plan Operativo 2026</div>
+    <div class="sb-tagline">EsSalud · Cooperación Internacional<br>Plan Operativo 2026</div>
   </div>
- 
-  <div class="sidebar-section">
-    <div class="sidebar-section-label">Visión general</div>
-    <button class="nav-item active" onclick="showPage('resumen', this)">
-      <span class="ni-icon">◈</span> Resumen POI
+
+  <div class="sb-sec">
+    <div class="sb-sec-lbl">Visión general</div>
+    <button class="nav-item active" onclick="showPage('resumen',this)">
+      <span class="ico">◈</span> Resumen POI
     </button>
-  </div>
- 
-  <div class="sidebar-section">
-    <div class="sidebar-section-label">Procesos MS-01</div>
-    <button class="nav-item" onclick="showPage('convenios', this)">
-      <span class="ni-icon">📋</span> Convenios
-      <span class="ni-badge" id="nb-conv">—</span>
-    </button>
-    <button class="nav-item" onclick="showPage('misiones', this)">
-      <span class="ni-icon">🌍</span> Misiones
-      <span class="ni-badge" id="nb-mis">—</span>
-    </button>
-    <button class="nav-item" onclick="showPage('donaciones', this)">
-      <span class="ni-icon">🎁</span> Donaciones
-      <span class="ni-badge" id="nb-don">—</span>
+    <button class="nav-item" onclick="showPage('poi',this)">
+      <span class="ico">📊</span> Avance POI Anual
     </button>
   </div>
- 
-  <div class="sidebar-section">
-    <div class="sidebar-section-label">Procesos MS-03</div>
-    <button class="nav-item" onclick="showPage('becas', this)">
-      <span class="ni-icon">🎓</span> Becas y Pasantías
-      <span class="ni-badge" id="nb-bec">—</span>
+
+  <div class="sb-sec">
+    <div class="sb-sec-lbl">Procesos MS-01</div>
+    <button class="nav-item" onclick="showPage('convenios',this)">
+      <span class="ico">📋</span> Convenios
+      <span class="nb" id="nb-conv">—</span>
     </button>
-    <button class="nav-item" onclick="showPage('membresias', this)">
-      <span class="ni-icon">🏛</span> Membresías
-      <span class="ni-badge" id="nb-mem">—</span>
+    <button class="nav-item" onclick="showPage('misiones',this)">
+      <span class="ico">🌍</span> Misiones
+      <span class="nb" id="nb-mis">—</span>
+    </button>
+    <button class="nav-item" onclick="showPage('donaciones',this)">
+      <span class="ico">🎁</span> Donaciones
+      <span class="nb" id="nb-don">—</span>
     </button>
   </div>
- 
-  <div class="sidebar-footer">
-    <div class="sync-status">
-      <span class="sync-dot" id="sync-dot"></span>
-      <span id="sync-time">Conectando…</span>
+
+  <div class="sb-sec">
+    <div class="sb-sec-lbl">Procesos MS-03</div>
+    <button class="nav-item" onclick="showPage('becas',this)">
+      <span class="ico">🎓</span> Becas y Pasantías
+      <span class="nb" id="nb-bec">—</span>
+    </button>
+    <button class="nav-item" onclick="showPage('membresias',this)">
+      <span class="ico">🏛</span> Membresías
+      <span class="nb" id="nb-mem">—</span>
+    </button>
+  </div>
+
+  <div class="sb-foot">
+    <div class="sync-row">
+      <span class="sdot" id="sdot"></span>
+      <span id="stime">Conectando…</span>
     </div>
   </div>
 </aside>
- 
-<!-- ══ TOPBAR ══ -->
+
 <header class="topbar">
-  <div class="topbar-title">POI 2026 · <span id="page-title">Resumen</span></div>
+  <div class="tb-title">POI 2026 · <span id="page-title">Resumen</span></div>
   <div class="filter-bar">
-    <span class="filter-label">TRIMESTRE</span>
-    <button class="chip active" onclick="setTrim('todos', this)">Todos</button>
-    <button class="chip" onclick="setTrim('T1', this)">T1</button>
-    <button class="chip" onclick="setTrim('T2', this)">T2</button>
-    <button class="chip" onclick="setTrim('T3', this)">T3</button>
-    <button class="chip" onclick="setTrim('T4', this)">T4</button>
+    <span class="fl">TRIMESTRE</span>
+    <button class="chip active" id="chip-todos" onclick="setTrim('todos',this)">Todos <span id="ct-todos"></span></button>
+    <button class="chip" id="chip-T1" onclick="setTrim('T1',this)">T1 <span id="ct-T1"></span></button>
+    <button class="chip" id="chip-T2" onclick="setTrim('T2',this)">T2 <span id="ct-T2"></span></button>
+    <button class="chip" id="chip-T3" onclick="setTrim('T3',this)">T3 <span id="ct-T3"></span></button>
+    <button class="chip" id="chip-T4" onclick="setTrim('T4',this)">T4 <span id="ct-T4"></span></button>
   </div>
-  <button class="btn-refresh" id="btn-refresh" onclick="loadAll()">
-    <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M11.5 2A6 6 0 1 0 12 6.5"/><path d="M12 1v3h-3"/></svg>
+  <button class="btn-ref" id="btn-ref" onclick="loadAll()">
+    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M10.5 2A5.5 5.5 0 1 0 11 6"/><path d="M11 1.5v3h-3"/></svg>
     Actualizar
   </button>
 </header>
- 
-<!-- ══ MAIN ══ -->
+
 <main class="main">
- 
-  <!-- ┌── RESUMEN ──┐ -->
-  <section id="page-resumen" class="page active">
-    <div class="section-header">
-      <div>
-        <div class="section-title">Resumen POI 2026</div>
-        <div class="section-sub">Vista consolidada de todos los procesos de cooperación internacional</div>
+
+<!-- ══ RESUMEN ══ -->
+<section id="page-resumen" class="page active">
+  <div class="sh">
+    <div><div class="sh-t">Resumen POI 2026</div><div class="sh-s">Vista consolidada · Cooperación Internacional EsSalud</div></div>
+  </div>
+  <div class="kpi-grid g5" id="kpis-res">
+    <div class="skel" style="height:80px"></div><div class="skel" style="height:80px"></div>
+    <div class="skel" style="height:80px"></div><div class="skel" style="height:80px"></div>
+    <div class="skel" style="height:80px"></div>
+  </div>
+  <div class="kpi-grid" id="kpis-res2">
+    <div class="skel" style="height:80px"></div><div class="skel" style="height:80px"></div>
+    <div class="skel" style="height:80px"></div><div class="skel" style="height:80px"></div>
+  </div>
+  <div class="g2">
+    <div class="card">
+      <div class="card-h"><div><div class="card-t">Actividades por trimestre</div><div class="card-s">Ejecución acumulada POI 2026</div></div></div>
+      <div class="card-b"><div class="cw" style="height:190px"><canvas id="chartTrim" role="img" aria-label="Actividades por trimestre">Gráfico.</canvas></div></div>
+    </div>
+    <div class="card">
+      <div class="card-h"><div><div class="card-t">Distribución por proceso</div></div></div>
+      <div class="card-b">
+        <div class="legend" id="leg-proc"></div>
+        <div class="cw" style="height:165px"><canvas id="chartProc" role="img" aria-label="Procesos">Gráfico.</canvas></div>
       </div>
     </div>
- 
-    <div class="kpi-grid" id="kpis-resumen">
-      <div class="skeleton" style="height:90px"></div>
-      <div class="skeleton" style="height:90px"></div>
-      <div class="skeleton" style="height:90px"></div>
-      <div class="skeleton" style="height:90px"></div>
-      <div class="skeleton" style="height:90px"></div>
+  </div>
+  <div class="card gfull">
+    <div class="card-h"><div class="card-t">Progreso de ejecución trimestral</div></div>
+    <div class="card-b">
+      <div class="trim-bar" id="trim-bar"></div>
+      <div style="margin-top:18px" id="prog-sec"></div>
     </div>
- 
-    <div class="grid2">
-      <div class="card">
-        <div class="card-head">
-          <div><div class="card-title">Actividades por trimestre</div><div class="card-sub">Ejecución acumulada POI 2026</div></div>
-        </div>
-        <div class="card-body">
-          <div class="chart-wrap" style="height:210px">
-            <canvas id="chartTrim" role="img" aria-label="Actividades por trimestre">Gráfico trimestral.</canvas>
-          </div>
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-head">
-          <div><div class="card-title">Distribución por proceso</div><div class="card-sub">Total actividades 2026</div></div>
-        </div>
-        <div class="card-body">
-          <div class="chart-wrap" style="height:210px">
-            <canvas id="chartProcesos" role="img" aria-label="Distribución por proceso">Gráfico de procesos.</canvas>
-          </div>
-        </div>
-      </div>
+  </div>
+</section>
+
+<!-- ══ POI ANUAL ══ -->
+<section id="page-poi" class="page">
+  <div class="sh">
+    <div><div class="sh-t">Avance POI Anual 2026</div><div class="sh-s">Seguimiento de metas comprometidas en el Plan Operativo Institucional</div></div>
+  </div>
+  <div class="kpi-grid" id="kpis-poi"></div>
+  <div class="card gfull">
+    <div class="card-h"><div class="card-t">Estado de metas POI 2026</div><div class="card-s">Ejecutado vs meta anual por proceso</div></div>
+    <div class="tw">
+      <table class="poi-table" id="tbl-poi"></table>
     </div>
- 
-    <div class="card grid-full">
-      <div class="card-head"><div class="card-title">Progreso de ejecución trimestral</div></div>
-      <div class="card-body">
-        <div class="trim-bar" id="trim-visual"></div>
-        <div style="margin-top:20px" id="progress-section"></div>
-      </div>
+  </div>
+  <div class="g2" style="margin-top:16px">
+    <div class="card">
+      <div class="card-h"><div class="card-t">Avance por proceso</div><div class="card-s">% completado de meta anual</div></div>
+      <div class="card-b"><div class="cw" style="height:220px"><canvas id="chartPOI" role="img" aria-label="Avance POI">Gráfico.</canvas></div></div>
     </div>
-  </section>
- 
-  <!-- ┌── CONVENIOS ──┐ -->
-  <section id="page-convenios" class="page">
-    <div class="section-header">
-      <div>
-        <div class="section-title">Instrumentos de cooperación</div>
-        <div class="section-sub">Convenios y memorandos suscritos — MS-01</div>
-      </div>
-      <div class="inline-filters">
-        <select id="filt-conv-estado" onchange="renderConvenios()">
-          <option value="">Todos los estados</option>
-          <option value="Vigente">Vigente</option>
-          <option value="Cerrado">Cerrado</option>
-          <option value="Suspendido">Suspendido</option>
-        </select>
-        <input type="text" id="filt-conv-q" placeholder="Buscar organismo…" oninput="renderConvenios()" style="width:180px">
-      </div>
+    <div class="card">
+      <div class="card-h"><div class="card-t">Resumen ejecutivo</div></div>
+      <div class="card-b" id="poi-resumen-exec"></div>
     </div>
-    <div class="kpi-grid" id="kpis-conv"></div>
-    <div class="card grid-full">
-      <div class="card-head">
-        <div><div class="card-title">Registro de convenios</div><div class="card-sub" id="conv-count"></div></div>
-      </div>
-      <div class="tbl-wrap" id="tbl-convenios"><div class="spinner-center"><div class="spin-ring"></div>Cargando…</div></div>
+  </div>
+</section>
+
+<!-- ══ CONVENIOS ══ -->
+<section id="page-convenios" class="page">
+  <div class="sh">
+    <div><div class="sh-t">Instrumentos de cooperación</div><div class="sh-s">Convenios y memorandos suscritos · MS-01</div></div>
+    <div class="ifilters">
+      <select id="filt-conv-e" onchange="renderConvenios()"><option value="">Todos los estados</option><option value="Vigente">Vigente</option><option value="Cerrado">Cerrado</option></select>
+      <input type="text" id="filt-conv-q" placeholder="Buscar organismo…" oninput="renderConvenios()" style="width:170px">
     </div>
-  </section>
- 
-  <!-- ┌── MISIONES ──┐ -->
-  <section id="page-misiones" class="page">
-    <div class="section-header">
-      <div>
-        <div class="section-title">Misiones humanitarias</div>
-        <div class="section-sub">Intervenciones ejecutadas en redes asistenciales — MS-01</div>
+  </div>
+  <div class="kpi-grid g3" id="kpis-conv"></div>
+  <div class="card gfull">
+    <div class="card-h"><div class="card-t">Registro de convenios</div><div class="card-s" id="conv-cnt"></div></div>
+    <div class="tw" id="tbl-conv"><div class="spin-c"><div class="sring"></div>Cargando…</div></div>
+  </div>
+</section>
+
+<!-- ══ MISIONES ══ -->
+<section id="page-misiones" class="page">
+  <div class="sh"><div><div class="sh-t">Misiones humanitarias</div><div class="sh-s">Intervenciones ejecutadas en redes asistenciales · MS-01</div></div></div>
+  <div class="kpi-grid" id="kpis-mis"></div>
+  <div class="g2">
+    <div id="cards-mis" class="mcards"></div>
+    <div class="card">
+      <div class="card-h"><div class="card-t">Impacto acumulado</div></div>
+      <div class="card-b">
+        <div class="legend"><span><i style="background:#1B6CA8"></i>Profesionales</span><span><i style="background:#00C9A7"></i>Pacientes</span></div>
+        <div class="cw" style="height:190px"><canvas id="chartMis" role="img" aria-label="Impacto misiones">Gráfico.</canvas></div>
       </div>
     </div>
-    <div class="kpi-grid" id="kpis-mis"></div>
-    <div class="grid2">
-      <div id="cards-misiones" class="mission-cards"></div>
-      <div class="card">
-        <div class="card-head"><div class="card-title">Impacto acumulado</div></div>
-        <div class="card-body">
-          <div class="chart-wrap" style="height:200px">
-            <canvas id="chartMis" role="img" aria-label="Impacto misiones">Gráfico impacto.</canvas>
-          </div>
-        </div>
+  </div>
+</section>
+
+<!-- ══ DONACIONES ══ -->
+<section id="page-donaciones" class="page">
+  <div class="sh"><div><div class="sh-t">Donaciones recibidas</div><div class="sh-s">Bienes y dispositivos recibidos por cooperación · MS-01</div></div></div>
+  <div class="kpi-grid g3" id="kpis-don"></div>
+  <div class="dcards" id="cards-don"></div>
+  <div class="card gfull">
+    <div class="card-h"><div class="card-t">Detalle de donaciones</div></div>
+    <div class="tw" id="tbl-don"></div>
+  </div>
+</section>
+
+<!-- ══ BECAS ══ -->
+<section id="page-becas" class="page">
+  <div class="sh">
+    <div><div class="sh-t">Becas y pasantías</div><div class="sh-s">Oportunidades de formación captadas · MS-03</div></div>
+    <div class="ifilters">
+      <select id="filt-be" onchange="renderBecas()"><option value="">Todos</option><option value="Cerrada">Cerrada</option><option value="Abierta">Abierta</option></select>
+      <select id="filt-bm" onchange="renderBecas()"><option value="">Modalidad</option><option value="Curso">Curso</option><option value="Diplomado">Diplomado</option><option value="Seminario">Seminario</option><option value="Microaprendizaje">Microaprendizaje</option></select>
+      <select id="filt-bo" onchange="renderBecas()"><option value="">Organismo</option><option value="CISS">CISS</option><option value="OISS">OISS</option></select>
+      <input type="text" id="filt-bq" placeholder="Buscar…" oninput="renderBecas()" style="width:140px">
+    </div>
+  </div>
+  <div class="kpi-grid" id="kpis-bec"></div>
+  <div class="card gfull">
+    <div class="card-h"><div class="card-t">Registro de becas</div><div class="card-s" id="bec-cnt"></div></div>
+    <div class="tw" id="tbl-bec"><div class="spin-c"><div class="sring"></div>Cargando…</div></div>
+  </div>
+</section>
+
+<!-- ══ MEMBRESÍAS ══ -->
+<section id="page-membresias" class="page">
+  <div class="sh"><div><div class="sh-t">Membresías activas</div><div class="sh-s">Organismos internacionales · MS-03</div></div></div>
+  <div class="kpi-grid g3" id="kpis-mem"></div>
+  <div class="g2">
+    <div class="memcards" id="cards-mem"></div>
+    <div class="card">
+      <div class="card-h"><div class="card-t">Inversión anual</div><div class="card-s">Distribución por organismo (USD)</div></div>
+      <div class="card-b">
+        <div class="legend" id="leg-mem"></div>
+        <div class="cw" style="height:200px"><canvas id="chartMem" role="img" aria-label="Membresías">Gráfico.</canvas></div>
       </div>
     </div>
-  </section>
- 
-  <!-- ┌── DONACIONES ──┐ -->
-  <section id="page-donaciones" class="page">
-    <div class="section-header">
-      <div>
-        <div class="section-title">Donaciones recibidas</div>
-        <div class="section-sub">Bienes y dispositivos recibidos por cooperación — MS-01</div>
-      </div>
-    </div>
-    <div class="kpi-grid" id="kpis-don"></div>
-    <div class="don-grid" id="cards-don"></div>
-    <div class="card grid-full" style="margin-top:18px">
-      <div class="card-head"><div class="card-title">Detalle de donaciones</div></div>
-      <div class="tbl-wrap" id="tbl-don"></div>
-    </div>
-  </section>
- 
-  <!-- ┌── BECAS ──┐ -->
-  <section id="page-becas" class="page">
-    <div class="section-header">
-      <div>
-        <div class="section-title">Becas y pasantías</div>
-        <div class="section-sub">Oportunidades de formación captadas — MS-03</div>
-      </div>
-      <div class="inline-filters">
-        <select id="filt-bec-estado" onchange="renderBecas()">
-          <option value="">Todos</option>
-          <option value="Cerrada">Cerrada</option>
-          <option value="Abierta">Abierta</option>
-        </select>
-        <select id="filt-bec-modal" onchange="renderBecas()">
-          <option value="">Modalidad</option>
-          <option value="Curso">Curso</option>
-          <option value="Diplomado">Diplomado</option>
-          <option value="Seminario">Seminario</option>
-          <option value="Microaprendizaje">Microaprendizaje</option>
-        </select>
-        <select id="filt-bec-org" onchange="renderBecas()">
-          <option value="">Organismo</option>
-          <option value="CISS">CISS</option>
-          <option value="OISS">OISS</option>
-        </select>
-        <input type="text" id="filt-bec-q" placeholder="Buscar…" oninput="renderBecas()" style="width:160px">
-      </div>
-    </div>
-    <div class="kpi-grid" id="kpis-bec"></div>
-    <div class="grid3">
-      <div class="card">
-        <div class="card-head">
-          <div><div class="card-title">Registro de becas</div><div class="card-sub" id="bec-count"></div></div>
-        </div>
-        <div class="tbl-wrap" id="tbl-becas"><div class="spinner-center"><div class="spin-ring"></div>Cargando…</div></div>
-      </div>
-      <div>
-        <div class="card" style="margin-bottom:14px">
-          <div class="card-head"><div class="card-title">Por modalidad</div></div>
-          <div class="card-body">
-            <div class="chart-wrap" style="height:160px">
-              <canvas id="chartModal" role="img" aria-label="Becas por modalidad">Gráfico modalidades.</canvas>
-            </div>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-head"><div class="card-title">Por organismo</div></div>
-          <div class="card-body">
-            <div class="chart-wrap" style="height:130px">
-              <canvas id="chartOrg" role="img" aria-label="Becas por organismo">Gráfico organismos.</canvas>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
- 
-  <!-- ┌── MEMBRESÍAS ──┐ -->
-  <section id="page-membresias" class="page">
-    <div class="section-header">
-      <div>
-        <div class="section-title">Membresías activas</div>
-        <div class="section-sub">Organismos internacionales — MS-03</div>
-      </div>
-    </div>
-    <div class="kpi-grid" id="kpis-mem"></div>
-    <div class="grid2">
-      <div class="mem-cards" id="cards-mem"></div>
-      <div class="card">
-        <div class="card-head"><div class="card-title">Inversión anual</div><div class="card-sub">Distribución por organismo (USD)</div></div>
-        <div class="card-body">
-          <div class="chart-wrap" style="height:240px">
-            <canvas id="chartMem" role="img" aria-label="Inversión membresías">Gráfico membresías.</canvas>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
- 
+  </div>
+</section>
+
 </main>
- 
-<!-- ══ MODAL ══ -->
-<div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
+
+<!-- MODAL -->
+<div class="moverlay" id="moverlay" onclick="closeMod(event)">
   <div class="modal" id="modal">
-    <div class="modal-head">
-      <div>
-        <div class="modal-title" id="modal-title">Detalle</div>
-        <div class="modal-id" id="modal-id"></div>
-      </div>
-      <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="mh">
+      <div><div class="mt" id="m-title"></div><div class="mid" id="m-id"></div></div>
+      <button class="mcl" onclick="closeMod()">✕</button>
     </div>
-    <div class="modal-body" id="modal-body"></div>
+    <div class="mb" id="m-body"></div>
   </div>
 </div>
- 
+
 <script>
-const BASE_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSq4jVuP0QbyGHNYWN2dbH67bFBsmQayQ4fUEAWfkUhD6TzFwG0kPT12kGD9WpX0pGJ6ETX3va7lwqz/pub';
- 
+const BASE = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSq4jVuP0QbyGHNYWN2dbH67bFBsmQayQ4fUEAWfkUhD6TzFwG0kPT12kGD9WpX0pGJ6ETX3va7lwqz/pub';
 const URLS = {
-  conv: BASE_URL + '?gid=0&single=true&output=csv',
-  mis:  BASE_URL + '?gid=367800634&single=true&output=csv',
-  don:  BASE_URL + '?gid=531213617&single=true&output=csv',
-  bec:  BASE_URL + '?gid=1020970410&single=true&output=csv',
-  mem:  BASE_URL + '?gid=2056939474&single=true&output=csv',
+  conv: BASE+'?gid=0&single=true&output=csv',
+  mis:  BASE+'?gid=367800634&single=true&output=csv',
+  don:  BASE+'?gid=531213617&single=true&output=csv',
+  bec:  BASE+'?gid=1020970410&single=true&output=csv',
+  mem:  BASE+'?gid=2056939474&single=true&output=csv',
 };
- 
-let DATA = { conv:[], mis:[], don:[], bec:[], mem:[] };
+
+// METAS POI ANUALES
+const METAS = [
+  {key:'convenios',   label:'Convenios suscritos',          meta:6,  ico:'📋', campo:'conv'},
+  {key:'misiones',    label:'Misiones humanitarias',         meta:4,  ico:'🌍', campo:'mis'},
+  {key:'donaciones',  label:'Donaciones recibidas',          meta:4,  ico:'🎁', campo:'don'},
+  {key:'becas',       label:'Becas otorgadas',               meta:null,ico:'🎓',campo:'bec'},
+  {key:'visitas',     label:'Visitas profesionales',         meta:12, ico:'🤝', campo:'vis'},
+  {key:'eventos',     label:'Eventos internacionales',       meta:2,  ico:'🌐', campo:'evt'},
+  {key:'premios',     label:'Premios y reconocimientos',     meta:2,  ico:'🏆', campo:'prm'},
+  {key:'membresias',  label:'Membresías activas',            meta:4,  ico:'🏛', campo:'mem'},
+];
+
+let DATA = {conv:[],mis:[],don:[],bec:[],mem:[],vis:[],evt:[],prm:[]};
 let TRIM = 'todos';
-let charts = {};
- 
+let CH = {};
+
 function parseCSV(txt) {
   const lines = txt.trim().split('\n');
-  const headers = lines[0].split(',').map(h => h.trim().replace(/^"|"$/g,''));
-  return lines.slice(1).filter(l => l.trim()).map(line => {
-    const vals = []; let cur = ''; let inQ = false;
-    for (let ch of line) {
-      if (ch === '"') { inQ = !inQ; }
-      else if (ch === ',' && !inQ) { vals.push(cur.trim()); cur = ''; }
-      else cur += ch;
+  const headers = lines[0].split(',').map(h=>h.trim().replace(/^"|"$/g,''));
+  return lines.slice(1).filter(l=>l.trim()).map(line=>{
+    const vals=[]; let cur=''; let inQ=false;
+    for(let ch of line){
+      if(ch==='"'){inQ=!inQ}
+      else if(ch===','&&!inQ){vals.push(cur.trim());cur=''}
+      else cur+=ch;
     }
     vals.push(cur.trim());
-    const obj = {};
-    headers.forEach((h,i) => obj[h] = vals[i] || '');
+    const obj={};
+    headers.forEach((h,i)=>obj[h]=vals[i]||'');
     return obj;
   });
 }
- 
-async function fetchSheet(url, key) {
-  try {
-    const r = await fetch(url + '&_=' + Date.now());
-    if (!r.ok) throw new Error('HTTP '+r.status);
-    DATA[key] = parseCSV(await r.text());
+
+async function fetchSheet(url,key){
+  try{
+    const r=await fetch(url+'&_='+Date.now());
+    if(!r.ok) throw new Error('HTTP '+r.status);
+    DATA[key]=parseCSV(await r.text());
     return true;
-  } catch(e) { return false; }
+  }catch(e){return false;}
 }
- 
-async function loadAll() {
-  const btn = document.getElementById('btn-refresh');
-  btn.classList.add('spinning');
-  document.getElementById('sync-dot').className = 'sync-dot';
-  document.getElementById('sync-time').textContent = 'Actualizando…';
- 
-  const res = await Promise.all([
-    fetchSheet(URLS.conv,'conv'), fetchSheet(URLS.mis,'mis'),
-    fetchSheet(URLS.don,'don'),  fetchSheet(URLS.bec,'bec'),
+
+async function loadAll(){
+  const btn=document.getElementById('btn-ref');
+  btn.classList.add('spin');
+  document.getElementById('sdot').className='sdot';
+  document.getElementById('stime').textContent='Actualizando…';
+
+  const res=await Promise.all([
+    fetchSheet(URLS.conv,'conv'),fetchSheet(URLS.mis,'mis'),
+    fetchSheet(URLS.don,'don'),fetchSheet(URLS.bec,'bec'),
     fetchSheet(URLS.mem,'mem'),
   ]);
- 
-  btn.classList.remove('spinning');
-  const ok = res.every(r=>r);
-  document.getElementById('sync-dot').className = 'sync-dot ' + (ok ? 'live' : 'err');
-  document.getElementById('sync-time').textContent =
+
+  btn.classList.remove('spin');
+  const ok=res.every(r=>r);
+  document.getElementById('sdot').className='sdot '+(ok?'live':'err');
+  document.getElementById('stime').textContent=
     new Date().toLocaleTimeString('es-PE',{hour:'2-digit',minute:'2-digit'});
- 
+
   updateBadges();
   renderAll();
 }
- 
-function filterByTrim(arr, campo='trimestre') {
-  if (TRIM === 'todos') return arr;
-  return arr.filter(r => (r[campo]||'').includes(TRIM));
+
+function ft(arr,campo='trimestre'){
+  if(TRIM==='todos') return arr;
+  return arr.filter(r=>(r[campo]||'').includes(TRIM));
 }
- 
-function setTrim(t, el) {
-  TRIM = t;
-  document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+
+function setTrim(t,el){
+  TRIM=t;
+  document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
   el.classList.add('active');
   renderAll();
 }
- 
-function updateBadges() {
-  document.getElementById('nb-conv').textContent = DATA.conv.length;
-  document.getElementById('nb-mis').textContent  = DATA.mis.length;
-  document.getElementById('nb-don').textContent  = DATA.don.length;
-  document.getElementById('nb-bec').textContent  = DATA.bec.length;
-  document.getElementById('nb-mem').textContent  = DATA.mem.length;
-  updateChipCounts();
-}
- 
-function countTrim(t) {
-  const all = [...DATA.conv, ...DATA.mis, ...DATA.don, ...DATA.bec];
-  return all.filter(r => (r.trimestre||'').includes(t)).length;
-}
- 
-function updateChipCounts() {
-  const total = DATA.conv.length + DATA.mis.length + DATA.don.length + DATA.bec.length;
-  document.getElementById('ct-todos').textContent = total ? ' '+total : '';
-  ['T1','T2','T3','T4'].forEach(t => {
-    const n = countTrim(t);
-    const el = document.getElementById('ct-'+t);
-    if (el) el.textContent = n ? ' '+n : '';
+
+function updateBadges(){
+  document.getElementById('nb-conv').textContent=DATA.conv.length;
+  document.getElementById('nb-mis').textContent=DATA.mis.length;
+  document.getElementById('nb-don').textContent=DATA.don.length;
+  document.getElementById('nb-bec').textContent=DATA.bec.length;
+  document.getElementById('nb-mem').textContent=DATA.mem.length;
+  // chip counts
+  const all=[...DATA.conv,...DATA.mis,...DATA.don,...DATA.bec];
+  const tot=all.length;
+  document.getElementById('ct-todos').textContent=tot?' '+tot:'';
+  ['T1','T2','T3','T4'].forEach(t=>{
+    const n=all.filter(r=>(r.trimestre||'').includes(t)).length;
+    const el=document.getElementById('ct-'+t);
+    if(el) el.textContent=n?' '+n:'';
   });
 }
- 
-function showPage(name, el) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  document.getElementById('page-'+name).classList.add('active');
+
+function showPage(n,el){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(x=>x.classList.remove('active'));
+  document.getElementById('page-'+n).classList.add('active');
   el.classList.add('active');
-  const titles = {resumen:'Resumen POI',convenios:'Convenios',misiones:'Misiones Humanitarias',donaciones:'Donaciones',becas:'Becas y Pasantías',membresias:'Membresías'};
-  document.getElementById('page-title').textContent = titles[name]||name;
-  const renders = {resumen:renderResumen,convenios:renderConvenios,misiones:renderMisiones,donaciones:renderDonaciones,becas:renderBecas,membresias:renderMembresias};
-  if(renders[name]) renders[name]();
+  const T={resumen:'Resumen POI',poi:'Avance POI Anual',convenios:'Convenios',misiones:'Misiones Humanitarias',donaciones:'Donaciones',becas:'Becas y Pasantías',membresias:'Membresías'};
+  document.getElementById('page-title').textContent=T[n]||n;
+  const R={resumen:renderResumen,poi:renderPOI,convenios:renderConvenios,misiones:renderMisiones,donaciones:renderDonaciones,becas:renderBecas,membresias:renderMembresias};
+  if(R[n]) R[n]();
 }
- 
-function renderAll() {
+
+function renderAll(){
   renderResumen();
-  renderConvenios();
-  renderMisiones();
-  renderDonaciones();
-  renderBecas();
-  renderMembresias();
+  const active=document.querySelector('.page.active');
+  if(active){
+    const id=active.id.replace('page-','');
+    const R={poi:renderPOI,convenios:renderConvenios,misiones:renderMisiones,donaciones:renderDonaciones,becas:renderBecas,membresias:renderMembresias};
+    if(R[id]) R[id]();
+  }
 }
- 
-function badgeEstado(e) {
-  if (!e) return '';
-  const m = {'vigente':'b-green','activa':'b-green','finalizada':'b-green','finalizado':'b-green','cerrada':'b-blue','cerrado':'b-blue','abierta':'b-sky','suspendido':'b-red','observado':'b-amber'};
-  const key = Object.keys(m).find(k => e.toLowerCase().includes(k));
-  return `<span class="badge ${key?m[key]:'b-gray'}">${e}</span>`;
+
+function bs(e){
+  if(!e) return '';
+  const m={'vigente':'bg','activa':'bg','finalizada':'bg','finalizado':'bg','cerrada':'bb','cerrado':'bb','abierta':'bsk','suspendido':'br','observado':'ba'};
+  const k=Object.keys(m).find(k=>e.toLowerCase().includes(k));
+  return `<span class="badge ${k?m[k]:'bgr'}">${e}</span>`;
 }
- 
-function kpi(label, val, sub, type='', icon='') {
-  return `<div class="kpi ${type}" style="cursor:default">
-    <div class="kpi-label">${label}</div>
-    <div class="kpi-value">${val}</div>
-    ${sub?`<div class="kpi-sub">${sub}</div>`:''}
-    ${icon?`<div class="kpi-icon">${icon}</div>`:''}
-  </div>`;
+
+function kpi(lbl,val,sub,cls='',ico=''){
+  return `<div class="kpi ${cls}"><div class="kpi-ico">${ico}</div><div class="kpi-lbl">${lbl}</div><div class="kpi-val">${val}</div>${sub?`<div class="kpi-sub">${sub}</div>`:''}</div>`;
 }
- 
-function dc(id) { if(charts[id]){charts[id].destroy();delete charts[id];} }
- 
+function dc(id){if(CH[id]){CH[id].destroy();delete CH[id];}}
+
 // ══ RESUMEN ══
-function renderResumen() {
-  const conv = filterByTrim(DATA.conv,'trimestre')||DATA.conv;
-  const mis  = filterByTrim(DATA.mis);
-  const don  = filterByTrim(DATA.don);
-  const bec  = filterByTrim(DATA.bec);
- 
-  const totalPac   = DATA.mis.reduce((s,r)=>s+(parseInt(r.n_pacientes_atendidos)||0),0);
-  const totalProf  = DATA.mis.reduce((s,r)=>s+(parseInt(r.n_profesionales)||0),0);
-  const totalBenef = DATA.bec.reduce((s,r)=>s+(parseInt(r.n_beneficiados)||0),0);
-  const totalDon   = DATA.don.reduce((s,r)=>s+(parseFloat(r.valor_usd)||0),0);
-  const totalMem   = DATA.mem.reduce((s,r)=>s+(parseFloat(r.costo_anual_usd)||0),0);
- 
-  document.getElementById('kpis-resumen').innerHTML =
-    kpi('Convenios suscritos', DATA.conv.length, '2026', '', '📋') +
-    kpi('Misiones ejecutadas', DATA.mis.length, 'humanitarias', '', '🌍') +
-    kpi('Pacientes atendidos', totalPac, 'por misiones', 'green', '🏥') +
-    kpi('Beneficiados becas', totalBenef||'—', 'personas capacitadas', 'green', '🎓') +
-    kpi('Donaciones recibidas', DATA.don.length, `USD ${totalDon.toLocaleString()}`, 'gold', '🎁') +
-    kpi('Membresías activas', DATA.mem.length, `USD ${totalMem.toLocaleString()} / año`, '', '🏛') +
-    kpi('Profesionales enviados', totalProf, 'voluntarios en misiones', '', '👨‍⚕️');
- 
-  // Gráfico trimestral
+function renderResumen(){
+  const totalPac=DATA.mis.reduce((s,r)=>s+(parseInt(r.n_pacientes_atendidos)||0),0);
+  const totalProf=DATA.mis.reduce((s,r)=>s+(parseInt(r.n_profesionales)||0),0);
+  const totalBenef=DATA.bec.reduce((s,r)=>s+(parseInt(r.n_beneficiados)||0),0);
+  const totalDon=DATA.don.reduce((s,r)=>s+(parseFloat(r.valor_usd)||0),0);
+  const totalMem=DATA.mem.reduce((s,r)=>s+(parseFloat(r.costo_anual_usd)||0),0);
+
+  document.getElementById('kpis-res').innerHTML=
+    kpi('Convenios suscritos',DATA.conv.length,'2026','','📋')+
+    kpi('Misiones ejecutadas',DATA.mis.length,'humanitarias','','🌍')+
+    kpi('Pacientes atendidos',totalPac,'por misiones','g','🏥')+
+    kpi('Becados',totalBenef||'—','personas capacitadas','g','🎓')+
+    kpi('Donaciones',DATA.don.length,'USD '+totalDon.toLocaleString(),'au','🎁');
+
+  document.getElementById('kpis-res2').innerHTML=
+    kpi('Membresías activas',DATA.mem.length,'USD '+totalMem.toLocaleString()+' / año','','🏛')+
+    kpi('Profesionales enviados',totalProf,'voluntarios en misiones','','👨‍⚕️')+
+    kpi('Horas de formación',DATA.bec.reduce((s,r)=>s+(parseFloat(r.horas)||0),0).toLocaleString(),'total becas','au','📚')+
+    kpi('Países cooperantes',[...new Set([...DATA.conv.map(r=>r.pais),...DATA.mis.map(r=>'Perú')].filter(Boolean))].length,'distintos','','🌐');
+
+  // Chart trimestral
   dc('chartTrim');
-  charts.chartTrim = new Chart(document.getElementById('chartTrim'), {
-    type: 'bar',
-    data: {
-      labels: ['T1 Ene–Mar','T2 Abr–Jun','T3 Jul–Sep','T4 Oct–Dic'],
-      datasets: [{
-        label: 'Actividades',
-        data: [20,6,3,3],
-        backgroundColor: ['#1B6CA8','#1B6CA8','#B5D4F0','#B5D4F0'],
-        borderRadius: 6, borderSkipped: false,
-      }]
-    },
-    options: {
-      responsive:true, maintainAspectRatio:false,
-      plugins:{ legend:{display:false} },
-      scales:{
-        y:{beginAtZero:true, grid:{color:'#F0F4FA'}, ticks:{color:'#667A90',font:{size:10}}},
-        x:{grid:{display:false}, ticks:{color:'#0B1E35',font:{size:10,weight:'bold'}}}
-      }
-    }
+  CH.chartTrim=new Chart(document.getElementById('chartTrim'),{
+    type:'bar',
+    data:{labels:['T1 Ene–Mar','T2 Abr–Jun','T3 Jul–Sep','T4 Oct–Dic'],datasets:[{
+      data:[20,6,3,3],
+      backgroundColor:['#0B1E35','#1B6CA8','#B5D4F0','#B5D4F0'],
+      borderRadius:6,borderSkipped:false
+    }]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
+      scales:{y:{beginAtZero:true,grid:{color:'#F0F4FA'},ticks:{color:'#667A90',font:{size:10}}},
+        x:{grid:{display:false},ticks:{color:'#0B1E35',font:{size:10,weight:'600'}}}}}
   });
- 
-  // Dona procesos
-  dc('chartProcesos');
-  charts.chartProcesos = new Chart(document.getElementById('chartProcesos'), {
-    type: 'doughnut',
-    data: {
-      labels: ['Convenios','Misiones','Donaciones','Becas','Membresías'],
-      datasets:[{
-        data:[DATA.conv.length,DATA.mis.length,DATA.don.length,DATA.bec.length,DATA.mem.length],
-        backgroundColor:['#0B1E35','#1B6CA8','#3B9EE0','#00C9A7','#F0A500'],
-        borderWidth:0
-      }]
-    },
-    options:{
-      responsive:true, maintainAspectRatio:false, cutout:'65%',
-      plugins:{
-        legend:{position:'right',labels:{font:{size:11},color:'#0D1B2A',boxWidth:10,padding:8}}
-      }
-    }
+
+  // Dona
+  const cols=['#0B1E35','#1B6CA8','#3B9EE0','#00C9A7','#F0A500'];
+  const labs=['Convenios','Misiones','Donaciones','Becas','Membresías'];
+  const vals=[DATA.conv.length,DATA.mis.length,DATA.don.length,DATA.bec.length,DATA.mem.length];
+  document.getElementById('leg-proc').innerHTML=labs.map((l,i)=>
+    `<span><i style="background:${cols[i]}"></i>${l} ${vals[i]}</span>`).join('');
+  dc('chartProc');
+  CH.chartProc=new Chart(document.getElementById('chartProc'),{
+    type:'doughnut',
+    data:{labels:labs,datasets:[{data:vals,backgroundColor:cols,borderWidth:0}]},
+    options:{responsive:true,maintainAspectRatio:false,cutout:'65%',plugins:{legend:{display:false}}}
   });
- 
-  // Timeline visual
-  const tqs = [
-    {label:'T1 · Ene–Mar', n:20, cls:'done'},
-    {label:'T2 · Abr–Jun', n:6,  cls:'done'},
-    {label:'T3 · Jul–Sep', n:3,  cls:''},
-    {label:'T4 · Oct–Dic', n:3,  cls:''},
+
+  // Trim visual
+  document.getElementById('trim-bar').innerHTML=[
+    {l:'T1 · Ene–Mar',n:20,c:'done'},{l:'T2 · Abr–Jun',n:6,c:'done'},
+    {l:'T3 · Jul–Sep',n:3,c:''},{l:'T4 · Oct–Dic',n:3,c:''}
+  ].map(q=>`<div class="tq ${q.c}"><span>${q.n}</span>${q.l}</div>`).join('');
+
+  // Progress
+  const procs=[
+    {l:'Convenios',v:DATA.conv.length,m:6,g:false},
+    {l:'Misiones',v:DATA.mis.length,m:4,g:false},
+    {l:'Donaciones',v:DATA.don.length,m:4,g:true},
+    {l:'Becas',v:DATA.bec.length,m:20,g:true},
+    {l:'Membresías',v:DATA.mem.length,m:4,g:false},
   ];
-  document.getElementById('trim-visual').innerHTML = tqs.map(q =>
-    `<div class="trim-q ${q.cls}"><span>${q.n}</span>${q.label}</div>`
-  ).join('');
- 
-  // Barras de progreso
-  const procesos = [
-    {label:'Convenios', val:DATA.conv.length, max:5, color:''},
-    {label:'Misiones',  val:DATA.mis.length,  max:4, color:''},
-    {label:'Donaciones',val:DATA.don.length,  max:4, color:'green'},
-    {label:'Becas',     val:DATA.bec.length,  max:15,color:'green'},
-    {label:'Membresías',val:DATA.mem.length,  max:3, color:''},
-  ];
-  document.getElementById('progress-section').innerHTML = procesos.map(p => {
-    const pct = Math.round((p.val/p.max)*100);
-    return `<div class="progress-row">
-      <div class="progress-label">${p.label}</div>
-      <div class="progress-bar"><div class="progress-fill ${p.color}" style="width:${Math.min(pct,100)}%"></div></div>
-      <div class="progress-val">${p.val}/${p.max}</div>
-    </div>`;
+  document.getElementById('prog-sec').innerHTML=procs.map(p=>{
+    const pct=Math.min(Math.round((p.v/p.m)*100),100);
+    return `<div class="prow"><div class="plbl">${p.l}</div><div class="pbar"><div class="pfill ${p.g?'g':''}" style="width:${pct}%"></div></div><div class="pval">${p.v}/${p.m}</div></div>`;
   }).join('');
 }
- 
-// ══ CONVENIOS ══
-function renderConvenios() {
-  const filtE = document.getElementById('filt-conv-estado')?.value||'';
-  const filtQ = (document.getElementById('filt-conv-q')?.value||'').toLowerCase();
-  let rows = DATA.conv.filter(r =>
-    (!filtE || r.estado===filtE) &&
-    (!filtQ || (r.organismo_cooperante||'').toLowerCase().includes(filtQ) || (r.titulo||'').toLowerCase().includes(filtQ))
-  );
- 
-  document.getElementById('kpis-conv').innerHTML =
-    kpi('Total convenios', DATA.conv.length, '2026', '') +
-    kpi('Vigentes', DATA.conv.filter(r=>r.estado==='Vigente').length, 'activos', 'green') +
-    kpi('Países', [...new Set(DATA.conv.map(r=>r.pais).filter(Boolean))].length, 'distintos');
- 
-  document.getElementById('conv-count').textContent = `${rows.length} registro(s)`;
- 
-  if (!rows.length) { document.getElementById('tbl-convenios').innerHTML = '<div class="empty">Sin registros para los filtros seleccionados</div>'; return; }
- 
-  document.getElementById('tbl-convenios').innerHTML = `<table>
-    <thead><tr><th>ID</th><th>Tipo</th><th>Organismo cooperante</th><th>País</th><th>Suscripción</th><th>Vencimiento</th><th>Estado</th></tr></thead>
-    <tbody>
-    ${rows.map(r=>`<tr onclick="showModal('conv','${r.id_instrumento}')">
-      <td><span style="font-family:'DM Mono',monospace;font-size:10px;color:#667A90">${r.id_instrumento}</span></td>
-      <td style="font-size:11px;color:#667A90">${r.tipo_instrumento||''}</td>
-      <td style="font-weight:700">${r.organismo_cooperante||''}</td>
-      <td>${r.pais||''}</td>
-      <td style="font-family:'DM Mono',monospace;font-size:11px">${r.fecha_suscripcion||''}</td>
-      <td style="font-family:'DM Mono',monospace;font-size:11px">${r.fecha_vencimiento||''}</td>
-      <td>${badgeEstado(r.estado)}</td>
-    </tr>`).join('')}
-    </tbody></table>`;
-}
- 
-// ══ MISIONES ══
-function renderMisiones() {
-  const mis = filterByTrim(DATA.mis);
-  const totalPac  = mis.reduce((s,r)=>s+(parseInt(r.n_pacientes_atendidos)||0),0);
-  const totalProf = mis.reduce((s,r)=>s+(parseInt(r.n_profesionales)||0),0);
- 
-  document.getElementById('kpis-mis').innerHTML =
-    kpi('Misiones', mis.length, 'ejecutadas', '') +
-    kpi('Pacientes atendidos', totalPac, 'total acumulado', 'green') +
-    kpi('Profesionales', totalProf, 'voluntarios enviados', '') +
-    kpi('Tipo', 'Quirúrgica', 'modalidad predominante', 'gold');
- 
-  document.getElementById('cards-misiones').innerHTML = mis.map(r=>`
-    <div class="mcard" onclick="showModal('mis','${r.id_mision}')">
-      <div class="mcard-head">
-        <span class="mcard-id">${r.id_mision} · ${r.trimestre||''}</span>
-        ${badgeEstado(r.estado)}
-      </div>
-      <div class="mcard-org">${r.fuente_cooperante||''}</div>
-      <div class="mcard-loc">📍 ${r.ipress_destino||r.red_asistencial||''}</div>
-      <div class="mcard-stats">
-        <div class="mcard-stat"><div class="mcard-num">${r.n_profesionales||0}</div><div class="mcard-lbl">Profesionales</div></div>
-        <div class="mcard-stat"><div class="mcard-num">${r.n_pacientes_atendidos||0}</div><div class="mcard-lbl">Pacientes</div></div>
-        <div class="mcard-stat" style="text-align:left;flex:1;padding-left:12px;border-left:1px solid #E8EEF8">
-          <div style="font-size:10px;color:#667A90">Período</div>
-          <div style="font-size:11px;font-weight:700;color:#0B1E35;margin-top:2px">${r.fecha_inicio} – ${r.fecha_fin}</div>
-        </div>
-      </div>
-    </div>`).join('') || '<div class="empty">Sin misiones para este filtro</div>';
- 
-  dc('chartMis');
-  charts.chartMis = new Chart(document.getElementById('chartMis'), {
-    type: 'bar',
-    data: {
-      labels: mis.map(r=>r.id_mision||''),
-      datasets: [
-        {label:'Profesionales', data:mis.map(r=>parseInt(r.n_profesionales)||0), backgroundColor:'#1B6CA8', borderRadius:5},
-        {label:'Pacientes',     data:mis.map(r=>parseInt(r.n_pacientes_atendidos)||0), backgroundColor:'#00C9A7', borderRadius:5},
+
+// ══ POI ANUAL ══
+function renderPOI(){
+  const ejecutado={
+    convenios: DATA.conv.length,
+    misiones:  DATA.mis.length,
+    donaciones:DATA.don.length,
+    becas:     DATA.bec.reduce((s,r)=>s+(parseInt(r.n_beneficiados)||0),0),
+    visitas:   DATA.vis.length,
+    eventos:   DATA.evt.length,
+    premios:   DATA.prm.length,
+    membresias:DATA.mem.length,
+  };
+
+  const completados=METAS.filter(m=>m.meta&&ejecutado[m.key]>=m.meta).length;
+  const enCurso=METAS.filter(m=>m.meta&&ejecutado[m.key]>0&&ejecutado[m.key]<m.meta).length;
+  const sinIniciar=METAS.filter(m=>m.meta&&ejecutado[m.key]===0).length;
+
+  document.getElementById('kpis-poi').innerHTML=
+    kpi('Metas completadas',completados,`de ${METAS.filter(m=>m.meta).length} con meta definida`,'g','✅')+
+    kpi('En curso',enCurso,'con avance parcial','au','⚡')+
+    kpi('Sin iniciar',sinIniciar,'pendientes de ejecución','r','⏳')+
+    kpi('Becas otorgadas',ejecutado.becas,'personas beneficiadas','g','🎓');
+
+  // Tabla POI
+  const rows=METAS.map(m=>{
+    const ej=ejecutado[m.key]||0;
+    const meta=m.meta;
+    const pct=meta?Math.min(Math.round((ej/meta)*100),100):null;
+    const falta=meta?Math.max(meta-ej,0):null;
+    let barClass='';
+    if(pct===null) barClass='';
+    else if(pct>=100) barClass='done';
+    else if(pct>=50) barClass='warn';
+    else barClass='danger';
+
+    let faltaHTML='';
+    if(falta===null) faltaHTML=`<span style="color:var(--muted);font-size:10px">Sin meta fija</span>`;
+    else if(falta===0) faltaHTML=`<span class="poi-falta ok">✓ Completo</span>`;
+    else faltaHTML=`<span class="poi-falta ${pct>=50?'warn':'danger'}">Faltan ${falta}</span>`;
+
+    const barHTML=meta?`<div style="display:flex;align-items:center">
+      <div class="poi-bar-wrap"><div class="poi-bar ${barClass}" style="width:${pct}%"></div></div>
+      <span class="poi-pct">${pct}%</span></div>`:'<span style="color:var(--muted);font-size:10px">—</span>';
+
+    return `<tr>
+      <td>${m.ico} <strong>${m.label}</strong></td>
+      <td style="font-family:'DM Mono',monospace;font-weight:700;font-size:13px">${ej}</td>
+      <td style="font-family:'DM Mono',monospace">${meta||'—'}</td>
+      <td>${barHTML}</td>
+      <td>${faltaHTML}</td>
+    </tr>`;
+  }).join('');
+
+  document.getElementById('tbl-poi').innerHTML=`
+    <thead><tr><th>Proceso / Actividad</th><th>Ejecutado</th><th>Meta anual</th><th>Progreso</th><th>Estado</th></tr></thead>
+    <tbody>${rows}</tbody>`;
+
+  // Chart POI
+  const metasConDato=METAS.filter(m=>m.meta);
+  dc('chartPOI');
+  CH.chartPOI=new Chart(document.getElementById('chartPOI'),{
+    type:'bar',
+    data:{
+      labels:metasConDato.map(m=>m.label.split(' ').slice(0,2).join(' ')),
+      datasets:[
+        {label:'Ejecutado',data:metasConDato.map(m=>ejecutado[m.key]||0),backgroundColor:'#1B6CA8',borderRadius:4},
+        {label:'Meta',data:metasConDato.map(m=>m.meta),backgroundColor:'#EEF2F8',borderRadius:4},
       ]
     },
     options:{
-      responsive:true, maintainAspectRatio:false,
+      responsive:true,maintainAspectRatio:false,
       plugins:{legend:{display:false}},
       scales:{
-        y:{beginAtZero:true, grid:{color:'#F0F4FA'}, ticks:{font:{size:10},color:'#667A90'}},
-        x:{grid:{display:false}, ticks:{font:{size:10},color:'#0B1E35'}}
+        x:{grid:{display:false},ticks:{font:{size:9},color:'#0B1E35',maxRotation:35}},
+        y:{beginAtZero:true,grid:{color:'#F0F4FA'},ticks:{font:{size:10},color:'#667A90'}}
       }
     }
   });
+
+  // Resumen ejecutivo
+  document.getElementById('poi-resumen-exec').innerHTML=`
+    <div style="display:flex;flex-direction:column;gap:10px">
+      ${METAS.map(m=>{
+        const ej=ejecutado[m.key]||0;
+        const meta=m.meta;
+        const pct=meta?Math.min(Math.round((ej/meta)*100),100):null;
+        let dot='background:#EEF2F8';
+        if(pct===100) dot='background:var(--accent)';
+        else if(pct>0) dot='background:var(--gold)';
+        else if(meta) dot='background:var(--danger)';
+        return `<div style="display:flex;align-items:center;gap:10px">
+          <div style="width:8px;height:8px;border-radius:50%;${dot};flex-shrink:0"></div>
+          <span style="flex:1;font-size:11px">${m.ico} ${m.label}</span>
+          <span style="font-family:'DM Mono',monospace;font-size:11px;font-weight:700;color:var(--navy)">${ej}${meta?'/'+meta:''}</span>
+        </div>`;
+      }).join('')}
+    </div>`;
 }
- 
-// ══ DONACIONES ══
-function renderDonaciones() {
-  const don = filterByTrim(DATA.don);
-  const total = don.reduce((s,r)=>s+(parseFloat(r.valor_usd)||0),0);
- 
-  document.getElementById('kpis-don').innerHTML =
-    kpi('Donaciones', don.length, '2026', '') +
-    kpi('Valor total', 'USD '+total.toLocaleString(), 'acumulado 2026', 'green') +
-    kpi('Bienes distintos', [...new Set(don.map(r=>r.tipo_bien).filter(Boolean))].length, 'tipos de bien');
- 
-  document.getElementById('cards-don').innerHTML = don.map(r=>`
-    <div class="don-card" onclick="showModal('don','${r.id_donacion}')">
-      <div class="don-org">${r.fuente_cooperante||''}</div>
-      <div class="don-tipo">${r.tipo_bien||''} · ${r.especificacion||''}</div>
-      <div class="don-value">USD ${parseFloat(r.valor_usd||0).toLocaleString()}</div>
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px">
-        <span style="font-size:10px;color:#667A90">${r.fecha||''} · ${r.red_beneficiada||''}</span>
-        ${badgeEstado(r.estado)}
-      </div>
-    </div>`).join('') || '<div class="empty">Sin donaciones para este filtro</div>';
- 
-  document.getElementById('tbl-don').innerHTML = don.length ? `<table>
-    <thead><tr><th>ID</th><th>Fuente cooperante</th><th>Tipo</th><th>Especificación</th><th>Fecha</th><th>Red</th><th>Valor (USD)</th><th>Estado</th></tr></thead>
-    <tbody>${don.map(r=>`<tr onclick="showModal('don','${r.id_donacion}')">
-      <td><span style="font-family:'DM Mono',monospace;font-size:10px;color:#667A90">${r.id_donacion}</span></td>
-      <td style="font-weight:700">${r.fuente_cooperante||''}</td>
-      <td>${r.tipo_bien||''}</td>
-      <td style="max-width:160px;white-space:normal;font-size:11px">${r.especificacion||''}</td>
-      <td style="font-family:'DM Mono',monospace;font-size:11px">${r.fecha||''}</td>
-      <td>${r.red_beneficiada||''}</td>
-      <td style="font-weight:700;color:#0B1E35;font-family:'DM Mono',monospace">${parseFloat(r.valor_usd||0).toLocaleString()}</td>
-      <td>${badgeEstado(r.estado)}</td>
-    </tr>`).join('')}</tbody></table>` : '';
-}
- 
-// ══ BECAS ══
-function renderBecas() {
-  const filtE = document.getElementById('filt-bec-estado')?.value||'';
-  const filtM = document.getElementById('filt-bec-modal')?.value||'';
-  const filtO = document.getElementById('filt-bec-org')?.value||'';
-  const filtQ = (document.getElementById('filt-bec-q')?.value||'').toLowerCase();
- 
-  let rows = filterByTrim(DATA.bec);
-  rows = rows.filter(r =>
-    (!filtE || r.estado===filtE) &&
-    (!filtM || r.modalidad===filtM) &&
-    (!filtO || r.organismo_oferente===filtO) &&
-    (!filtQ || (r.nombre||'').toLowerCase().includes(filtQ))
+
+// ══ CONVENIOS ══
+function renderConvenios(){
+  const fe=document.getElementById('filt-conv-e')?.value||'';
+  const fq=(document.getElementById('filt-conv-q')?.value||'').toLowerCase();
+  let rows=ft(DATA.conv).filter(r=>
+    (!fe||r.estado===fe)&&
+    (!fq||(r.organismo_cooperante||'').toLowerCase().includes(fq)||(r.titulo||'').toLowerCase().includes(fq))
   );
- 
-  const totalH = DATA.bec.reduce((s,r)=>s+(parseFloat(r.horas)||0),0);
-  const totalB = DATA.bec.reduce((s,r)=>s+(parseInt(r.n_beneficiados)||0),0);
-  const cerradas = DATA.bec.filter(r=>r.estado==='Cerrada').length;
-  const abiertas = DATA.bec.filter(r=>r.estado==='Abierta').length;
- 
-  document.getElementById('kpis-bec').innerHTML =
-    kpi('Total becas', DATA.bec.length, '2026', '') +
-    kpi('Beneficiados', totalB||'—', 'personas capacitadas', 'green') +
-    kpi('Horas formación', totalH.toLocaleString(), 'total acumulado', 'gold') +
-    kpi('Cerradas', cerradas, 'completadas', 'green') +
-    kpi('Abiertas', abiertas, 'en curso', 'danger');
- 
-  document.getElementById('bec-count').textContent = `${rows.length} registro(s) filtrados`;
- 
-  document.getElementById('tbl-becas').innerHTML = rows.length ? `<table>
-    <thead><tr><th>ID</th><th>Modalidad</th><th>Nombre</th><th>Organismo</th><th>Horas</th><th>Beneficiados</th><th>Cierre</th><th>Estado</th></tr></thead>
-    <tbody>${rows.map(r=>`<tr onclick="showModal('bec','${r.id_beca}')">
-      <td><span style="font-family:'DM Mono',monospace;font-size:10px;color:#667A90">${r.id_beca}</span></td>
-      <td><span class="badge b-blue">${r.modalidad||''}</span></td>
-      <td style="max-width:200px;white-space:normal;font-size:11px;font-weight:700">${r.nombre||''}</td>
-      <td>${r.organismo_oferente||''}</td>
-      <td style="text-align:right;font-family:'DM Mono',monospace">${r.horas||''}</td>
-      <td style="text-align:center;font-weight:700;color:#0B1E35">${r.n_beneficiados||'—'}</td>
-      <td style="font-family:'DM Mono',monospace;font-size:11px">${r.fecha_cierre||''}</td>
-      <td>${badgeEstado(r.estado)}</td>
-    </tr>`).join('')}</tbody></table>` :
-    '<div class="empty">Sin registros para los filtros seleccionados</div>';
- 
-  const modalCount = {};
-  DATA.bec.forEach(r=>{ modalCount[r.modalidad]=(modalCount[r.modalidad]||0)+1; });
-  dc('chartModal');
-  charts.chartModal = new Chart(document.getElementById('chartModal'), {
+  document.getElementById('kpis-conv').innerHTML=
+    kpi('Total convenios',DATA.conv.length,'2026','')+
+    kpi('Vigentes',DATA.conv.filter(r=>r.estado==='Vigente').length,'activos','g')+
+    kpi('Países',[...new Set(DATA.conv.map(r=>r.pais).filter(Boolean))].length,'distintos');
+  document.getElementById('conv-cnt').textContent=`${rows.length} registro(s)`;
+  document.getElementById('tbl-conv').innerHTML=rows.length?`<table>
+    <thead><tr><th>ID</th><th>Tipo</th><th>Organismo cooperante</th><th>País</th><th>Suscripción</th><th>Vencimiento</th><th>Estado</th></tr></thead>
+    <tbody>${rows.map(r=>`<tr onclick="showMod('conv','${r.id_instrumento}')">
+      <td style="font-family:'DM Mono',monospace;font-size:9px;color:var(--muted)">${r.id_instrumento}</td>
+      <td style="font-size:10px;color:var(--muted)">${r.tipo_instrumento||''}</td>
+      <td style="font-weight:600">${r.organismo_cooperante||''}</td>
+      <td>${r.pais||''}</td>
+      <td style="font-family:'DM Mono',monospace;font-size:10px">${r.fecha_suscripcion||''}</td>
+      <td style="font-family:'DM Mono',monospace;font-size:10px">${r.fecha_vencimiento||''}</td>
+      <td>${bs(r.estado)}</td>
+    </tr>`).join('')}</tbody></table>`:'<div class="empty">Sin registros</div>';
+}
+
+// ══ MISIONES ══
+function renderMisiones(){
+  const mis=ft(DATA.mis);
+  const totalPac=mis.reduce((s,r)=>s+(parseInt(r.n_pacientes_atendidos)||0),0);
+  const totalProf=mis.reduce((s,r)=>s+(parseInt(r.n_profesionales)||0),0);
+  document.getElementById('kpis-mis').innerHTML=
+    kpi('Misiones',mis.length,'ejecutadas','')+
+    kpi('Pacientes atendidos',totalPac,'total acumulado','g')+
+    kpi('Profesionales',totalProf,'voluntarios enviados','')+
+    kpi('Modalidad','Quirúrgica','predominante','au');
+  document.getElementById('cards-mis').innerHTML=mis.map(r=>`
+    <div class="mcard" onclick="showMod('mis','${r.id_mision}')">
+      <div class="mc-hd"><span class="mc-id">${r.id_mision} · ${r.trimestre||''}</span>${bs(r.estado)}</div>
+      <div class="mc-org">${r.fuente_cooperante||''}</div>
+      <div class="mc-loc">📍 ${r.ipress_destino||r.red_asistencial||''}</div>
+      <div class="mc-stats">
+        <div class="mc-stat"><div class="mc-num">${r.n_profesionales||0}</div><div class="mc-lbl">Profesionales</div></div>
+        <div class="mc-stat"><div class="mc-num">${r.n_pacientes_atendidos||0}</div><div class="mc-lbl">Pacientes</div></div>
+        <div class="mc-stat" style="text-align:left;flex:1;padding-left:12px;border-left:1px solid var(--border)">
+          <div style="font-size:9px;color:var(--muted)">Período</div>
+          <div style="font-size:10px;font-weight:600;color:var(--navy);margin-top:2px">${r.fecha_inicio} – ${r.fecha_fin}</div>
+        </div>
+      </div>
+    </div>`).join('')||'<div class="empty">Sin misiones</div>';
+  dc('chartMis');
+  CH.chartMis=new Chart(document.getElementById('chartMis'),{
     type:'bar',
-    data:{ labels:Object.keys(modalCount), datasets:[{data:Object.values(modalCount),backgroundColor:'#1B6CA8',borderRadius:5}] },
-    options:{ indexAxis:'y', responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{ x:{grid:{color:'#F0F4FA'},ticks:{font:{size:10},color:'#667A90'}}, y:{grid:{display:false},ticks:{font:{size:10},color:'#0B1E35'}} } }
-  });
- 
-  const orgCount = {};
-  DATA.bec.forEach(r=>{ orgCount[r.organismo_oferente]=(orgCount[r.organismo_oferente]||0)+1; });
-  dc('chartOrg');
-  charts.chartOrg = new Chart(document.getElementById('chartOrg'), {
-    type:'doughnut',
-    data:{ labels:Object.keys(orgCount), datasets:[{data:Object.values(orgCount),backgroundColor:['#1B6CA8','#00C9A7'],borderWidth:0}] },
-    options:{ responsive:true, maintainAspectRatio:false, cutout:'55%', plugins:{ legend:{position:'right',labels:{font:{size:11},color:'#0D1B2A',boxWidth:10,padding:6}} } }
+    data:{labels:mis.map(r=>r.id_mision),datasets:[
+      {label:'Profesionales',data:mis.map(r=>parseInt(r.n_profesionales)||0),backgroundColor:'#1B6CA8',borderRadius:4},
+      {label:'Pacientes',data:mis.map(r=>parseInt(r.n_pacientes_atendidos)||0),backgroundColor:'#00C9A7',borderRadius:4}
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
+      scales:{y:{beginAtZero:true,grid:{color:'#F0F4FA'},ticks:{font:{size:10},color:'#667A90'}},
+        x:{grid:{display:false},ticks:{font:{size:10},color:'#0B1E35'}}}}
   });
 }
- 
+
+// ══ DONACIONES ══
+function renderDonaciones(){
+  const don=ft(DATA.don);
+  const total=don.reduce((s,r)=>s+(parseFloat(r.valor_usd)||0),0);
+  document.getElementById('kpis-don').innerHTML=
+    kpi('Donaciones',don.length,'2026','')+
+    kpi('Valor total','USD '+total.toLocaleString(),'acumulado 2026','g')+
+    kpi('Tipos',[...new Set(don.map(r=>r.tipo_bien).filter(Boolean))].length,'de bien recibido');
+  document.getElementById('cards-don').innerHTML=don.map(r=>`
+    <div class="dcard" onclick="showMod('don','${r.id_donacion}')">
+      <div class="dcard-org">${r.fuente_cooperante||''}</div>
+      <div class="dcard-tipo">${r.tipo_bien||''} · ${r.especificacion||''}</div>
+      <div class="dcard-val">USD ${parseFloat(r.valor_usd||0).toLocaleString()}</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:7px">
+        <span style="font-size:9px;color:var(--muted)">${r.fecha||''} · ${r.red_beneficiada||''}</span>
+        ${bs(r.estado)}
+      </div>
+    </div>`).join('')||'<div class="empty">Sin donaciones</div>';
+  document.getElementById('tbl-don').innerHTML=don.length?`<table>
+    <thead><tr><th>ID</th><th>Fuente cooperante</th><th>Tipo</th><th>Especificación</th><th>Fecha</th><th>Red</th><th>Valor USD</th><th>Estado</th></tr></thead>
+    <tbody>${don.map(r=>`<tr onclick="showMod('don','${r.id_donacion}')">
+      <td style="font-family:'DM Mono',monospace;font-size:9px;color:var(--muted)">${r.id_donacion}</td>
+      <td style="font-weight:600">${r.fuente_cooperante||''}</td>
+      <td>${r.tipo_bien||''}</td>
+      <td style="max-width:150px;white-space:normal;font-size:10px">${r.especificacion||''}</td>
+      <td style="font-family:'DM Mono',monospace;font-size:10px">${r.fecha||''}</td>
+      <td>${r.red_beneficiada||''}</td>
+      <td style="font-weight:700;font-family:'DM Mono',monospace">${parseFloat(r.valor_usd||0).toLocaleString()}</td>
+      <td>${bs(r.estado)}</td>
+    </tr>`).join('')}</tbody></table>`:'';
+}
+
+// ══ BECAS ══
+function renderBecas(){
+  const fe=document.getElementById('filt-be')?.value||'';
+  const fm=document.getElementById('filt-bm')?.value||'';
+  const fo=document.getElementById('filt-bo')?.value||'';
+  const fq=(document.getElementById('filt-bq')?.value||'').toLowerCase();
+  let rows=ft(DATA.bec).filter(r=>
+    (!fe||r.estado===fe)&&(!fm||r.modalidad===fm)&&
+    (!fo||r.organismo_oferente===fo)&&(!fq||(r.nombre||'').toLowerCase().includes(fq))
+  );
+  const totalH=DATA.bec.reduce((s,r)=>s+(parseFloat(r.horas)||0),0);
+  const totalB=DATA.bec.reduce((s,r)=>s+(parseInt(r.n_beneficiados)||0),0);
+  document.getElementById('kpis-bec').innerHTML=
+    kpi('Total becas',DATA.bec.length,'captadas 2026','')+
+    kpi('Becados',totalB||'—','personas beneficiadas','g')+
+    kpi('Cerradas',DATA.bec.filter(r=>r.estado==='Cerrada').length,'completadas','g')+
+    kpi('Abiertas',DATA.bec.filter(r=>r.estado==='Abierta').length,'en curso','r')+
+    kpi('Horas totales',totalH.toLocaleString(),'formación acumulada','au');
+  document.getElementById('bec-cnt').textContent=`${rows.length} registro(s) filtrados`;
+  document.getElementById('tbl-bec').innerHTML=rows.length?`<table>
+    <thead><tr><th>ID</th><th>Modalidad</th><th>Nombre</th><th>Organismo</th><th>País</th><th>Horas</th><th>Becados</th><th>Cierre</th><th>Estado</th></tr></thead>
+    <tbody>${rows.map(r=>`<tr onclick="showMod('bec','${r.id_beca}')">
+      <td style="font-family:'DM Mono',monospace;font-size:9px;color:var(--muted)">${r.id_beca}</td>
+      <td><span class="badge bb">${r.modalidad||''}</span></td>
+      <td style="max-width:180px;white-space:normal;font-size:10px;font-weight:600">${r.nombre||''}</td>
+      <td>${r.organismo_oferente||''}</td>
+      <td>${r.pais_destino||''}</td>
+      <td style="text-align:right;font-family:'DM Mono',monospace">${r.horas||''}</td>
+      <td style="text-align:center;font-weight:700;color:var(--navy)">${r.n_beneficiados||'—'}</td>
+      <td style="font-family:'DM Mono',monospace;font-size:10px">${r.fecha_cierre||''}</td>
+      <td>${bs(r.estado)}</td>
+    </tr>`).join('')}</tbody></table>`:'<div class="empty">Sin registros</div>';
+}
+
 // ══ MEMBRESÍAS ══
-function renderMembresias() {
-  const total = DATA.mem.reduce((s,r)=>s+(parseFloat(r.costo_anual_usd)||0),0);
- 
-  document.getElementById('kpis-mem').innerHTML =
-    kpi('Membresías activas', DATA.mem.length, 'organismos internacionales', '') +
-    kpi('Inversión anual', 'USD '+total.toLocaleString(), 'costo total 2026', 'gold') +
-    kpi('Cobertura', 'Global', 'AISS · América · Iberoamérica', 'green') +
-    kpi('Más antigua', '1942', 'CISS — Miembro Fundador');
- 
-  document.getElementById('cards-mem').innerHTML = DATA.mem.map(r=>`
-    <div class="mem-card" onclick="showModal('mem','${r.id_membresia}')">
+function renderMembresias(){
+  const total=DATA.mem.reduce((s,r)=>s+(parseFloat(r.costo_anual_usd)||0),0);
+  document.getElementById('kpis-mem').innerHTML=
+    kpi('Membresías activas',DATA.mem.length,'organismos internacionales','')+
+    kpi('Inversión anual','USD '+total.toLocaleString(),'costo total 2026','au')+
+    kpi('Cobertura','Global','AISS · América · Iberoamérica','g');
+  document.getElementById('cards-mem').innerHTML=DATA.mem.map(r=>`
+    <div class="memcard" onclick="showMod('mem','${r.id_membresia}')">
       <div>
-        <div class="mem-name">${r.organismo||''}</div>
-        <div class="mem-meta">${r.tipo_membresia||''} · ${r.pais_sede||''} · desde ${r.anio_suscripcion||''}</div>
-        <div style="margin-top:6px">${badgeEstado(r.estado)}</div>
+        <div class="mem-nm">${r.organismo||''}</div>
+        <div class="mem-mt">${r.tipo_membresia||''} · ${r.pais_sede||''} · desde ${r.anio_suscripcion||''}</div>
+        <div style="margin-top:5px">${bs(r.estado)}</div>
       </div>
-      <div>
-        <div class="mem-cost">USD ${parseFloat(r.costo_anual_usd||0).toLocaleString()}</div>
-        <div class="mem-cost-label">por año</div>
-      </div>
+      <div><div class="mem-cost">USD ${parseFloat(r.costo_anual_usd||0).toLocaleString()}</div><div class="mem-cl">por año</div></div>
     </div>`).join('');
- 
+  const cols=['#0B1E35','#1B6CA8','#3B9EE0'];
+  document.getElementById('leg-mem').innerHTML=DATA.mem.map((r,i)=>
+    `<span><i style="background:${cols[i]}"></i>${r.organismo||r.id_membresia}</span>`).join('');
   dc('chartMem');
-  charts.chartMem = new Chart(document.getElementById('chartMem'), {
+  CH.chartMem=new Chart(document.getElementById('chartMem'),{
     type:'doughnut',
-    data:{
-      labels:DATA.mem.map(r=>r.organismo||r.id_membresia),
-      datasets:[{data:DATA.mem.map(r=>parseFloat(r.costo_anual_usd)||0),backgroundColor:['#0B1E35','#1B6CA8','#3B9EE0'],borderWidth:0}]
-    },
-    options:{
-      responsive:true, maintainAspectRatio:false, cutout:'55%',
-      plugins:{
-        legend:{position:'bottom',labels:{font:{size:11},color:'#0D1B2A',boxWidth:10,padding:10}},
-        tooltip:{callbacks:{label:ctx=>' USD '+ctx.raw.toLocaleString()}}
-      }
-    }
+    data:{labels:DATA.mem.map(r=>r.organismo||r.id_membresia),datasets:[{
+      data:DATA.mem.map(r=>parseFloat(r.costo_anual_usd)||0),
+      backgroundColor:cols,borderWidth:0
+    }]},
+    options:{responsive:true,maintainAspectRatio:false,cutout:'58%',
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>' USD '+ctx.raw.toLocaleString()}}}}
   });
 }
- 
+
 // ══ MODAL ══
-function showModal(type, id) {
-  let r, title, body='';
- 
-  if (type==='conv') {
-    r = DATA.conv.find(x=>x.id_instrumento===id);
-    if(!r) return;
-    title = r.organismo_cooperante||r.titulo||'Convenio';
-    body = `
-      <div class="modal-grid" style="margin-bottom:16px">
-        <div class="modal-field"><div class="modal-field-label">Tipo de instrumento</div><div class="modal-field-value">${r.tipo_instrumento||'—'}</div></div>
-        <div class="modal-field"><div class="modal-field-label">País</div><div class="modal-field-value">${r.pais||'—'}</div></div>
-        <div class="modal-field"><div class="modal-field-label">Fecha suscripción</div><div class="modal-field-value">${r.fecha_suscripcion||'—'}</div></div>
-        <div class="modal-field"><div class="modal-field-label">Fecha vencimiento</div><div class="modal-field-value">${r.fecha_vencimiento||'—'}</div></div>
-      </div>
-      <div class="modal-field"><div class="modal-field-label">Estado</div><div class="modal-field-value">${badgeEstado(r.estado)}</div></div>
-      <div class="modal-field"><div class="modal-field-label">Red asistencial</div><div class="modal-field-value">${r.red_asistencial||'—'}</div></div>
-      <div class="modal-field"><div class="modal-field-label">Descripción / Alcance</div><div class="modal-field-value" style="color:#667A90">${r.descripcion||'—'}</div></div>
-      ${r.monto_comprometido?`<div class="modal-field"><div class="modal-field-label">Monto comprometido</div><div class="modal-field-value" style="font-family:'DM Mono',monospace">USD ${parseFloat(r.monto_comprometido).toLocaleString()}</div></div>`:''}`;
+function showMod(type,id){
+  let r,title,body='';
+  if(type==='conv'){
+    r=DATA.conv.find(x=>x.id_instrumento===id); if(!r) return;
+    title=r.organismo_cooperante||'Convenio';
+    body=`<div class="mgrid">
+      <div class="mf"><div class="mfl">Tipo</div><div class="mfv">${r.tipo_instrumento||'—'}</div></div>
+      <div class="mf"><div class="mfl">País</div><div class="mfv">${r.pais||'—'}</div></div>
+      <div class="mf"><div class="mfl">Suscripción</div><div class="mfv">${r.fecha_suscripcion||'—'}</div></div>
+      <div class="mf"><div class="mfl">Vencimiento</div><div class="mfv">${r.fecha_vencimiento||'—'}</div></div>
+    </div>
+    <div class="mf"><div class="mfl">Estado</div><div class="mfv">${bs(r.estado)}</div></div>
+    <div class="mf"><div class="mfl">Red asistencial</div><div class="mfv">${r.red_asistencial||'—'}</div></div>
+    <div class="mf"><div class="mfl">Descripción</div><div class="mfv" style="color:var(--muted)">${r.descripcion||'—'}</div></div>`;
+  } else if(type==='mis'){
+    r=DATA.mis.find(x=>x.id_mision===id); if(!r) return;
+    title=r.fuente_cooperante||'Misión';
+    body=`<div class="mgrid" style="margin-bottom:14px">
+      <div class="mstat"><div class="msn">${r.n_profesionales||0}</div><div class="msl">Profesionales</div></div>
+      <div class="mstat"><div class="msn">${r.n_pacientes_atendidos||0}</div><div class="msl">Pacientes</div></div>
+    </div>
+    <div class="mgrid">
+      <div class="mf"><div class="mfl">Tipo</div><div class="mfv">${r.tipo_intervencion||'—'}</div></div>
+      <div class="mf"><div class="mfl">Trimestre</div><div class="mfv">${r.trimestre||'—'}</div></div>
+      <div class="mf"><div class="mfl">Inicio</div><div class="mfv">${r.fecha_inicio||'—'}</div></div>
+      <div class="mf"><div class="mfl">Fin</div><div class="mfv">${r.fecha_fin||'—'}</div></div>
+    </div>
+    <div class="mf"><div class="mfl">IPRESS destino</div><div class="mfv">${r.ipress_destino||'—'}</div></div>
+    <div class="mf"><div class="mfl">Línea de acción</div><div class="mfv" style="color:var(--muted)">${r.linea_accion||'—'}</div></div>
+    <div class="mf"><div class="mfl">Estado</div><div class="mfv">${bs(r.estado)}</div></div>`;
+  } else if(type==='don'){
+    r=DATA.don.find(x=>x.id_donacion===id); if(!r) return;
+    title=r.fuente_cooperante||'Donación';
+    body=`<div class="mstat" style="margin-bottom:14px">
+      <div class="msn" style="color:var(--accent)">USD ${parseFloat(r.valor_usd||0).toLocaleString()}</div>
+      <div class="msl">Valor de la donación</div>
+    </div>
+    <div class="mgrid">
+      <div class="mf"><div class="mfl">Tipo de bien</div><div class="mfv">${r.tipo_bien||'—'}</div></div>
+      <div class="mf"><div class="mfl">Fecha</div><div class="mfv">${r.fecha||'—'}</div></div>
+    </div>
+    <div class="mf"><div class="mfl">Especificación</div><div class="mfv">${r.especificacion||'—'}</div></div>
+    <div class="mf"><div class="mfl">Red beneficiada</div><div class="mfv">${r.red_beneficiada||'—'}</div></div>
+    <div class="mf"><div class="mfl">Impacto asistencial</div><div class="mfv" style="color:var(--muted)">${r.impacto_asistencial||'—'}</div></div>
+    <div class="mf"><div class="mfl">Estado</div><div class="mfv">${bs(r.estado)}</div></div>`;
+  } else if(type==='bec'){
+    r=DATA.bec.find(x=>x.id_beca===id); if(!r) return;
+    title=r.nombre||'Beca';
+    body=`<div class="mgrid" style="margin-bottom:14px">
+      <div class="mstat"><div class="msn">${r.horas||0}</div><div class="msl">Horas</div></div>
+      <div class="mstat"><div class="msn" style="color:var(--accent)">${r.n_beneficiados||'—'}</div><div class="msl">Becados</div></div>
+    </div>
+    <div class="mgrid">
+      <div class="mf"><div class="mfl">Modalidad</div><div class="mfv"><span class="badge bb">${r.modalidad||'—'}</span></div></div>
+      <div class="mf"><div class="mfl">Organismo</div><div class="mfv">${r.organismo_oferente||'—'}</div></div>
+      <div class="mf"><div class="mfl">País destino</div><div class="mfv">${r.pais_destino||'—'}</div></div>
+      <div class="mf"><div class="mfl">Cierre</div><div class="mfv">${r.fecha_cierre||'—'}</div></div>
+    </div>
+    <div class="mf"><div class="mfl">Estado</div><div class="mfv">${bs(r.estado)}</div></div>`;
+  } else if(type==='mem'){
+    r=DATA.mem.find(x=>x.id_membresia===id); if(!r) return;
+    title=r.organismo||'Membresía';
+    body=`<div class="mstat" style="margin-bottom:14px">
+      <div class="msn" style="color:var(--gold)">USD ${parseFloat(r.costo_anual_usd||0).toLocaleString()}</div>
+      <div class="msl">Costo anual</div>
+    </div>
+    <div class="mgrid">
+      <div class="mf"><div class="mfl">Tipo membresía</div><div class="mfv">${r.tipo_membresia||'—'}</div></div>
+      <div class="mf"><div class="mfl">Ámbito</div><div class="mfv">${r.ambito||'—'}</div></div>
+      <div class="mf"><div class="mfl">País sede</div><div class="mfv">${r.pais_sede||'—'}</div></div>
+      <div class="mf"><div class="mfl">Año suscripción</div><div class="mfv">${r.anio_suscripcion||'—'}</div></div>
+    </div>
+    <div class="mf"><div class="mfl">Estado</div><div class="mfv">${bs(r.estado)}</div></div>`;
   }
- 
-  else if (type==='mis') {
-    r = DATA.mis.find(x=>x.id_mision===id);
-    if(!r) return;
-    title = r.fuente_cooperante||'Misión humanitaria';
-    body = `
-      <div class="modal-grid" style="margin-bottom:16px">
-        <div class="modal-stat"><div class="modal-stat-num">${r.n_profesionales||0}</div><div class="modal-stat-label">Profesionales</div></div>
-        <div class="modal-stat"><div class="modal-stat-num">${r.n_pacientes_atendidos||0}</div><div class="modal-stat-label">Pacientes</div></div>
-      </div>
-      <div class="modal-grid">
-        <div class="modal-field"><div class="modal-field-label">Tipo</div><div class="modal-field-value">${r.tipo_intervencion||'—'}</div></div>
-        <div class="modal-field"><div class="modal-field-label">Trimestre</div><div class="modal-field-value">${r.trimestre||'—'}</div></div>
-        <div class="modal-field"><div class="modal-field-label">Inicio</div><div class="modal-field-value">${r.fecha_inicio||'—'}</div></div>
-        <div class="modal-field"><div class="modal-field-label">Fin</div><div class="modal-field-value">${r.fecha_fin||'—'}</div></div>
-      </div>
-      <div class="modal-field"><div class="modal-field-label">Red asistencial</div><div class="modal-field-value">${r.red_asistencial||'—'}</div></div>
-      <div class="modal-field"><div class="modal-field-label">IPRESS destino</div><div class="modal-field-value">${r.ipress_destino||'—'}</div></div>
-      <div class="modal-field"><div class="modal-field-label">Línea de acción</div><div class="modal-field-value" style="color:#667A90">${r.linea_accion||'—'}</div></div>
-      <div class="modal-field"><div class="modal-field-label">Estado</div><div class="modal-field-value">${badgeEstado(r.estado)}</div></div>`;
-  }
- 
-  else if (type==='don') {
-    r = DATA.don.find(x=>x.id_donacion===id);
-    if(!r) return;
-    title = r.fuente_cooperante||'Donación';
-    body = `
-      <div class="modal-stat" style="margin-bottom:16px;text-align:center">
-        <div class="modal-stat-num" style="color:#00C9A7">USD ${parseFloat(r.valor_usd||0).toLocaleString()}</div>
-        <div class="modal-stat-label">Valor de la donación</div>
-      </div>
-      <div class="modal-grid">
-        <div class="modal-field"><div class="modal-field-label">Tipo de bien</div><div class="modal-field-value">${r.tipo_bien||'—'}</div></div>
-        <div class="modal-field"><div class="modal-field-label">Fecha</div><div class="modal-field-value">${r.fecha||'—'}</div></div>
-      </div>
-      <div class="modal-field"><div class="modal-field-label">Especificación</div><div class="modal-field-value">${r.especificacion||'—'}</div></div>
-      <div class="modal-field"><div class="modal-field-label">Red beneficiada</div><div class="modal-field-value">${r.red_beneficiada||'—'}</div></div>
-      <div class="modal-field"><div class="modal-field-label">Impacto asistencial</div><div class="modal-field-value" style="color:#667A90">${r.impacto_asistencial||'—'}</div></div>
-      <div class="modal-field"><div class="modal-field-label">Estado</div><div class="modal-field-value">${badgeEstado(r.estado)}</div></div>`;
-  }
- 
-  else if (type==='bec') {
-    r = DATA.bec.find(x=>x.id_beca===id);
-    if(!r) return;
-    title = r.nombre||'Beca';
-    body = `
-      <div class="modal-grid" style="margin-bottom:16px">
-        <div class="modal-stat"><div class="modal-stat-num">${r.horas||0}</div><div class="modal-stat-label">Horas</div></div>
-        <div class="modal-stat"><div class="modal-stat-num">${r.n_beneficiados||'—'}</div><div class="modal-stat-label">Beneficiados</div></div>
-      </div>
-      <div class="modal-grid">
-        <div class="modal-field"><div class="modal-field-label">Modalidad</div><div class="modal-field-value"><span class="badge b-blue">${r.modalidad||'—'}</span></div></div>
-        <div class="modal-field"><div class="modal-field-label">Tipo</div><div class="modal-field-value">${r.tipo||'—'}</div></div>
-        <div class="modal-field"><div class="modal-field-label">Organismo oferente</div><div class="modal-field-value">${r.organismo_oferente||'—'}</div></div>
-        <div class="modal-field"><div class="modal-field-label">País destino</div><div class="modal-field-value">${r.pais_destino||'—'}</div></div>
-        <div class="modal-field"><div class="modal-field-label">Convocatoria</div><div class="modal-field-value">${r.fecha_convocatoria||'—'}</div></div>
-        <div class="modal-field"><div class="modal-field-label">Cierre</div><div class="modal-field-value">${r.fecha_cierre||'—'}</div></div>
-      </div>
-      <div class="modal-field"><div class="modal-field-label">Estado</div><div class="modal-field-value">${badgeEstado(r.estado)}</div></div>
-      <div class="modal-field"><div class="modal-field-label">Trimestre</div><div class="modal-field-value">${r.trimestre||'—'}</div></div>`;
-  }
- 
-  else if (type==='mem') {
-    r = DATA.mem.find(x=>x.id_membresia===id);
-    if(!r) return;
-    title = r.organismo||'Membresía';
-    body = `
-      <div class="modal-stat" style="margin-bottom:16px;text-align:center">
-        <div class="modal-stat-num" style="color:#F0A500">USD ${parseFloat(r.costo_anual_usd||0).toLocaleString()}</div>
-        <div class="modal-stat-label">Costo anual</div>
-      </div>
-      <div class="modal-grid">
-        <div class="modal-field"><div class="modal-field-label">Tipo membresía</div><div class="modal-field-value">${r.tipo_membresia||'—'}</div></div>
-        <div class="modal-field"><div class="modal-field-label">Ámbito</div><div class="modal-field-value">${r.ambito||'—'}</div></div>
-        <div class="modal-field"><div class="modal-field-label">País sede</div><div class="modal-field-value">${r.pais_sede||'—'}</div></div>
-        <div class="modal-field"><div class="modal-field-label">Año suscripción</div><div class="modal-field-value">${r.anio_suscripcion||'—'}</div></div>
-      </div>
-      <div class="modal-field"><div class="modal-field-label">Estado</div><div class="modal-field-value">${badgeEstado(r.estado)}</div></div>`;
-  }
- 
-  document.getElementById('modal-title').textContent = title;
-  document.getElementById('modal-id').textContent = id;
-  document.getElementById('modal-body').innerHTML = body;
-  document.getElementById('modal-overlay').classList.add('open');
+
+  document.getElementById('m-title').textContent=title;
+  document.getElementById('m-id').textContent=id;
+  document.getElementById('m-body').innerHTML=body;
+  document.getElementById('moverlay').classList.add('open');
 }
- 
-function closeModal(e) {
-  if (!e || e.target === document.getElementById('modal-overlay')) {
-    document.getElementById('modal-overlay').classList.remove('open');
-  }
+
+function closeMod(e){
+  if(!e||e.target===document.getElementById('moverlay'))
+    document.getElementById('moverlay').classList.remove('open');
 }
- 
-document.addEventListener('keydown', e => { if(e.key==='Escape') closeModal(); });
- 
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeMod();});
+
 loadAll();
-setInterval(loadAll, 60000);
+setInterval(loadAll,60000);
 </script>
 </body>
 </html>
- 
