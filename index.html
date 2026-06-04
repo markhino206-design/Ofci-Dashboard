@@ -2,823 +2,782 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OFCI · POI 2026 · EsSalud</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>OFCI · POI 2026</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@400;500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Syne:wght@700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-:root {
-  --navy:   #0B1E35;
-  --navy2:  #132840;
-  --blue:   #1B6CA8;
-  --sky:    #3B9EE0;
-  --accent: #00C9A7;
-  --gold:   #F0A500;
-  --danger: #E05263;
-  --white:  #FFFFFF;
-  --bg:     #F2F5FA;
-  --surface:#FFFFFF;
-  --border: rgba(0,0,0,0.07);
-  --text:   #0D1B2A;
-  --muted:  #667A90;
-  --sw: 220px;
-  --th: 56px;
-}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;font-size:13px}
+:root{
+  --navy:#0B1E35;--blue:#1A6CB0;--sky:#3B9EE0;--accent:#00C9A7;
+  --gold:#F0A500;--red:#E05263;--white:#fff;--bg:#EEF2F8;
+  --surface:#fff;--border:rgba(0,0,0,.06);--text:#0D1B2A;--muted:#6B7E94;
+  --sw:216px;--th:52px;
+}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);font-size:13px;line-height:1.5;overflow-x:hidden}
  
-/* SIDEBAR */
-.sidebar{position:fixed;top:0;left:0;width:var(--sw);height:100vh;background:var(--navy);display:flex;flex-direction:column;z-index:200}
-.sb-logo{padding:18px 18px 14px;border-bottom:1px solid rgba(255,255,255,.08)}
-.sb-badge{display:inline-flex;align-items:center;gap:7px;background:var(--blue);border-radius:7px;padding:5px 11px;margin-bottom:7px}
-.sb-badge span{font-family:'Syne',sans-serif;font-weight:800;font-size:12px;color:#fff;letter-spacing:.07em}
-.sb-tagline{font-size:10px;color:rgba(255,255,255,.38);line-height:1.5}
-.sb-sec{padding:12px 10px 2px}
-.sb-sec-lbl{font-size:9px;font-weight:600;letter-spacing:.12em;color:rgba(255,255,255,.28);text-transform:uppercase;padding:0 8px;margin-bottom:3px}
-.nav-item{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:7px;cursor:pointer;transition:all .15s;color:rgba(255,255,255,.5);font-size:12px;font-weight:400;border:none;background:none;width:100%;text-align:left}
-.nav-item:hover{background:rgba(255,255,255,.07);color:#fff}
-.nav-item.active{background:var(--blue);color:#fff;font-weight:600}
-.nav-item .ico{font-size:14px;width:16px;flex-shrink:0}
-.nav-item .nb{margin-left:auto;background:var(--accent);color:var(--navy);font-size:9px;font-weight:700;padding:1px 6px;border-radius:8px;font-family:'DM Mono',monospace}
-.nb.warn{background:var(--gold)}
-.sb-foot{margin-top:auto;padding:12px 14px;border-top:1px solid rgba(255,255,255,.08)}
-.sync-row{display:flex;align-items:center;gap:7px;font-size:10px;color:rgba(255,255,255,.32)}
-.sdot{width:6px;height:6px;border-radius:50%;background:#555;flex-shrink:0;transition:background .3s}
-.sdot.live{background:var(--accent);box-shadow:0 0 0 3px rgba(0,201,167,.18)}
-.sdot.err{background:var(--danger)}
+/* ─── SIDEBAR ─── */
+.sb{position:fixed;top:0;left:0;width:var(--sw);height:100vh;background:var(--navy);display:flex;flex-direction:column;z-index:300;overflow-y:auto}
+.sb-logo{padding:16px 16px 12px;border-bottom:1px solid rgba(255,255,255,.07)}
+.sb-badge{display:inline-flex;align-items:center;gap:6px;background:var(--blue);border-radius:6px;padding:4px 10px;margin-bottom:6px}
+.sb-badge b{font-family:'Syne',sans-serif;font-size:11px;font-weight:800;color:#fff;letter-spacing:.08em}
+.sb-tag{font-size:9.5px;color:rgba(255,255,255,.35);line-height:1.5}
+.sb-grp{padding:10px 8px 2px}
+.sb-grp-lbl{font-size:8.5px;font-weight:600;letter-spacing:.13em;color:rgba(255,255,255,.25);text-transform:uppercase;padding:0 8px;margin-bottom:2px}
+.ni{display:flex;align-items:center;gap:8px;padding:7px 8px;border-radius:7px;cursor:pointer;color:rgba(255,255,255,.48);font-size:11.5px;border:none;background:none;width:100%;text-align:left;transition:all .14s}
+.ni:hover{background:rgba(255,255,255,.06);color:rgba(255,255,255,.8)}
+.ni.on{background:var(--blue);color:#fff;font-weight:500}
+.ni .ico{font-size:13px;width:15px;flex-shrink:0}
+.ni .nb{margin-left:auto;background:rgba(255,255,255,.12);color:rgba(255,255,255,.7);font-size:9px;font-weight:600;padding:1px 6px;border-radius:6px;font-family:'DM Mono',monospace;min-width:18px;text-align:center}
+.ni.on .nb{background:rgba(255,255,255,.2);color:#fff}
+.sb-foot{margin-top:auto;padding:10px 14px;border-top:1px solid rgba(255,255,255,.07)}
+.sync{display:flex;align-items:center;gap:6px;font-size:10px;color:rgba(255,255,255,.28)}
+.sdot{width:6px;height:6px;border-radius:50%;background:#3d5068;flex-shrink:0;transition:all .3s}
+.sdot.ok{background:var(--accent);box-shadow:0 0 0 3px rgba(0,201,167,.15)}
+.sdot.err{background:var(--red)}
  
-/* TOPBAR */
-.topbar{position:fixed;top:0;left:var(--sw);right:0;height:var(--th);background:var(--white);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 24px;gap:14px;z-index:100}
-.tb-title{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:var(--navy);flex:1}
-.tb-title span{color:var(--blue)}
-.filter-bar{display:flex;align-items:center;gap:6px}
-.fl{font-size:10px;color:var(--muted);font-weight:600;letter-spacing:.05em}
-.chip{padding:4px 11px;border-radius:16px;font-size:11px;font-weight:600;cursor:pointer;border:1.5px solid var(--border);background:transparent;color:var(--muted);transition:all .15s;font-family:'Inter',sans-serif}
+/* ─── TOPBAR ─── */
+.tb{position:fixed;top:0;left:var(--sw);right:0;height:var(--th);background:var(--white);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 22px;gap:12px;z-index:200}
+.tb-title{font-family:'Syne',sans-serif;font-size:13px;font-weight:800;color:var(--navy);flex:1;white-space:nowrap}
+.tb-title em{color:var(--blue);font-style:normal}
+.fbar{display:flex;align-items:center;gap:5px}
+.fl{font-size:9.5px;font-weight:600;letter-spacing:.06em;color:var(--muted);text-transform:uppercase;margin-right:2px}
+.chip{padding:4px 10px;border-radius:14px;font-size:10.5px;font-weight:600;cursor:pointer;border:1.5px solid rgba(0,0,0,.1);background:transparent;color:var(--muted);transition:all .14s;font-family:'Inter',sans-serif;line-height:1}
 .chip:hover{border-color:var(--blue);color:var(--blue)}
-.chip.active{background:var(--navy);border-color:var(--navy);color:#fff}
-.btn-ref{display:flex;align-items:center;gap:5px;padding:6px 13px;border-radius:7px;background:var(--navy);color:#fff;font-size:11px;font-weight:600;cursor:pointer;border:none;transition:all .15s;font-family:'Inter',sans-serif}
-.btn-ref:hover{background:var(--blue)}
-.btn-ref.spin svg{animation:rot .7s linear infinite}
+.chip.on{background:var(--navy);border-color:var(--navy);color:#fff}
+.btn-upd{display:flex;align-items:center;gap:5px;padding:5px 12px;border-radius:7px;background:var(--navy);color:#fff;font-size:11px;font-weight:600;cursor:pointer;border:none;font-family:'Inter',sans-serif;transition:background .14s;white-space:nowrap}
+.btn-upd:hover{background:var(--blue)}
+.btn-upd.spin svg{animation:rot .7s linear infinite}
 @keyframes rot{to{transform:rotate(360deg)}}
  
-/* MAIN */
+/* ─── MAIN ─── */
 .main{margin-left:var(--sw);padding-top:var(--th);min-height:100vh}
-.page{display:none;padding:22px 24px;animation:fu .22s ease}
-.page.active{display:block}
-@keyframes fu{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.page{display:none;padding:20px 22px;animation:fu .2s ease}
+.page.on{display:block}
+@keyframes fu{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
  
-/* KPI GRID — 4 col max */
-.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
-.kpi-grid.g3{grid-template-columns:repeat(3,1fr)}
-.kpi-grid.g5{grid-template-columns:repeat(5,1fr)}
-.kpi{background:var(--surface);border-radius:11px;border:1px solid var(--border);padding:14px 16px;position:relative;overflow:hidden;cursor:default}
-.kpi::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--blue)}
-.kpi.g::before{background:var(--accent)}
-.kpi.au::before{background:var(--gold)}
-.kpi.r::before{background:var(--danger)}
-.kpi-lbl{font-size:9px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin-bottom:7px}
-.kpi-val{font-family:'Syne',sans-serif;font-size:26px;font-weight:800;color:var(--navy);line-height:1}
-.kpi-sub{font-size:10px;color:var(--muted);margin-top:3px}
-.kpi-ico{position:absolute;right:12px;top:12px;font-size:18px;opacity:.12}
+/* ─── KPI CARDS ─── */
+.krow{display:grid;gap:10px;margin-bottom:14px}
+.krow.k4{grid-template-columns:repeat(4,1fr)}
+.krow.k5{grid-template-columns:repeat(5,1fr)}
+.krow.k3{grid-template-columns:repeat(3,1fr)}
+@media(max-width:1100px){.krow.k5{grid-template-columns:repeat(3,1fr)}.krow.k4{grid-template-columns:repeat(2,1fr)}}
+.kc{background:var(--surface);border-radius:10px;border:1px solid var(--border);padding:13px 15px;position:relative;overflow:hidden}
+.kc::after{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;border-radius:3px 0 0 3px;background:var(--blue)}
+.kc.g::after{background:var(--accent)}.kc.au::after{background:var(--gold)}.kc.r::after{background:var(--red)}
+.kc-lbl{font-size:9px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.kc-val{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:var(--navy);line-height:1.1}
+.kc-sub{font-size:10px;color:var(--muted);margin-top:3px}
+.kc-ico{position:absolute;right:11px;top:11px;font-size:16px;opacity:.1}
  
-/* LAYOUT */
-.g2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
-.g31{display:grid;grid-template-columns:2fr 1fr;gap:16px;margin-bottom:16px}
-.gfull{margin-bottom:16px}
-@media(max-width:1000px){.g2,.g31{grid-template-columns:1fr}}
+/* ─── LAYOUT ─── */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.g31{display:grid;grid-template-columns:3fr 2fr;gap:14px;margin-bottom:14px}
+.gf{margin-bottom:14px}
+@media(max-width:960px){.g2,.g31{grid-template-columns:1fr}}
  
-/* CARD */
+/* ─── CARD ─── */
 .card{background:var(--surface);border-radius:12px;border:1px solid var(--border)}
-.card-h{padding:14px 18px 10px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
-.card-t{font-family:'Syne',sans-serif;font-size:12px;font-weight:700;color:var(--navy)}
-.card-s{font-size:10px;color:var(--muted);margin-top:1px}
-.card-b{padding:16px 18px}
+.ch{padding:12px 16px 9px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:10px}
+.ct{font-family:'Syne',sans-serif;font-size:12px;font-weight:700;color:var(--navy)}
+.cs{font-size:10px;color:var(--muted);margin-top:1px}
+.cb{padding:14px 16px}
  
-/* TABLE */
+/* ─── TABLE ─── */
 .tw{overflow-x:auto}
 table{width:100%;border-collapse:collapse;font-size:11px}
-thead th{background:#F7FAFD;color:var(--navy);font-weight:600;font-size:9px;letter-spacing:.07em;text-transform:uppercase;padding:9px 12px;text-align:left;white-space:nowrap;border-bottom:1px solid var(--border)}
-tbody tr{border-bottom:1px solid rgba(0,0,0,.035);cursor:pointer;transition:background .1s}
-tbody tr:hover{background:#EFF6FF}
-tbody td{padding:9px 12px;vertical-align:middle}
+thead th{background:#F6F9FD;color:var(--navy);font-weight:600;font-size:9px;letter-spacing:.08em;text-transform:uppercase;padding:8px 11px;text-align:left;white-space:nowrap;border-bottom:1px solid var(--border)}
+tbody tr{border-bottom:1px solid rgba(0,0,0,.03);cursor:pointer;transition:background .1s}
+tbody tr:hover{background:#EEF5FF}
+tbody td{padding:8px 11px;vertical-align:middle}
 tbody tr:last-child{border-bottom:none}
  
-/* BADGES */
-.badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.04em}
-.bg{background:#E0F7F1;color:#0A6B54}
-.bb{background:#E3F0FC;color:#0C4A8A}
-.ba{background:#FFF3D6;color:#8A5A00}
-.br{background:#FDEAEA;color:#9A1F1F}
-.bgr{background:#F0F0F0;color:#444}
-.bsk{background:#E3F4FF;color:#0B5E9C}
+/* ─── BADGES ─── */
+.b{display:inline-block;padding:2px 7px;border-radius:4px;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;white-space:nowrap}
+.bg{background:#E0F7F1;color:#0A6B54}.bb{background:#E3F0FC;color:#0C4A8A}
+.ba{background:#FFF3D6;color:#8A5A00}.br{background:#FDEAEA;color:#9A1F1F}
+.bgr{background:#F0F2F5;color:#444}.bsk{background:#E3F4FF;color:#0B5E9C}
  
-/* FILTROS */
-select,input[type="text"]{border:1px solid var(--border);border-radius:6px;padding:5px 9px;font-size:11px;font-family:'Inter',sans-serif;color:var(--text);background:var(--surface);outline:none}
+/* ─── INPUTS ─── */
+select,input[type="text"]{border:1px solid var(--border);border-radius:6px;padding:5px 8px;font-size:11px;font-family:'Inter',sans-serif;color:var(--text);background:var(--surface);outline:none}
 select:focus,input:focus{border-color:var(--blue)}
-.ifilters{display:flex;gap:7px;flex-wrap:wrap;align-items:center}
+.iflt{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
  
-/* MODAL */
-.moverlay{display:none;position:fixed;inset:0;background:rgba(11,30,53,.55);z-index:1000;align-items:center;justify-content:center;padding:20px}
-.moverlay.open{display:flex}
-.modal{background:var(--white);border-radius:16px;width:100%;max-width:560px;max-height:88vh;overflow-y:auto;animation:mi .18s ease}
+/* ─── MODAL ─── */
+.mov{display:none;position:fixed;inset:0;background:rgba(11,30,53,.5);z-index:900;align-items:center;justify-content:center;padding:16px}
+.mov.on{display:flex}
+.mod{background:var(--white);border-radius:14px;width:100%;max-width:520px;max-height:86vh;overflow-y:auto;animation:mi .17s ease}
 @keyframes mi{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:scale(1)}}
-.mh{padding:18px 22px 14px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;justify-content:space-between}
-.mt{font-family:'Syne',sans-serif;font-size:14px;font-weight:800;color:var(--navy)}
-.mid{font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;margin-top:2px}
-.mcl{background:#F4F7FC;border:none;border-radius:7px;width:30px;height:30px;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;color:var(--muted);flex-shrink:0;margin-left:10px}
+.mh{padding:16px 20px 12px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;justify-content:space-between}
+.mt{font-family:'Syne',sans-serif;font-size:13px;font-weight:800;color:var(--navy)}
+.mi{font-size:9.5px;color:var(--muted);font-family:'DM Mono',monospace;margin-top:2px}
+.mcl{background:#F4F7FC;border:none;border-radius:6px;width:28px;height:28px;cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;color:var(--muted);flex-shrink:0;margin-left:8px}
 .mcl:hover{background:#E8EEF8;color:var(--navy)}
-.mb{padding:18px 22px}
+.mb{padding:16px 20px}
 .mfl{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:3px}
 .mfv{font-size:12px;color:var(--text);line-height:1.5}
-.mgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
-.mstat{background:#F8FAFD;border-radius:9px;padding:12px 14px;text-align:center}
-.msn{font-family:'Syne',sans-serif;font-size:28px;font-weight:800;color:var(--navy)}
+.mg{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:12px}
+.mst{background:#F8FAFD;border-radius:9px;padding:11px 13px;text-align:center}
+.msn{font-family:'Syne',sans-serif;font-size:26px;font-weight:800;color:var(--navy)}
 .msl{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-top:2px}
-.mf{margin-bottom:12px}
+.mf{margin-bottom:11px}
  
-/* POI PROGRESS TABLE */
-.poi-table{width:100%;border-collapse:collapse}
-.poi-table th{font-size:9px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);padding:8px 12px;text-align:left;border-bottom:1px solid var(--border);background:#F7FAFD}
-.poi-table td{padding:10px 12px;border-bottom:1px solid rgba(0,0,0,.04);font-size:11px;vertical-align:middle}
-.poi-table tr:last-child td{border-bottom:none}
-.poi-bar-wrap{width:160px;height:7px;background:#EEF2F8;border-radius:4px;overflow:hidden;display:inline-block;vertical-align:middle}
-.poi-bar{height:100%;border-radius:4px;background:var(--blue);transition:width .6s ease}
-.poi-bar.done{background:var(--accent)}
-.poi-bar.warn{background:var(--gold)}
-.poi-bar.danger{background:var(--danger)}
-.poi-pct{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);margin-left:8px}
-.poi-falta{font-family:'Syne',sans-serif;font-size:12px;font-weight:700}
-.poi-falta.ok{color:var(--accent)}
-.poi-falta.warn{color:var(--gold)}
-.poi-falta.danger{color:var(--danger)}
+/* ─── TRIM BAR ─── */
+.trim-bar{display:grid;grid-template-columns:repeat(4,1fr);border-radius:9px;overflow:hidden;border:1px solid var(--border);margin-bottom:16px}
+.tq{text-align:center;padding:10px 6px;font-size:10px;font-weight:600;color:var(--muted);background:#F8FAFD;border-right:1px solid var(--border);cursor:pointer;transition:all .14s;user-select:none}
+.tq:last-child{border-right:none}
+.tq:hover{background:#EEF5FF;color:var(--blue)}
+.tq.done{background:var(--navy);color:rgba(255,255,255,.6)}
+.tq.cur{background:var(--blue);color:#fff}
+.tq.sel{background:var(--accent);color:var(--navy);font-weight:700}
+.tq-n{display:block;font-family:'Syne',sans-serif;font-size:19px;font-weight:800;line-height:1.1;margin-bottom:2px}
+.tq-n.done-n{color:#fff}
+.tq-n.muted-n{color:#C5CFD8}
  
-/* MISIONES */
+/* ─── PROGRESS ─── */
+.prow{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.plbl{font-size:11px;color:var(--text);min-width:110px;font-weight:500}
+.pbar{flex:1;height:6px;background:#E8EEF8;border-radius:3px;overflow:hidden}
+.pfill{height:100%;border-radius:3px;background:var(--blue);transition:width .5s ease}
+.pfill.g{background:var(--accent)}.pfill.au{background:var(--gold)}.pfill.r{background:var(--red)}
+.pval{font-size:10px;color:var(--muted);min-width:36px;text-align:right;font-family:'DM Mono',monospace}
+ 
+/* ─── POI TABLE ─── */
+.poi-bar-wrap{width:120px;height:6px;background:#E8EEF8;border-radius:3px;overflow:hidden;display:inline-block;vertical-align:middle}
+.poi-bar{height:100%;border-radius:3px;transition:width .5s ease}
+.poi-bar.c-ok{background:var(--accent)}.poi-bar.c-md{background:var(--gold)}.poi-bar.c-lo{background:var(--red)}
+.poi-pct{font-family:'DM Mono',monospace;font-size:9.5px;color:var(--muted);margin-left:6px}
+.falta{font-family:'Syne',sans-serif;font-size:11px;font-weight:700}
+.falta.ok{color:var(--accent)}.falta.md{color:var(--gold)}.falta.lo{color:var(--red)}
+ 
+/* ─── MISSION CARDS ─── */
 .mcards{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.mcard{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;cursor:pointer;transition:all .2s}
-.mcard:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.07)}
-.mc-hd{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px}
+.mcard{background:var(--surface);border:1px solid var(--border);border-radius:11px;padding:14px;cursor:pointer;transition:all .17s}
+.mcard:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(0,0,0,.07);border-color:rgba(0,0,0,.1)}
+.mc-hd{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:7px}
 .mc-id{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted)}
-.mc-org{font-family:'Syne',sans-serif;font-size:12px;font-weight:700;color:var(--navy);margin-bottom:3px}
-.mc-loc{font-size:10px;color:var(--muted);margin-bottom:10px}
-.mc-stats{display:flex;gap:16px;padding-top:10px;border-top:1px solid var(--border)}
-.mc-stat{text-align:center}
-.mc-num{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:var(--navy)}
-.mc-lbl{font-size:8px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.mc-org{font-family:'Syne',sans-serif;font-size:12px;font-weight:700;color:var(--navy);margin-bottom:2px}
+.mc-loc{font-size:10px;color:var(--muted);margin-bottom:9px}
+.mc-stats{display:flex;gap:14px;padding-top:9px;border-top:1px solid var(--border)}
+.mc-s{text-align:center}
+.mc-n{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:var(--navy)}
+.mc-l{font-size:8.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
  
-/* DONACIONES CARDS */
-.dcards{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
-.dcard{border:1px solid var(--border);border-radius:11px;padding:14px;cursor:pointer;transition:all .15s;background:var(--surface)}
+/* ─── DON CARDS ─── */
+.dcards{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:13px}
+.dcard{border:1px solid var(--border);border-radius:10px;padding:13px;cursor:pointer;transition:all .14s;background:var(--surface)}
 .dcard:hover{border-color:var(--accent);background:#F4FFFB}
-.dcard-org{font-family:'Syne',sans-serif;font-size:11px;font-weight:700;color:var(--navy);margin-bottom:3px}
-.dcard-tipo{font-size:10px;color:var(--muted);margin-bottom:8px}
-.dcard-val{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:var(--accent)}
+.dc-org{font-family:'Syne',sans-serif;font-size:11px;font-weight:700;color:var(--navy);margin-bottom:2px}
+.dc-tipo{font-size:10px;color:var(--muted);margin-bottom:7px}
+.dc-val{font-family:'Syne',sans-serif;font-size:19px;font-weight:800;color:var(--accent)}
  
-/* MEM */
-.memcards{display:flex;flex-direction:column;gap:10px}
-.memcard{background:var(--surface);border:1px solid var(--border);border-radius:11px;padding:13px 15px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;transition:all .15s}
+/* ─── MEM CARDS ─── */
+.memcards{display:flex;flex-direction:column;gap:9px}
+.memcard{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;transition:all .14s}
 .memcard:hover{border-color:var(--blue);background:#F8FBFF}
 .mem-nm{font-family:'Syne',sans-serif;font-size:11px;font-weight:700;color:var(--navy)}
 .mem-mt{font-size:10px;color:var(--muted);margin-top:1px}
-.mem-cost{font-family:'Syne',sans-serif;font-size:15px;font-weight:800;color:var(--navy);text-align:right}
-.mem-cl{font-size:9px;color:var(--muted);text-align:right}
+.mem-cost{font-family:'Syne',sans-serif;font-size:14px;font-weight:800;color:var(--navy);text-align:right}
  
-/* SECTION HEADER */
-.sh{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px}
-.sh-t{font-family:'Syne',sans-serif;font-size:17px;font-weight:800;color:var(--navy)}
-.sh-s{font-size:11px;color:var(--muted);margin-top:2px}
- 
-/* CHART */
+/* ─── MISC ─── */
+.sh{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px;gap:12px}
+.sh-t{font-family:'Syne',sans-serif;font-size:16px;font-weight:800;color:var(--navy)}
+.sh-s{font-size:10.5px;color:var(--muted);margin-top:2px}
 .cw{position:relative;width:100%}
- 
-/* TRIM BAR */
-.trim-bar{display:flex;border-radius:9px;overflow:hidden;border:1px solid var(--border)}
-.tq{flex:1;text-align:center;padding:9px 4px;font-size:9px;font-weight:700;color:var(--muted);background:#F8FAFD;border-right:1px solid var(--border)}
-.tq:last-child{border-right:none}
-.tq.done{background:var(--navy);color:#fff}
-.tq.cur{background:var(--blue);color:#fff}
-.tq span{display:block;font-size:17px;font-weight:800;font-family:'Syne',sans-serif;margin-bottom:1px}
- 
-/* PROGRESS */
-.prow{display:flex;align-items:center;gap:10px;margin-bottom:10px}
-.plbl{font-size:11px;color:var(--text);min-width:120px;font-weight:600}
-.pbar{flex:1;height:7px;background:#EEF2F8;border-radius:4px;overflow:hidden}
-.pfill{height:100%;border-radius:4px;background:var(--blue);transition:width .6s ease}
-.pfill.g{background:var(--accent)}
-.pval{font-size:10px;color:var(--muted);min-width:30px;text-align:right;font-family:'DM Mono',monospace}
- 
-/* LOADING */
-.skel{background:linear-gradient(90deg,#F0F4FA 25%,#E4EAF4 50%,#F0F4FA 75%);background-size:200%;animation:sh 1.2s infinite;border-radius:8px}
+.skel{background:linear-gradient(90deg,#EDF1F7 25%,#E2E8F2 50%,#EDF1F7 75%);background-size:200%;animation:sh 1.2s infinite;border-radius:8px}
 @keyframes sh{to{background-position:-200% 0}}
-.spin-c{display:flex;align-items:center;justify-content:center;padding:36px;gap:8px;color:var(--muted);font-size:12px}
-.sring{width:18px;height:18px;border:2px solid #E0E8F4;border-top-color:var(--blue);border-radius:50%;animation:rot .7s linear infinite}
-.empty{text-align:center;padding:36px;color:var(--muted);font-size:12px}
- 
-/* LEGEND */
-.legend{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:8px;font-size:11px;color:var(--muted)}
-.legend span{display:flex;align-items:center;gap:4px}
-.legend i{width:9px;height:9px;border-radius:2px;flex-shrink:0}
+.spin-c{display:flex;align-items:center;justify-content:center;padding:32px;gap:8px;color:var(--muted);font-size:11.5px}
+.sring{width:16px;height:16px;border:2px solid #DDE4EF;border-top-color:var(--blue);border-radius:50%;animation:rot .7s linear infinite}
+.empty{text-align:center;padding:32px;color:var(--muted);font-size:11.5px;line-height:1.7}
+.leg{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:7px;font-size:10.5px;color:var(--muted)}
+.leg span{display:flex;align-items:center;gap:4px}
+.leg i{width:8px;height:8px;border-radius:2px;flex-shrink:0}
+.divider{height:1px;background:var(--border);margin:12px 0}
 </style>
 </head>
 <body>
  
-<aside class="sidebar">
+<!-- ══ SIDEBAR ══ -->
+<aside class="sb">
   <div class="sb-logo">
     <div class="sb-badge">
-      <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><circle cx="6.5" cy="6.5" r="5.5" stroke="#fff" stroke-width="1.4"/><path d="M6.5 3.5v3l1.8 1.3" stroke="#fff" stroke-width="1.4" stroke-linecap="round"/></svg>
-      <span>OFCI</span>
+      <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><circle cx="5.5" cy="5.5" r="4.5" stroke="#fff" stroke-width="1.3"/><path d="M5.5 3v2.5l1.5 1" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/></svg>
+      <b>OFCI</b>
     </div>
-    <div class="sb-tagline">EsSalud · Cooperación Internacional<br>Plan Operativo 2026</div>
+    <div class="sb-tag">EsSalud · Cooperación Internacional<br>Plan Operativo 2026</div>
   </div>
  
-  <div class="sb-sec">
-    <div class="sb-sec-lbl">Visión general</div>
-    <button class="nav-item active" onclick="showPage('resumen',this)">
-      <span class="ico">◈</span> Resumen POI
-    </button>
-    <button class="nav-item" onclick="showPage('poi',this)">
-      <span class="ico">📊</span> Avance POI Anual
-    </button>
+  <div class="sb-grp">
+    <div class="sb-grp-lbl">Visión general</div>
+    <button class="ni on" onclick="nav('resumen',this)"><span class="ico">◈</span> Resumen POI</button>
+    <button class="ni" onclick="nav('poi',this)"><span class="ico">📊</span> Avance POI Anual</button>
   </div>
- 
-  <div class="sb-sec">
-    <div class="sb-sec-lbl">Procesos MS-01</div>
-    <button class="nav-item" onclick="showPage('convenios',this)">
-      <span class="ico">📋</span> Convenios
-      <span class="nb" id="nb-conv">—</span>
-    </button>
-    <button class="nav-item" onclick="showPage('misiones',this)">
-      <span class="ico">🌍</span> Misiones
-      <span class="nb" id="nb-mis">—</span>
-    </button>
-    <button class="nav-item" onclick="showPage('donaciones',this)">
-      <span class="ico">🎁</span> Donaciones
-      <span class="nb" id="nb-don">—</span>
-    </button>
+  <div class="sb-grp">
+    <div class="sb-grp-lbl">MS-01 · Cooperación</div>
+    <button class="ni" onclick="nav('convenios',this)"><span class="ico">📋</span> Convenios <span class="nb" id="nb-conv">—</span></button>
+    <button class="ni" onclick="nav('misiones',this)"><span class="ico">🌍</span> Misiones <span class="nb" id="nb-mis">—</span></button>
+    <button class="ni" onclick="nav('donaciones',this)"><span class="ico">🎁</span> Donaciones <span class="nb" id="nb-don">—</span></button>
   </div>
- 
-  <div class="sb-sec">
-    <div class="sb-sec-lbl">Procesos MS-03</div>
-    <button class="nav-item" onclick="showPage('becas',this)">
-      <span class="ico">🎓</span> Becas y Pasantías
-      <span class="nb" id="nb-bec">—</span>
-    </button>
-    <button class="nav-item" onclick="showPage('membresias',this)">
-      <span class="ico">🏛</span> Membresías
-      <span class="nb" id="nb-mem">—</span>
-    </button>
+  <div class="sb-grp">
+    <div class="sb-grp-lbl">MS-03 · Formación</div>
+    <button class="ni" onclick="nav('becas',this)"><span class="ico">🎓</span> Becas y Pasantías <span class="nb" id="nb-bec">—</span></button>
+    <button class="ni" onclick="nav('membresias',this)"><span class="ico">🏛</span> Membresías <span class="nb" id="nb-mem">—</span></button>
   </div>
-  <div class="sb-sec">
-    <div class="sb-sec-lbl">Otros procesos</div>
-    <button class="nav-item" onclick="showPage('visitas',this)">
-      <span class="ico">🤝</span> Visitas Profesionales
-      <span class="nb" id="nb-vis">—</span>
-    </button>
-    <button class="nav-item" onclick="showPage('eventos',this)">
-      <span class="ico">🌐</span> Eventos Internacionales
-      <span class="nb" id="nb-evt">—</span>
-    </button>
-    <button class="nav-item" onclick="showPage('premios',this)">
-      <span class="ico">🏆</span> Premios y Reconocimientos
-      <span class="nb" id="nb-prm">—</span>
-    </button>
+  <div class="sb-grp">
+    <div class="sb-grp-lbl">Otros procesos</div>
+    <button class="ni" onclick="nav('visitas',this)"><span class="ico">🤝</span> Visitas Profesionales <span class="nb" id="nb-vis">—</span></button>
+    <button class="ni" onclick="nav('eventos',this)"><span class="ico">🌐</span> Eventos Int. <span class="nb" id="nb-evt">—</span></button>
+    <button class="ni" onclick="nav('premios',this)"><span class="ico">🏆</span> Premios y Reconoc. <span class="nb" id="nb-prm">—</span></button>
   </div>
  
   <div class="sb-foot">
-    <div class="sync-row">
+    <div class="sync">
       <span class="sdot" id="sdot"></span>
-      <span id="stime">Conectando…</span>
+      <span id="stime" style="font-family:'DM Mono',monospace">—</span>
     </div>
   </div>
 </aside>
  
-<header class="topbar">
-  <div class="tb-title">POI 2026 · <span id="page-title">Resumen</span></div>
-  <div class="filter-bar">
-    <span class="fl">TRIMESTRE</span>
-    <button class="chip active" id="chip-todos" onclick="setTrim('todos',this)">Todos <span id="ct-todos"></span></button>
-    <button class="chip" id="chip-T1" onclick="setTrim('T1',this)">T1 <span id="ct-T1"></span></button>
-    <button class="chip" id="chip-T2" onclick="setTrim('T2',this)">T2 <span id="ct-T2"></span></button>
-    <button class="chip" id="chip-T3" onclick="setTrim('T3',this)">T3 <span id="ct-T3"></span></button>
-    <button class="chip" id="chip-T4" onclick="setTrim('T4',this)">T4 <span id="ct-T4"></span></button>
+<!-- ══ TOPBAR ══ -->
+<header class="tb">
+  <div class="tb-title">POI 2026 · <em id="page-ttl">Resumen</em></div>
+  <div class="fbar">
+    <span class="fl">Trimestre</span>
+    <button class="chip on" id="chip-all" onclick="setTrim('all',this)">Todos</button>
+    <button class="chip" id="chip-T1" onclick="setTrim('T1',this)">T1</button>
+    <button class="chip" id="chip-T2" onclick="setTrim('T2',this)">T2</button>
+    <button class="chip" id="chip-T3" onclick="setTrim('T3',this)">T3</button>
+    <button class="chip" id="chip-T4" onclick="setTrim('T4',this)">T4</button>
   </div>
-  <button class="btn-ref" id="btn-ref" onclick="loadAll()">
-    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M10.5 2A5.5 5.5 0 1 0 11 6"/><path d="M11 1.5v3h-3"/></svg>
+  <button class="btn-upd" id="btn-upd" onclick="loadAll()">
+    <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M9.5 2A4.8 4.8 0 1 0 10 5.5"/><path d="M10 1.5v2.8H7.2"/></svg>
     Actualizar
   </button>
 </header>
  
+<!-- ══ PAGES ══ -->
 <main class="main">
  
-<!-- ══ RESUMEN ══ -->
-<section id="page-resumen" class="page active">
-  <div class="sh">
-    <div><div class="sh-t">Resumen POI 2026</div><div class="sh-s">Vista consolidada · Cooperación Internacional EsSalud</div></div>
-  </div>
-  <div class="kpi-grid g5" id="kpis-res">
-    <div class="skel" style="height:80px"></div><div class="skel" style="height:80px"></div>
-    <div class="skel" style="height:80px"></div><div class="skel" style="height:80px"></div>
-    <div class="skel" style="height:80px"></div>
-  </div>
-  <div class="kpi-grid" id="kpis-res2">
-    <div class="skel" style="height:80px"></div><div class="skel" style="height:80px"></div>
-    <div class="skel" style="height:80px"></div><div class="skel" style="height:80px"></div>
-  </div>
+<!-- RESUMEN -->
+<section id="pg-resumen" class="page on">
+  <div class="sh"><div><div class="sh-t">Resumen POI 2026</div><div class="sh-s">Vista consolidada · Cooperación Internacional EsSalud</div></div></div>
+  <div class="krow k5" id="kr1"><div class="skel" style="height:76px"></div><div class="skel" style="height:76px"></div><div class="skel" style="height:76px"></div><div class="skel" style="height:76px"></div><div class="skel" style="height:76px"></div></div>
+  <div class="krow k4" id="kr2"><div class="skel" style="height:76px"></div><div class="skel" style="height:76px"></div><div class="skel" style="height:76px"></div><div class="skel" style="height:76px"></div></div>
   <div class="g2">
     <div class="card">
-      <div class="card-h"><div><div class="card-t">Actividades por trimestre</div><div class="card-s">Ejecución acumulada POI 2026</div></div></div>
-      <div class="card-b"><div class="cw" style="height:240px"><canvas id="chartTrim" role="img" aria-label="Actividades por trimestre">Gráfico.</canvas></div></div>
+      <div class="ch"><div><div class="ct">Actividades por trimestre</div><div class="cs" id="trim-chart-sub">Ejecución acumulada 2026</div></div></div>
+      <div class="cb"><div class="cw" style="height:210px"><canvas id="cTrim" role="img" aria-label="Actividades por trimestre">Gráfico.</canvas></div></div>
     </div>
     <div class="card">
-      <div class="card-h"><div><div class="card-t">Distribución por proceso</div></div></div>
-      <div class="card-b">
-        <div class="legend" id="leg-proc"></div>
-        <div class="cw" style="height:200px"><canvas id="chartProc" role="img" aria-label="Procesos">Gráfico.</canvas></div>
+      <div class="ch"><div><div class="ct">Distribución por proceso</div></div></div>
+      <div class="cb">
+        <div class="leg" id="leg-proc"></div>
+        <div class="cw" style="height:185px"><canvas id="cProc" role="img" aria-label="Distribución">Gráfico.</canvas></div>
       </div>
     </div>
   </div>
-  <div class="card gfull">
-    <div class="card-h"><div class="card-t">Progreso de ejecución trimestral</div></div>
-    <div class="card-b">
-      <div class="trim-bar" id="trim-bar"></div>
-      <div style="margin-top:18px" id="prog-sec"></div>
+  <div class="card gf">
+    <div class="ch"><div class="ct">Ejecución por trimestre</div></div>
+    <div class="cb">
+      <div class="trim-bar" id="trim-visual"></div>
+      <div id="prog-rows"></div>
     </div>
   </div>
 </section>
  
-<!-- ══ POI ANUAL ══ -->
-<section id="page-poi" class="page">
-  <div class="sh">
-    <div><div class="sh-t">Avance POI Anual 2026</div><div class="sh-s">Seguimiento de metas comprometidas en el Plan Operativo Institucional</div></div>
+<!-- POI ANUAL -->
+<section id="pg-poi" class="page">
+  <div class="sh"><div><div class="sh-t">Avance POI Anual 2026</div><div class="sh-s">Seguimiento de metas comprometidas en el POI</div></div></div>
+  <div class="krow k4" id="kpoi"></div>
+  <div class="card gf">
+    <div class="ch"><div class="ct">Estado de metas POI 2026</div><div class="cs">Ejecutado vs meta anual</div></div>
+    <div class="tw"><table id="tpoi"></table></div>
   </div>
-  <div class="kpi-grid" id="kpis-poi"></div>
-  <div class="card gfull">
-    <div class="card-h"><div class="card-t">Estado de metas POI 2026</div><div class="card-s">Ejecutado vs meta anual por proceso</div></div>
-    <div class="tw">
-      <table class="poi-table" id="tbl-poi"></table>
-    </div>
-  </div>
-  <div class="g2" style="margin-top:16px">
+  <div class="g2" style="margin-top:14px">
     <div class="card">
-      <div class="card-h"><div class="card-t">Avance por proceso</div><div class="card-s">% completado de meta anual</div></div>
-      <div class="card-b"><div class="cw" style="height:260px"><canvas id="chartPOI" role="img" aria-label="Avance POI">Gráfico.</canvas></div></div>
+      <div class="ch"><div class="ct">Avance visual por proceso</div></div>
+      <div class="cb"><div class="cw" style="height:230px"><canvas id="cPOI" role="img" aria-label="Avance POI">Gráfico.</canvas></div></div>
     </div>
     <div class="card">
-      <div class="card-h"><div class="card-t">Resumen ejecutivo</div></div>
-      <div class="card-b" id="poi-resumen-exec"></div>
+      <div class="ch"><div class="ct">Semáforo de metas</div></div>
+      <div class="cb" id="poi-semaforo"></div>
     </div>
   </div>
 </section>
  
-<!-- ══ CONVENIOS ══ -->
-<section id="page-convenios" class="page">
+<!-- CONVENIOS -->
+<section id="pg-convenios" class="page">
   <div class="sh">
-    <div><div class="sh-t">Instrumentos de cooperación</div><div class="sh-s">Convenios y memorandos suscritos · MS-01</div></div>
-    <div class="ifilters">
-      <select id="filt-conv-e" onchange="renderConvenios()"><option value="">Todos los estados</option><option value="Vigente">Vigente</option><option value="Cerrado">Cerrado</option></select>
-      <input type="text" id="filt-conv-q" placeholder="Buscar organismo…" oninput="renderConvenios()" style="width:170px">
+    <div><div class="sh-t">Instrumentos de cooperación</div><div class="sh-s">Convenios y memorandos · MS-01</div></div>
+    <div class="iflt">
+      <select id="fc-e" onchange="rConvenios()"><option value="">Todos los estados</option><option value="Vigente">Vigente</option><option value="Cerrado">Cerrado</option></select>
+      <input type="text" id="fc-q" placeholder="Buscar…" oninput="rConvenios()" style="width:160px">
     </div>
   </div>
-  <div class="kpi-grid g3" id="kpis-conv"></div>
-  <div class="card gfull">
-    <div class="card-h"><div class="card-t">Registro de convenios</div><div class="card-s" id="conv-cnt"></div></div>
-    <div class="tw" id="tbl-conv"><div class="spin-c"><div class="sring"></div>Cargando…</div></div>
+  <div class="krow k3" id="kconv"></div>
+  <div class="card gf">
+    <div class="ch"><div class="ct">Registro de convenios</div><div class="cs" id="conv-c"></div></div>
+    <div class="tw" id="tconv"><div class="spin-c"><div class="sring"></div>Cargando…</div></div>
   </div>
 </section>
  
-<!-- ══ MISIONES ══ -->
-<section id="page-misiones" class="page">
-  <div class="sh"><div><div class="sh-t">Misiones humanitarias</div><div class="sh-s">Intervenciones ejecutadas en redes asistenciales · MS-01</div></div></div>
-  <div class="kpi-grid" id="kpis-mis"></div>
-  <div class="g2">
+<!-- MISIONES -->
+<section id="pg-misiones" class="page">
+  <div class="sh"><div><div class="sh-t">Misiones humanitarias</div><div class="sh-s">Intervenciones ejecutadas · MS-01</div></div></div>
+  <div class="krow k4" id="kmis"></div>
+  <div class="g31">
     <div id="cards-mis" class="mcards"></div>
     <div class="card">
-      <div class="card-h"><div class="card-t">Impacto acumulado</div></div>
-      <div class="card-b">
-        <div class="legend"><span><i style="background:#1B6CA8"></i>Profesionales</span><span><i style="background:#00C9A7"></i>Pacientes</span></div>
-        <div class="cw" style="height:230px"><canvas id="chartMis" role="img" aria-label="Impacto misiones">Gráfico.</canvas></div>
+      <div class="ch"><div class="ct">Impacto acumulado</div></div>
+      <div class="cb">
+        <div class="leg"><span><i style="background:#1A6CB0"></i>Profesionales</span><span><i style="background:#00C9A7"></i>Pacientes</span></div>
+        <div class="cw" style="height:200px"><canvas id="cMis" role="img" aria-label="Impacto">Gráfico.</canvas></div>
       </div>
     </div>
   </div>
 </section>
  
-<!-- ══ DONACIONES ══ -->
-<section id="page-donaciones" class="page">
-  <div class="sh"><div><div class="sh-t">Donaciones recibidas</div><div class="sh-s">Bienes y dispositivos recibidos por cooperación · MS-01</div></div></div>
-  <div class="kpi-grid g3" id="kpis-don"></div>
-  <div class="dcards" id="cards-don"></div>
-  <div class="card gfull">
-    <div class="card-h"><div class="card-t">Detalle de donaciones</div></div>
-    <div class="tw" id="tbl-don"></div>
+<!-- DONACIONES -->
+<section id="pg-donaciones" class="page">
+  <div class="sh"><div><div class="sh-t">Donaciones recibidas</div><div class="sh-s">Bienes y dispositivos · MS-01</div></div></div>
+  <div class="krow k3" id="kdon"></div>
+  <div class="dcards" id="cdon"></div>
+  <div class="card gf">
+    <div class="ch"><div class="ct">Detalle de donaciones</div></div>
+    <div class="tw" id="tdon"></div>
   </div>
 </section>
  
-<!-- ══ BECAS ══ -->
-<section id="page-becas" class="page">
+<!-- BECAS -->
+<section id="pg-becas" class="page">
   <div class="sh">
-    <div><div class="sh-t">Becas y pasantías</div><div class="sh-s">Oportunidades de formación captadas · MS-03</div></div>
-    <div class="ifilters">
-      <select id="filt-be" onchange="renderBecas()"><option value="">Todos</option><option value="Cerrada">Cerrada</option><option value="Abierta">Abierta</option></select>
-      <select id="filt-bm" onchange="renderBecas()"><option value="">Modalidad</option><option value="Curso">Curso</option><option value="Diplomado">Diplomado</option><option value="Seminario">Seminario</option><option value="Microaprendizaje">Microaprendizaje</option></select>
-      <select id="filt-bo" onchange="renderBecas()"><option value="">Organismo</option><option value="CISS">CISS</option><option value="OISS">OISS</option></select>
-      <input type="text" id="filt-bq" placeholder="Buscar…" oninput="renderBecas()" style="width:140px">
+    <div><div class="sh-t">Becas y pasantías</div><div class="sh-s">Formación internacional captada · MS-03</div></div>
+    <div class="iflt">
+      <select id="fb-e" onchange="rBecas()"><option value="">Todos</option><option value="Cerrada">Cerrada</option><option value="Abierta">Abierta</option></select>
+      <select id="fb-m" onchange="rBecas()"><option value="">Modalidad</option><option value="Curso">Curso</option><option value="Diplomado">Diplomado</option><option value="Seminario">Seminario</option><option value="Microaprendizaje">Microaprendizaje</option></select>
+      <select id="fb-o" onchange="rBecas()"><option value="">Organismo</option><option value="CISS">CISS</option><option value="OISS">OISS</option></select>
+      <input type="text" id="fb-q" placeholder="Buscar…" oninput="rBecas()" style="width:130px">
     </div>
   </div>
-  <div class="kpi-grid" id="kpis-bec"></div>
-  <div class="card gfull">
-    <div class="card-h"><div class="card-t">Registro de becas</div><div class="card-s" id="bec-cnt"></div></div>
-    <div class="tw" id="tbl-bec"><div class="spin-c"><div class="sring"></div>Cargando…</div></div>
+  <div class="krow k5" id="kbec"></div>
+  <div class="card gf">
+    <div class="ch"><div class="ct">Registro de becas</div><div class="cs" id="bec-c"></div></div>
+    <div class="tw" id="tbec"><div class="spin-c"><div class="sring"></div>Cargando…</div></div>
   </div>
 </section>
  
-<!-- ══ MEMBRESÍAS ══ -->
-<section id="page-membresias" class="page">
+<!-- MEMBRESÍAS -->
+<section id="pg-membresias" class="page">
   <div class="sh"><div><div class="sh-t">Membresías activas</div><div class="sh-s">Organismos internacionales · MS-03</div></div></div>
-  <div class="kpi-grid g3" id="kpis-mem"></div>
+  <div class="krow k3" id="kmem"></div>
   <div class="g2">
-    <div class="memcards" id="cards-mem"></div>
+    <div class="memcards" id="cmem"></div>
     <div class="card">
-      <div class="card-h"><div class="card-t">Inversión anual</div><div class="card-s">Distribución por organismo (USD)</div></div>
-      <div class="card-b">
-        <div class="legend" id="leg-mem"></div>
-        <div class="cw" style="height:230px"><canvas id="chartMem" role="img" aria-label="Membresías">Gráfico.</canvas></div>
+      <div class="ch"><div class="ct">Inversión anual por organismo</div></div>
+      <div class="cb">
+        <div class="leg" id="leg-mem"></div>
+        <div class="cw" style="height:200px"><canvas id="cMem" role="img" aria-label="Membresías">Gráfico.</canvas></div>
       </div>
     </div>
+  </div>
+</section>
+ 
+<!-- VISITAS -->
+<section id="pg-visitas" class="page">
+  <div class="sh"><div><div class="sh-t">Visitas profesionales</div><div class="sh-s">Intercambios y visitas de cooperación técnica · 2026</div></div></div>
+  <div class="krow k3" id="kvis"></div>
+  <div class="card gf">
+    <div class="ch"><div class="ct">Registro de visitas</div><div class="cs" id="vis-c"></div></div>
+    <div class="tw" id="tvis"><div class="spin-c"><div class="sring"></div>Cargando…</div></div>
+  </div>
+</section>
+ 
+<!-- EVENTOS -->
+<section id="pg-eventos" class="page">
+  <div class="sh"><div><div class="sh-t">Eventos internacionales</div><div class="sh-s">Participación en foros y eventos · 2026</div></div></div>
+  <div class="krow k3" id="kevt"></div>
+  <div class="card gf">
+    <div class="ch"><div class="ct">Registro de eventos</div><div class="cs" id="evt-c"></div></div>
+    <div class="tw" id="tevt"><div class="spin-c"><div class="sring"></div>Cargando…</div></div>
+  </div>
+</section>
+ 
+<!-- PREMIOS -->
+<section id="pg-premios" class="page">
+  <div class="sh"><div><div class="sh-t">Premios y reconocimientos</div><div class="sh-s">Distinciones recibidas por EsSalud · 2026</div></div></div>
+  <div class="krow k3" id="kprm"></div>
+  <div class="card gf">
+    <div class="ch"><div class="ct">Registro de premios</div><div class="cs" id="prm-c"></div></div>
+    <div class="tw" id="tprm"><div class="spin-c"><div class="sring"></div>Cargando…</div></div>
   </div>
 </section>
  
 </main>
  
-<!-- ══ VISITAS ══ -->
-<section id="page-visitas" class="page">
-  <div class="sh"><div><div class="sh-t">Visitas profesionales</div><div class="sh-s">Intercambios y visitas de cooperación técnica · 2026</div></div></div>
-  <div class="kpi-grid g3" id="kpis-vis"></div>
-  <div class="card gfull">
-    <div class="card-h"><div class="card-t">Registro de visitas</div><div class="card-s" id="vis-cnt"></div></div>
-    <div class="tw" id="tbl-vis"><div class="spin-c"><div class="sring"></div>Cargando…</div></div>
-  </div>
-</section>
- 
-<!-- ══ EVENTOS ══ -->
-<section id="page-eventos" class="page">
-  <div class="sh"><div><div class="sh-t">Eventos internacionales</div><div class="sh-s">Participación en foros y eventos · 2026</div></div></div>
-  <div class="kpi-grid g3" id="kpis-evt"></div>
-  <div class="card gfull">
-    <div class="card-h"><div class="card-t">Registro de eventos</div><div class="card-s" id="evt-cnt"></div></div>
-    <div class="tw" id="tbl-evt"><div class="spin-c"><div class="sring"></div>Cargando…</div></div>
-  </div>
-</section>
- 
-<!-- ══ PREMIOS ══ -->
-<section id="page-premios" class="page">
-  <div class="sh"><div><div class="sh-t">Premios y reconocimientos</div><div class="sh-s">Distinciones recibidas por EsSalud · 2026</div></div></div>
-  <div class="kpi-grid g3" id="kpis-prm"></div>
-  <div class="card gfull">
-    <div class="card-h"><div class="card-t">Registro de premios</div><div class="card-s" id="prm-cnt"></div></div>
-    <div class="tw" id="tbl-prm"><div class="spin-c"><div class="sring"></div>Cargando…</div></div>
-  </div>
-</section>
- 
 <!-- MODAL -->
-<div class="moverlay" id="moverlay" onclick="closeMod(event)">
-  <div class="modal" id="modal">
+<div class="mov" id="mov" onclick="closeMod(event)">
+  <div class="mod">
     <div class="mh">
-      <div><div class="mt" id="m-title"></div><div class="mid" id="m-id"></div></div>
+      <div><div class="mt" id="mod-t"></div><div class="mi" id="mod-i"></div></div>
       <button class="mcl" onclick="closeMod()">✕</button>
     </div>
-    <div class="mb" id="m-body"></div>
+    <div class="mb" id="mod-b"></div>
   </div>
 </div>
  
 <script>
-const BASE = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSq4jVuP0QbyGHNYWN2dbH67bFBsmQayQ4fUEAWfkUhD6TzFwG0kPT12kGD9WpX0pGJ6ETX3va7lwqz/pub';
-const URLS = {
-  conv: BASE+'?gid=0&single=true&output=csv',
-  mis:  BASE+'?gid=367800634&single=true&output=csv',
-  don:  BASE+'?gid=531213617&single=true&output=csv',
-  bec:  BASE+'?gid=1020970410&single=true&output=csv',
-  mem:  BASE+'?gid=2056939474&single=true&output=csv',
-  vis:  'https://docs.google.com/spreadsheets/d/e/2PACX-1vSq4jVuP0QbyGHNYWN2dbH67bFBsmQayQ4fUEAWfkUhD6TzFwG0kPT12kGD9WpX0pGJ6ETX3va7lwqz/pub?gid=877031401&single=true&output=csv',
-  evt:  'https://docs.google.com/spreadsheets/d/e/2PACX-1vSq4jVuP0QbyGHNYWN2dbH67bFBsmQayQ4fUEAWfkUhD6TzFwG0kPT12kGD9WpX0pGJ6ETX3va7lwqz/pub?gid=2075582924&single=true&output=csv',
-  prm:  'https://docs.google.com/spreadsheets/d/e/2PACX-1vSq4jVuP0QbyGHNYWN2dbH67bFBsmQayQ4fUEAWfkUhD6TzFwG0kPT12kGD9WpX0pGJ6ETX3va7lwqz/pub?gid=29455211&single=true&output=csv',
+const BASE='https://docs.google.com/spreadsheets/d/e/2PACX-1vSq4jVuP0QbyGHNYWN2dbH67bFBsmQayQ4fUEAWfkUhD6TzFwG0kPT12kGD9WpX0pGJ6ETX3va7lwqz/pub';
+const URLS={
+  conv:BASE+'?gid=0&single=true&output=csv',
+  mis: BASE+'?gid=367800634&single=true&output=csv',
+  don: BASE+'?gid=531213617&single=true&output=csv',
+  bec: BASE+'?gid=1020970410&single=true&output=csv',
+  mem: BASE+'?gid=2056939474&single=true&output=csv',
+  vis: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSq4jVuP0QbyGHNYWN2dbH67bFBsmQayQ4fUEAWfkUhD6TzFwG0kPT12kGD9WpX0pGJ6ETX3va7lwqz/pub?gid=877031401&single=true&output=csv',
+  evt: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSq4jVuP0QbyGHNYWN2dbH67bFBsmQayQ4fUEAWfkUhD6TzFwG0kPT12kGD9WpX0pGJ6ETX3va7lwqz/pub?gid=2075582924&single=true&output=csv',
+  prm: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSq4jVuP0QbyGHNYWN2dbH67bFBsmQayQ4fUEAWfkUhD6TzFwG0kPT12kGD9WpX0pGJ6ETX3va7lwqz/pub?gid=29455211&single=true&output=csv',
 };
  
-// METAS POI ANUALES
-const METAS = [
-  {key:'convenios',   label:'Convenios suscritos',          meta:6,  ico:'📋', campo:'conv'},
-  {key:'misiones',    label:'Misiones humanitarias',         meta:4,  ico:'🌍', campo:'mis'},
-  {key:'donaciones',  label:'Donaciones recibidas',          meta:4,  ico:'🎁', campo:'don'},
-  {key:'becas',       label:'Becas otorgadas',               meta:30, ico:'🎓',campo:'bec'},
-  {key:'visitas',     label:'Visitas profesionales',         meta:12, ico:'🤝', campo:'vis'},
-  {key:'eventos',     label:'Eventos internacionales',       meta:2,  ico:'🌐', campo:'evt'},
-  {key:'premios',     label:'Premios y reconocimientos',     meta:2,  ico:'🏆', campo:'prm'},
-  {key:'membresias',  label:'Membresías activas',            meta:4,  ico:'🏛', campo:'mem'},
+const METAS=[
+  {key:'convenios', label:'Convenios',           meta:6,  ico:'📋'},
+  {key:'misiones',  label:'Misiones humanitarias',meta:4,  ico:'🌍'},
+  {key:'donaciones',label:'Donaciones',           meta:4,  ico:'🎁'},
+  {key:'becas',     label:'Becas otorgadas',       meta:30, ico:'🎓'},
+  {key:'visitas',   label:'Visitas profesionales', meta:12, ico:'🤝'},
+  {key:'eventos',   label:'Eventos internacionales',meta:2, ico:'🌐'},
+  {key:'premios',   label:'Premios y reconoc.',    meta:2,  ico:'🏆'},
+  {key:'membresias',label:'Membresías',            meta:4,  ico:'🏛'},
 ];
  
-let DATA = {conv:[],mis:[],don:[],bec:[],mem:[],vis:[],evt:[],prm:[]};
-let TRIM = 'todos';
-let CH = {};
+let D={conv:[],mis:[],don:[],bec:[],mem:[],vis:[],evt:[],prm:[]};
+let TRIM='all';
+let CH={};
+let CUR_PAGE='resumen';
  
-function parseCSV(txt) {
-  const lines = txt.trim().split('\n');
-  const headers = lines[0].split(',').map(h=>h.trim().replace(/^"|"$/g,''));
+// ── PARSE CSV ──
+function parseCSV(txt){
+  const lines=txt.trim().split('\n');
+  const headers=lines[0].split(',').map(h=>h.trim().replace(/^"|"$/g,''));
   return lines.slice(1).filter(l=>l.trim()).map(line=>{
-    const vals=[]; let cur=''; let inQ=false;
-    for(let ch of line){
+    const vals=[];let cur='';let inQ=false;
+    for(const ch of line){
       if(ch==='"'){inQ=!inQ}
       else if(ch===','&&!inQ){vals.push(cur.trim());cur=''}
       else cur+=ch;
     }
     vals.push(cur.trim());
-    const obj={};
-    headers.forEach((h,i)=>obj[h]=vals[i]||'');
-    return obj;
+    const o={};headers.forEach((h,i)=>o[h]=vals[i]||'');
+    return o;
   });
 }
  
 async function fetchSheet(url,key){
   try{
     const r=await fetch(url+'&_='+Date.now());
-    if(!r.ok) throw new Error('HTTP '+r.status);
-    DATA[key]=parseCSV(await r.text());
+    if(!r.ok)throw new Error();
+    D[key]=parseCSV(await r.text());
     return true;
-  }catch(e){return false;}
+  }catch{return false;}
 }
  
 async function loadAll(){
-  const btn=document.getElementById('btn-ref');
+  const btn=document.getElementById('btn-upd');
   btn.classList.add('spin');
   document.getElementById('sdot').className='sdot';
-  document.getElementById('stime').textContent='Actualizando…';
- 
-  const res=await Promise.all([
-    fetchSheet(URLS.conv,'conv'),fetchSheet(URLS.mis,'mis'),
-    fetchSheet(URLS.don,'don'),fetchSheet(URLS.bec,'bec'),
-    fetchSheet(URLS.mem,'mem'),
-    fetchSheet(URLS.vis,'vis'),
-    fetchSheet(URLS.evt,'evt'),
-    fetchSheet(URLS.prm,'prm'),
-  ]);
- 
+  document.getElementById('stime').textContent='…';
+  const res=await Promise.all(Object.entries(URLS).map(([k,u])=>fetchSheet(u,k)));
   btn.classList.remove('spin');
   const ok=res.every(r=>r);
-  document.getElementById('sdot').className='sdot '+(ok?'live':'err');
+  document.getElementById('sdot').className='sdot '+(ok?'ok':'err');
   document.getElementById('stime').textContent=
     new Date().toLocaleTimeString('es-PE',{hour:'2-digit',minute:'2-digit'});
- 
   updateBadges();
-  renderAll();
+  renderPage(CUR_PAGE);
 }
  
-function ft(arr,campo='trimestre'){
-  if(TRIM==='todos') return arr;
-  return arr.filter(r=>(r[campo]||'').includes(TRIM));
+// ── FILTER BY TRIM ──
+// Filtros que tienen campo trimestre
+function ft(arr){
+  if(TRIM==='all')return arr;
+  return arr.filter(r=>(r.trimestre||'').toUpperCase()===TRIM);
+}
+ 
+// Contar actividades por trimestre (conv+mis+don+bec)
+function countTrim(t){
+  return [...D.conv,...D.mis,...D.don,...D.bec]
+    .filter(r=>(r.trimestre||'').toUpperCase()===t).length;
 }
  
 function setTrim(t,el){
   TRIM=t;
-  document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
-  el.classList.add('active');
-  renderAll();
+  document.querySelectorAll('.chip').forEach(c=>c.classList.remove('on'));
+  el.classList.add('on');
+  renderPage(CUR_PAGE);
 }
  
 function updateBadges(){
-  document.getElementById('nb-conv').textContent=DATA.conv.length;
-  document.getElementById('nb-mis').textContent=DATA.mis.length;
-  document.getElementById('nb-don').textContent=DATA.don.length;
-  document.getElementById('nb-bec').textContent=DATA.bec.length;
-  document.getElementById('nb-mem').textContent=DATA.mem.length;
-  document.getElementById('nb-vis').textContent=DATA.vis.length||'0';
-  document.getElementById('nb-evt').textContent=DATA.evt.length||'0';
-  document.getElementById('nb-prm').textContent=DATA.prm.length||'0';
-  // chip counts
-  const all=[...DATA.conv,...DATA.mis,...DATA.don,...DATA.bec];
-  const tot=all.length;
-  document.getElementById('ct-todos').textContent=tot?' '+tot:'';
-  ['T1','T2','T3','T4'].forEach(t=>{
-    const n=all.filter(r=>(r.trimestre||'').includes(t)).length;
-    const el=document.getElementById('ct-'+t);
-    if(el) el.textContent=n?' '+n:'';
-  });
+  document.getElementById('nb-conv').textContent=D.conv.length;
+  document.getElementById('nb-mis').textContent=D.mis.length;
+  document.getElementById('nb-don').textContent=D.don.length;
+  document.getElementById('nb-bec').textContent=D.bec.length;
+  document.getElementById('nb-mem').textContent=D.mem.length;
+  document.getElementById('nb-vis').textContent=D.vis.length||'0';
+  document.getElementById('nb-evt').textContent=D.evt.length||'0';
+  document.getElementById('nb-prm').textContent=D.prm.length||'0';
 }
  
-function showPage(n,el){
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.nav-item').forEach(x=>x.classList.remove('active'));
-  document.getElementById('page-'+n).classList.add('active');
-  el.classList.add('active');
-  const T={resumen:'Resumen POI',poi:'Avance POI Anual',convenios:'Convenios',misiones:'Misiones Humanitarias',donaciones:'Donaciones',becas:'Becas y Pasantías',membresias:'Membresías',visitas:'Visitas Profesionales',eventos:'Eventos Internacionales',premios:'Premios y Reconocimientos'};
-  document.getElementById('page-title').textContent=T[n]||n;
-  const R={resumen:renderResumen,poi:renderPOI,convenios:renderConvenios,misiones:renderMisiones,donaciones:renderDonaciones,becas:renderBecas,membresias:renderMembresias,visitas:renderVisitas,eventos:renderEventos,premios:renderPremios};
-  if(R[n]) R[n]();
+// ── NAVIGATION ──
+const PAGE_TITLES={resumen:'Resumen POI',poi:'Avance POI Anual',convenios:'Convenios',misiones:'Misiones',donaciones:'Donaciones',becas:'Becas y Pasantías',membresias:'Membresías',visitas:'Visitas Profesionales',eventos:'Eventos Internacionales',premios:'Premios y Reconocimientos'};
+ 
+function nav(name,el){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.ni').forEach(n=>n.classList.remove('on'));
+  document.getElementById('pg-'+name).classList.add('on');
+  el.classList.add('on');
+  document.getElementById('page-ttl').textContent=PAGE_TITLES[name]||name;
+  CUR_PAGE=name;
+  renderPage(name);
 }
  
-function renderAll(){
-  renderResumen();
-  const active=document.querySelector('.page.active');
-  if(active){
-    const id=active.id.replace('page-','');
-    const R={poi:renderPOI,convenios:renderConvenios,misiones:renderMisiones,donaciones:renderDonaciones,becas:renderBecas,membresias:renderMembresias,visitas:renderVisitas,eventos:renderEventos,premios:renderPremios};
-    if(R[id]) R[id]();
-  }
+function renderPage(name){
+  const R={resumen:rResumen,poi:rPOI,convenios:rConvenios,misiones:rMisiones,donaciones:rDonaciones,becas:rBecas,membresias:rMembresias,visitas:rVisitas,eventos:rEventos,premios:rPremios};
+  if(R[name])R[name]();
 }
  
+// ── HELPERS ──
 function bs(e){
-  if(!e) return '';
-  const m={'vigente':'bg','activa':'bg','finalizada':'bg','finalizado':'bg','cerrada':'bb','cerrado':'bb','abierta':'bsk','suspendido':'br','observado':'ba'};
+  if(!e)return'';
+  const m={'vigente':'bg','activa':'bg','finalizada':'bg','finalizado':'bg','cerrada':'bb','cerrado':'bb','abierta':'bsk','suspendido':'br','por registrar':'bgr'};
   const k=Object.keys(m).find(k=>e.toLowerCase().includes(k));
-  return `<span class="badge ${k?m[k]:'bgr'}">${e}</span>`;
+  return`<span class="b ${k?m[k]:'bgr'}">${e}</span>`;
 }
- 
-function kpi(lbl,val,sub,cls='',ico=''){
-  return `<div class="kpi ${cls}"><div class="kpi-ico">${ico}</div><div class="kpi-lbl">${lbl}</div><div class="kpi-val">${val}</div>${sub?`<div class="kpi-sub">${sub}</div>`:''}</div>`;
+function kc(lbl,val,sub,cls='',ico=''){
+  return`<div class="kc ${cls}"><div class="kc-ico">${ico}</div><div class="kc-lbl">${lbl}</div><div class="kc-val">${val}</div>${sub?`<div class="kc-sub">${sub}</div>`:''}</div>`;
 }
 function dc(id){if(CH[id]){CH[id].destroy();delete CH[id];}}
  
-// ══ RESUMEN ══
-function renderResumen(){
-  const totalPac=DATA.mis.reduce((s,r)=>s+(parseInt(r.n_pacientes_atendidos)||0),0);
-  const totalProf=DATA.mis.reduce((s,r)=>s+(parseInt(r.n_profesionales)||0),0);
-  const totalBenef=DATA.bec.reduce((s,r)=>s+(parseInt(r.n_beneficiados)||0),0);
-  const totalDon=DATA.don.reduce((s,r)=>s+(parseFloat(r.valor_usd)||0),0);
-  const totalMem=DATA.mem.reduce((s,r)=>s+(parseFloat(r.costo_anual_usd)||0),0);
+// ── RESUMEN ──
+function rResumen(){
+  const conv=ft(D.conv);
+  const mis=ft(D.mis);
+  const don=ft(D.don);
+  const bec=ft(D.bec);
  
-  document.getElementById('kpis-res').innerHTML=
-    kpi('Convenios suscritos',DATA.conv.length,'2026','','📋')+
-    kpi('Misiones ejecutadas',DATA.mis.length,'humanitarias','','🌍')+
-    kpi('Pacientes atendidos',totalPac,'por misiones','g','🏥')+
-    kpi('Becados',totalBenef||'—','personas capacitadas','g','🎓')+
-    kpi('Donaciones',DATA.don.length,'USD '+totalDon.toLocaleString(),'au','🎁');
+  const totalPac=mis.reduce((s,r)=>s+(parseInt(r.n_pacientes_atendidos)||0),0);
+  const totalProf=mis.reduce((s,r)=>s+(parseInt(r.n_profesionales)||0),0);
+  const totalBenef=D.bec.reduce((s,r)=>s+(parseInt(r.n_beneficiados)||0),0);
+  const totalDon=don.reduce((s,r)=>s+(parseFloat(r.valor_usd)||0),0);
+  const totalMem=D.mem.reduce((s,r)=>s+(parseFloat(r.costo_anual_usd)||0),0);
+  const totalH=D.bec.reduce((s,r)=>s+(parseFloat(r.horas)||0),0);
  
-  document.getElementById('kpis-res2').innerHTML=
-    kpi('Membresías activas',DATA.mem.length,'USD '+totalMem.toLocaleString()+' / año','','🏛')+
-    kpi('Profesionales enviados',totalProf,'voluntarios en misiones','','👨‍⚕️')+
-    kpi('Horas de formación',DATA.bec.reduce((s,r)=>s+(parseFloat(r.horas)||0),0).toLocaleString(),'total becas','au','📚')+
-    kpi('Países cooperantes',[...new Set([...DATA.conv.map(r=>r.pais),...DATA.mis.map(r=>'Perú')].filter(Boolean))].length,'distintos','','🌐');
+  const trimLabel=TRIM==='all'?'Todos los trimestres':TRIM;
  
-  // Chart trimestral
-  dc('chartTrim');
-  CH.chartTrim=new Chart(document.getElementById('chartTrim'),{
+  document.getElementById('kr1').innerHTML=
+    kc('Convenios suscritos',conv.length,trimLabel,'','📋')+
+    kc('Misiones ejecutadas',mis.length,trimLabel,'','🌍')+
+    kc('Pacientes atendidos',totalPac,'por misiones','g','🏥')+
+    kc('Becados',totalBenef||'—','personas capacitadas','g','🎓')+
+    kc('Donaciones',don.length,'USD '+totalDon.toLocaleString(),'au','🎁');
+ 
+  document.getElementById('kr2').innerHTML=
+    kc('Membresías activas',D.mem.length,'USD '+totalMem.toLocaleString()+'/año','','')+
+    kc('Profesionales enviados',totalProf,'en misiones','','')+
+    kc('Horas de formación',totalH.toLocaleString(),'total becas','au','')+
+    kc('Países cooperantes',[...new Set(D.conv.map(r=>r.pais).filter(Boolean))].length,'distintos','','');
+ 
+  // Calcular conteos por trimestre dinámicamente
+  const tCounts={T1:0,T2:0,T3:0,T4:0};
+  [...D.conv,...D.mis,...D.don,...D.bec].forEach(r=>{
+    const t=(r.trimestre||'').toUpperCase();
+    if(tCounts[t]!==undefined)tCounts[t]++;
+  });
+ 
+  // Datos del gráfico según filtro
+  let chartData,chartLabels;
+  if(TRIM==='all'){
+    chartLabels=['T1','T2','T3','T4'];
+    chartData=[tCounts.T1,tCounts.T2,tCounts.T3,tCounts.T4];
+    document.getElementById('trim-chart-sub').textContent='Ejecución acumulada 2026';
+  } else {
+    const allInTrim=[...D.conv,...D.mis,...D.don,...D.bec].filter(r=>(r.trimestre||'').toUpperCase()===TRIM);
+    const byProc={Convenios:0,Misiones:0,Donaciones:0,Becas:0};
+    D.conv.filter(r=>(r.trimestre||'').toUpperCase()===TRIM).forEach(()=>byProc.Convenios++);
+    D.mis.filter(r=>(r.trimestre||'').toUpperCase()===TRIM).forEach(()=>byProc.Misiones++);
+    D.don.filter(r=>(r.trimestre||'').toUpperCase()===TRIM).forEach(()=>byProc.Donaciones++);
+    D.bec.filter(r=>(r.trimestre||'').toUpperCase()===TRIM).forEach(()=>byProc.Becas++);
+    chartLabels=Object.keys(byProc);
+    chartData=Object.values(byProc);
+    document.getElementById('trim-chart-sub').textContent='Desglose por proceso · '+TRIM;
+  }
+ 
+  const barColors=TRIM==='all'
+    ?['#0B1E35','#1A6CB0','#8EB8DA','#C5D9EC']
+    :['#0B1E35','#1A6CB0','#00C9A7','#F0A500'];
+ 
+  dc('cTrim');
+  CH.cTrim=new Chart(document.getElementById('cTrim'),{
     type:'bar',
-    data:{labels:['T1 Ene–Mar','T2 Abr–Jun','T3 Jul–Sep','T4 Oct–Dic'],datasets:[{
-      data:[20,6,3,3],
-      backgroundColor:['#0B1E35','#1B6CA8','#B5D4F0','#B5D4F0'],
-      borderRadius:8,borderSkipped:false
+    data:{labels:chartLabels,datasets:[{
+      data:chartData,
+      backgroundColor:barColors,
+      borderRadius:7,borderSkipped:false,
+      barPercentage:0.55,categoryPercentage:0.7
     }]},
-    options:{responsive:true,maintainAspectRatio:false,
-      layout:{padding:{top:10}},
-      plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>' '+ctx.raw+' actividades'}}},
-      scales:{y:{beginAtZero:true,grid:{color:'#F0F4FA'},ticks:{color:'#667A90',font:{size:11}},border:{display:false}},
-        x:{grid:{display:false},ticks:{color:'#0B1E35',font:{size:11,weight:'600'}},border:{display:false}}}}
-  });
- 
-  // Dona
-  const cols=['#0B1E35','#1B6CA8','#3B9EE0','#00C9A7','#F0A500'];
-  const labs=['Convenios','Misiones','Donaciones','Becas','Membresías'];
-  const vals=[DATA.conv.length,DATA.mis.length,DATA.don.length,DATA.bec.length,DATA.mem.length];
-  document.getElementById('leg-proc').innerHTML=labs.map((l,i)=>
-    `<span><i style="background:${cols[i]}"></i>${l} ${vals[i]}</span>`).join('');
-  dc('chartProc');
-  CH.chartProc=new Chart(document.getElementById('chartProc'),{
-    type:'doughnut',
-    data:{labels:labs,datasets:[{data:vals,backgroundColor:cols,borderWidth:0}]},
-    options:{responsive:true,maintainAspectRatio:false,cutout:'65%',plugins:{legend:{display:false}}}
-  });
- 
-  // Trim visual
-  document.getElementById('trim-bar').innerHTML=[
-    {l:'T1 · Ene–Mar',n:20,c:'done'},{l:'T2 · Abr–Jun',n:6,c:'done'},
-    {l:'T3 · Jul–Sep',n:3,c:''},{l:'T4 · Oct–Dic',n:3,c:''}
-  ].map(q=>`<div class="tq ${q.c}"><span>${q.n}</span>${q.l}</div>`).join('');
- 
-  // Progress
-  const procs=[
-    {l:'Convenios',v:DATA.conv.length,m:6,g:false},
-    {l:'Misiones',v:DATA.mis.length,m:4,g:false},
-    {l:'Donaciones',v:DATA.don.length,m:4,g:true},
-    {l:'Becas',v:DATA.bec.length,m:30,g:true},
-    {l:'Membresías',v:DATA.mem.length,m:4,g:false},
-  ];
-  document.getElementById('prog-sec').innerHTML=procs.map(p=>{
-    const pct=Math.min(Math.round((p.v/p.m)*100),100);
-    return `<div class="prow"><div class="plbl">${p.l}</div><div class="pbar"><div class="pfill ${p.g?'g':''}" style="width:${pct}%"></div></div><div class="pval">${p.v}/${p.m}</div></div>`;
-  }).join('');
-}
- 
-// ══ POI ANUAL ══
-function renderPOI(){
-  const ejecutado={
-    convenios: DATA.conv.length,
-    misiones:  DATA.mis.length,
-    donaciones:DATA.don.length,
-    becas:     DATA.bec.reduce((s,r)=>s+(parseInt(r.n_beneficiados)||0),0),
-    visitas:   DATA.vis.length,
-    eventos:   DATA.evt.length,
-    premios:   DATA.prm.length,
-    membresias:DATA.mem.length,
-  };
- 
-  const completados=METAS.filter(m=>m.meta&&ejecutado[m.key]>=m.meta).length;
-  const enCurso=METAS.filter(m=>m.meta&&ejecutado[m.key]>0&&ejecutado[m.key]<m.meta).length;
-  const sinIniciar=METAS.filter(m=>m.meta&&ejecutado[m.key]===0).length;
- 
-  document.getElementById('kpis-poi').innerHTML=
-    kpi('Metas completadas',completados,`de ${METAS.filter(m=>m.meta).length} con meta definida`,'g','✅')+
-    kpi('En curso',enCurso,'con avance parcial','au','⚡')+
-    kpi('Sin iniciar',sinIniciar,'pendientes de ejecución','r','⏳')+
-    kpi('Becas otorgadas',ejecutado.becas,'personas beneficiadas','g','🎓');
- 
-  // Tabla POI
-  const rows=METAS.map(m=>{
-    const ej=ejecutado[m.key]||0;
-    const meta=m.meta;
-    const pct=meta?Math.min(Math.round((ej/meta)*100),100):null;
-    const falta=meta?Math.max(meta-ej,0):null;
-    let barClass='';
-    if(pct===null) barClass='';
-    else if(pct>=100) barClass='done';
-    else if(pct>=50) barClass='warn';
-    else barClass='danger';
- 
-    let faltaHTML='';
-    if(falta===null) faltaHTML=`<span style="color:var(--muted);font-size:10px">Sin meta fija</span>`;
-    else if(falta===0) faltaHTML=`<span class="poi-falta ok">✓ Completo</span>`;
-    else faltaHTML=`<span class="poi-falta ${pct>=50?'warn':'danger'}">Faltan ${falta}</span>`;
- 
-    const barHTML=meta?`<div style="display:flex;align-items:center">
-      <div class="poi-bar-wrap"><div class="poi-bar ${barClass}" style="width:${pct}%"></div></div>
-      <span class="poi-pct">${pct}%</span></div>`:'<span style="color:var(--muted);font-size:10px">—</span>';
- 
-    return `<tr>
-      <td>${m.ico} <strong>${m.label}</strong></td>
-      <td style="font-family:'DM Mono',monospace;font-weight:700;font-size:13px">${ej}</td>
-      <td style="font-family:'DM Mono',monospace">${meta||'—'}</td>
-      <td>${barHTML}</td>
-      <td>${faltaHTML}</td>
-    </tr>`;
-  }).join('');
- 
-  document.getElementById('tbl-poi').innerHTML=`
-    <thead><tr><th>Proceso / Actividad</th><th>Ejecutado</th><th>Meta anual</th><th>Progreso</th><th>Estado</th></tr></thead>
-    <tbody>${rows}</tbody>`;
- 
-  // Chart POI
-  const metasConDato=METAS.filter(m=>m.meta);
-  dc('chartPOI');
-  CH.chartPOI=new Chart(document.getElementById('chartPOI'),{
-    type:'bar',
-    data:{
-      labels:metasConDato.map(m=>m.label.split(' ').slice(0,2).join(' ')),
-      datasets:[
-        {label:'Ejecutado',data:metasConDato.map(m=>ejecutado[m.key]||0),backgroundColor:'#1B6CA8',borderRadius:4},
-        {label:'Meta',data:metasConDato.map(m=>m.meta),backgroundColor:'#EEF2F8',borderRadius:4},
-      ]
-    },
     options:{
       responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{display:false}},
+      layout:{padding:{top:12,bottom:4}},
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>' '+ctx.raw+' actividades'}}},
       scales:{
-        x:{grid:{display:false},ticks:{font:{size:9},color:'#0B1E35',maxRotation:35}},
-        y:{beginAtZero:true,grid:{color:'#F0F4FA'},ticks:{font:{size:10},color:'#667A90'}}
+        y:{beginAtZero:true,grid:{color:'#EDF1F7',drawBorder:false},border:{display:false},ticks:{color:'#6B7E94',font:{size:10},stepSize:1}},
+        x:{grid:{display:false},border:{display:false},ticks:{color:'#0B1E35',font:{size:10,weight:'600'}}}
       }
     }
   });
  
-  // Resumen ejecutivo
-  document.getElementById('poi-resumen-exec').innerHTML=`
-    <div style="display:flex;flex-direction:column;gap:10px">
+  // Dona — siempre total, no filtrada
+  const procCols=['#0B1E35','#1A6CB0','#3B9EE0','#00C9A7','#F0A500'];
+  const procLabs=['Convenios','Misiones','Donaciones','Becas','Membresías'];
+  const procVals=[D.conv.length,D.mis.length,D.don.length,D.bec.length,D.mem.length];
+  document.getElementById('leg-proc').innerHTML=procLabs.map((l,i)=>
+    `<span><i style="background:${procCols[i]}"></i>${l} <strong style="color:var(--navy)">${procVals[i]}</strong></span>`).join('');
+  dc('cProc');
+  CH.cProc=new Chart(document.getElementById('cProc'),{
+    type:'doughnut',
+    data:{labels:procLabs,datasets:[{data:procVals,backgroundColor:procCols,borderWidth:2,borderColor:'#fff'}]},
+    options:{responsive:true,maintainAspectRatio:false,cutout:'66%',
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>` ${ctx.label}: ${ctx.raw}`}}}}
+  });
+ 
+  // Trim visual bar — clicable
+  const tqDefs=[
+    {t:'T1',label:'T1 · Ene–Mar',n:tCounts.T1,done:true},
+    {t:'T2',label:'T2 · Abr–Jun',n:tCounts.T2,done:true},
+    {t:'T3',label:'T3 · Jul–Sep',n:tCounts.T3,done:false},
+    {t:'T4',label:'T4 · Oct–Dic',n:tCounts.T4,done:false},
+  ];
+  document.getElementById('trim-visual').innerHTML=tqDefs.map(q=>{
+    const isSel=TRIM===q.t;
+    const cls=isSel?'sel':q.done?'done':'';
+    const nCls=isSel?'tq-n':'tq-n '+(q.done?'done-n':'muted-n');
+    return`<div class="tq ${cls}" onclick="setTrimFromBar('${q.t}')">
+      <span class="${nCls}">${q.n}</span>${q.label}
+    </div>`;
+  }).join('');
+ 
+  // Progress rows
+  const procs2=[
+    {l:'Convenios',v:D.conv.length,m:6},
+    {l:'Misiones',v:D.mis.length,m:4},
+    {l:'Donaciones',v:D.don.length,m:4},
+    {l:'Becas',v:D.bec.length,m:30,g:true},
+    {l:'Membresías',v:D.mem.length,m:4},
+  ];
+  document.getElementById('prog-rows').innerHTML=procs2.map(p=>{
+    const pct=Math.min(Math.round((p.v/p.m)*100),100);
+    const cls=pct>=100?'g':pct>=50?'au':'r';
+    return`<div class="prow">
+      <div class="plbl">${p.l}</div>
+      <div class="pbar"><div class="pfill ${cls}" style="width:${pct}%"></div></div>
+      <div class="pval">${p.v}/${p.m}</div>
+    </div>`;
+  }).join('');
+}
+ 
+function setTrimFromBar(t){
+  // Toggle: si ya está seleccionado, vuelve a todos
+  const newTrim=TRIM===t?'all':t;
+  TRIM=newTrim;
+  document.querySelectorAll('.chip').forEach(c=>c.classList.remove('on'));
+  document.getElementById(newTrim==='all'?'chip-all':'chip-'+newTrim).classList.add('on');
+  rResumen();
+}
+ 
+// ── POI ANUAL ──
+function rPOI(){
+  const ej={
+    convenios:D.conv.length, misiones:D.mis.length, donaciones:D.don.length,
+    becas:D.bec.reduce((s,r)=>s+(parseInt(r.n_beneficiados)||0),0),
+    visitas:D.vis.length, eventos:D.evt.length, premios:D.prm.length, membresias:D.mem.length,
+  };
+  const completos=METAS.filter(m=>ej[m.key]>=m.meta).length;
+  const enCurso=METAS.filter(m=>ej[m.key]>0&&ej[m.key]<m.meta).length;
+  const pendientes=METAS.filter(m=>ej[m.key]===0).length;
+ 
+  document.getElementById('kpoi').innerHTML=
+    kc('Metas completadas',completos,'de '+METAS.length+' totales','g')+
+    kc('En curso',enCurso,'con avance parcial','au')+
+    kc('Sin iniciar',pendientes,'pendientes','r')+
+    kc('Becas otorgadas',ej.becas,'personas beneficiadas','g');
+ 
+  const rows=METAS.map(m=>{
+    const e=ej[m.key]||0;
+    const pct=Math.min(Math.round((e/m.meta)*100),100);
+    const falta=Math.max(m.meta-e,0);
+    const cls=pct>=100?'c-ok':pct>=50?'c-md':'c-lo';
+    const fcls=pct>=100?'ok':pct>=50?'md':'lo';
+    return`<tr>
+      <td>${m.ico} <strong>${m.label}</strong></td>
+      <td style="font-family:'DM Mono',monospace;font-size:13px;font-weight:700;color:var(--navy)">${e}</td>
+      <td style="font-family:'DM Mono',monospace;color:var(--muted)">${m.meta}</td>
+      <td><div style="display:flex;align-items:center">
+        <div class="poi-bar-wrap"><div class="poi-bar ${cls}" style="width:${pct}%"></div></div>
+        <span class="poi-pct">${pct}%</span>
+      </div></td>
+      <td><span class="falta ${fcls}">${falta===0?'✓ Completo':'Faltan '+falta}</span></td>
+    </tr>`;
+  }).join('');
+ 
+  document.getElementById('tpoi').innerHTML=`
+    <thead><tr><th>Proceso</th><th>Ejecutado</th><th>Meta</th><th>Progreso</th><th>Estado</th></tr></thead>
+    <tbody>${rows}</tbody>`;
+ 
+  dc('cPOI');
+  CH.cPOI=new Chart(document.getElementById('cPOI'),{
+    type:'bar',
+    data:{
+      labels:METAS.map(m=>m.label.split(' ').slice(0,2).join(' ')),
+      datasets:[
+        {label:'Ejecutado',data:METAS.map(m=>ej[m.key]||0),backgroundColor:'#1A6CB0',borderRadius:5,barPercentage:.5},
+        {label:'Meta',data:METAS.map(m=>m.meta),backgroundColor:'#E8EEF8',borderRadius:5,barPercentage:.5},
+      ]
+    },
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false}},
+      scales:{
+        x:{grid:{display:false},border:{display:false},ticks:{font:{size:9},color:'#0B1E35',maxRotation:30}},
+        y:{beginAtZero:true,grid:{color:'#EDF1F7'},border:{display:false},ticks:{font:{size:10},color:'#6B7E94'}}
+      }
+    }
+  });
+ 
+  document.getElementById('poi-semaforo').innerHTML=`
+    <div style="display:flex;flex-direction:column;gap:8px">
       ${METAS.map(m=>{
-        const ej=ejecutado[m.key]||0;
-        const meta=m.meta;
-        const pct=meta?Math.min(Math.round((ej/meta)*100),100):null;
-        let dot='background:#EEF2F8';
-        if(pct===100) dot='background:var(--accent)';
-        else if(pct>0) dot='background:var(--gold)';
-        else if(meta) dot='background:var(--danger)';
-        return `<div style="display:flex;align-items:center;gap:10px">
-          <div style="width:8px;height:8px;border-radius:50%;${dot};flex-shrink:0"></div>
+        const e=ej[m.key]||0;
+        const pct=Math.min(Math.round((e/m.meta)*100),100);
+        const col=pct>=100?'#00C9A7':pct>0?'#F0A500':'#E05263';
+        return`<div style="display:flex;align-items:center;gap:9px;padding:6px 0;border-bottom:1px solid var(--border)">
+          <div style="width:7px;height:7px;border-radius:50%;background:${col};flex-shrink:0"></div>
           <span style="flex:1;font-size:11px">${m.ico} ${m.label}</span>
-          <span style="font-family:'DM Mono',monospace;font-size:11px;font-weight:700;color:var(--navy)">${ej}${meta?'/'+meta:''}</span>
+          <span style="font-family:'DM Mono',monospace;font-size:11px;font-weight:700;color:var(--navy)">${e}/${m.meta}</span>
         </div>`;
       }).join('')}
     </div>`;
 }
  
-// ══ CONVENIOS ══
-function renderConvenios(){
-  const fe=document.getElementById('filt-conv-e')?.value||'';
-  const fq=(document.getElementById('filt-conv-q')?.value||'').toLowerCase();
-  let rows=ft(DATA.conv).filter(r=>
-    (!fe||r.estado===fe)&&
-    (!fq||(r.organismo_cooperante||'').toLowerCase().includes(fq)||(r.titulo||'').toLowerCase().includes(fq))
-  );
-  document.getElementById('kpis-conv').innerHTML=
-    kpi('Total convenios',DATA.conv.length,'2026','')+
-    kpi('Vigentes',DATA.conv.filter(r=>r.estado==='Vigente').length,'activos','g')+
-    kpi('Países',[...new Set(DATA.conv.map(r=>r.pais).filter(Boolean))].length,'distintos');
-  document.getElementById('conv-cnt').textContent=`${rows.length} registro(s)`;
-  document.getElementById('tbl-conv').innerHTML=rows.length?`<table>
+// ── CONVENIOS ──
+function rConvenios(){
+  const fe=document.getElementById('fc-e')?.value||'';
+  const fq=(document.getElementById('fc-q')?.value||'').toLowerCase();
+  const rows=ft(D.conv).filter(r=>(!fe||r.estado===fe)&&(!fq||(r.organismo_cooperante||'').toLowerCase().includes(fq)));
+  document.getElementById('kconv').innerHTML=
+    kc('Total',D.conv.length,'2026','')+
+    kc('Vigentes',D.conv.filter(r=>r.estado==='Vigente').length,'activos','g')+
+    kc('Países',[...new Set(D.conv.map(r=>r.pais).filter(Boolean))].length,'distintos');
+  document.getElementById('conv-c').textContent=rows.length+' registro(s)';
+  document.getElementById('tconv').innerHTML=rows.length?`<table>
     <thead><tr><th>ID</th><th>Tipo</th><th>Organismo cooperante</th><th>País</th><th>Suscripción</th><th>Vencimiento</th><th>Estado</th></tr></thead>
-    <tbody>${rows.map(r=>`<tr onclick="showMod('conv','${r.id_instrumento}')">
+    <tbody>${rows.map(r=>`<tr onclick="openMod('conv','${r.id_instrumento}')">
       <td style="font-family:'DM Mono',monospace;font-size:9px;color:var(--muted)">${r.id_instrumento}</td>
       <td style="font-size:10px;color:var(--muted)">${r.tipo_instrumento||''}</td>
       <td style="font-weight:600">${r.organismo_cooperante||''}</td>
@@ -826,71 +785,71 @@ function renderConvenios(){
       <td style="font-family:'DM Mono',monospace;font-size:10px">${r.fecha_suscripcion||''}</td>
       <td style="font-family:'DM Mono',monospace;font-size:10px">${r.fecha_vencimiento||''}</td>
       <td>${bs(r.estado)}</td>
-    </tr>`).join('')}</tbody></table>`:'<div class="empty">Sin registros</div>';
+    </tr>`).join('')}</tbody></table>`:'<div class="empty">Sin registros para los filtros seleccionados</div>';
 }
  
-// ══ MISIONES ══
-function renderMisiones(){
-  const mis=ft(DATA.mis);
-  const totalPac=mis.reduce((s,r)=>s+(parseInt(r.n_pacientes_atendidos)||0),0);
-  const totalProf=mis.reduce((s,r)=>s+(parseInt(r.n_profesionales)||0),0);
-  document.getElementById('kpis-mis').innerHTML=
-    kpi('Misiones',mis.length,'ejecutadas','')+
-    kpi('Pacientes atendidos',totalPac,'total acumulado','g')+
-    kpi('Profesionales',totalProf,'voluntarios enviados','')+
-    kpi('Modalidad','Quirúrgica','predominante','au');
+// ── MISIONES ──
+function rMisiones(){
+  const mis=ft(D.mis);
+  const pac=mis.reduce((s,r)=>s+(parseInt(r.n_pacientes_atendidos)||0),0);
+  const prof=mis.reduce((s,r)=>s+(parseInt(r.n_profesionales)||0),0);
+  document.getElementById('kmis').innerHTML=
+    kc('Misiones',mis.length,'ejecutadas','')+
+    kc('Pacientes',pac,'atendidos','g')+
+    kc('Profesionales',prof,'enviados','')+
+    kc('Modalidad','Quirúrgica','predominante','au');
   document.getElementById('cards-mis').innerHTML=mis.map(r=>`
-    <div class="mcard" onclick="showMod('mis','${r.id_mision}')">
+    <div class="mcard" onclick="openMod('mis','${r.id_mision}')">
       <div class="mc-hd"><span class="mc-id">${r.id_mision} · ${r.trimestre||''}</span>${bs(r.estado)}</div>
       <div class="mc-org">${r.fuente_cooperante||''}</div>
       <div class="mc-loc">📍 ${r.ipress_destino||r.red_asistencial||''}</div>
       <div class="mc-stats">
-        <div class="mc-stat"><div class="mc-num">${r.n_profesionales||0}</div><div class="mc-lbl">Profesionales</div></div>
-        <div class="mc-stat"><div class="mc-num">${r.n_pacientes_atendidos||0}</div><div class="mc-lbl">Pacientes</div></div>
-        <div class="mc-stat" style="text-align:left;flex:1;padding-left:12px;border-left:1px solid var(--border)">
+        <div class="mc-s"><div class="mc-n">${r.n_profesionales||0}</div><div class="mc-l">Profesionales</div></div>
+        <div class="mc-s"><div class="mc-n">${r.n_pacientes_atendidos||0}</div><div class="mc-l">Pacientes</div></div>
+        <div style="flex:1;padding-left:11px;border-left:1px solid var(--border)">
           <div style="font-size:9px;color:var(--muted)">Período</div>
-          <div style="font-size:10px;font-weight:600;color:var(--navy);margin-top:2px">${r.fecha_inicio} – ${r.fecha_fin}</div>
+          <div style="font-size:10px;font-weight:600;color:var(--navy);margin-top:1px">${r.fecha_inicio}–${r.fecha_fin}</div>
         </div>
       </div>
-    </div>`).join('')||'<div class="empty">Sin misiones</div>';
-  dc('chartMis');
-  CH.chartMis=new Chart(document.getElementById('chartMis'),{
+    </div>`).join('')||'<div class="empty">Sin misiones para este filtro</div>';
+  dc('cMis');
+  CH.cMis=new Chart(document.getElementById('cMis'),{
     type:'bar',
-    data:{labels:mis.map(r=>r.id_mision),datasets:[
-      {label:'Profesionales',data:mis.map(r=>parseInt(r.n_profesionales)||0),backgroundColor:'#1B6CA8',borderRadius:4},
-      {label:'Pacientes',data:mis.map(r=>parseInt(r.n_pacientes_atendidos)||0),backgroundColor:'#00C9A7',borderRadius:4}
+    data:{labels:D.mis.map(r=>r.id_mision),datasets:[
+      {label:'Profesionales',data:D.mis.map(r=>parseInt(r.n_profesionales)||0),backgroundColor:'#1A6CB0',borderRadius:5,barPercentage:.5},
+      {label:'Pacientes',data:D.mis.map(r=>parseInt(r.n_pacientes_atendidos)||0),backgroundColor:'#00C9A7',borderRadius:5,barPercentage:.5},
     ]},
     options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
-      scales:{y:{beginAtZero:true,grid:{color:'#F0F4FA'},ticks:{font:{size:10},color:'#667A90'}},
-        x:{grid:{display:false},ticks:{font:{size:10},color:'#0B1E35'}}}}
+      scales:{y:{beginAtZero:true,grid:{color:'#EDF1F7'},border:{display:false},ticks:{font:{size:10},color:'#6B7E94'}},
+        x:{grid:{display:false},border:{display:false},ticks:{font:{size:10},color:'#0B1E35'}}}}
   });
 }
  
-// ══ DONACIONES ══
-function renderDonaciones(){
-  const don=ft(DATA.don);
+// ── DONACIONES ──
+function rDonaciones(){
+  const don=ft(D.don);
   const total=don.reduce((s,r)=>s+(parseFloat(r.valor_usd)||0),0);
-  document.getElementById('kpis-don').innerHTML=
-    kpi('Donaciones',don.length,'2026','')+
-    kpi('Valor total','USD '+total.toLocaleString(),'acumulado 2026','g')+
-    kpi('Tipos',[...new Set(don.map(r=>r.tipo_bien).filter(Boolean))].length,'de bien recibido');
-  document.getElementById('cards-don').innerHTML=don.map(r=>`
-    <div class="dcard" onclick="showMod('don','${r.id_donacion}')">
-      <div class="dcard-org">${r.fuente_cooperante||''}</div>
-      <div class="dcard-tipo">${r.tipo_bien||''} · ${r.especificacion||''}</div>
-      <div class="dcard-val">USD ${parseFloat(r.valor_usd||0).toLocaleString()}</div>
+  document.getElementById('kdon').innerHTML=
+    kc('Donaciones',don.length,'2026','')+
+    kc('Valor total','USD '+total.toLocaleString(),'acumulado','g')+
+    kc('Tipos',[...new Set(don.map(r=>r.tipo_bien).filter(Boolean))].length,'de bien');
+  document.getElementById('cdon').innerHTML=don.map(r=>`
+    <div class="dcard" onclick="openMod('don','${r.id_donacion}')">
+      <div class="dc-org">${r.fuente_cooperante||''}</div>
+      <div class="dc-tipo">${r.tipo_bien||''} · ${r.especificacion||''}</div>
+      <div class="dc-val">USD ${parseFloat(r.valor_usd||0).toLocaleString()}</div>
       <div style="display:flex;justify-content:space-between;align-items:center;margin-top:7px">
         <span style="font-size:9px;color:var(--muted)">${r.fecha||''} · ${r.red_beneficiada||''}</span>
         ${bs(r.estado)}
       </div>
-    </div>`).join('')||'<div class="empty">Sin donaciones</div>';
-  document.getElementById('tbl-don').innerHTML=don.length?`<table>
+    </div>`).join('')||'<div class="empty">Sin donaciones para este filtro</div>';
+  document.getElementById('tdon').innerHTML=don.length?`<table>
     <thead><tr><th>ID</th><th>Fuente cooperante</th><th>Tipo</th><th>Especificación</th><th>Fecha</th><th>Red</th><th>Valor USD</th><th>Estado</th></tr></thead>
-    <tbody>${don.map(r=>`<tr onclick="showMod('don','${r.id_donacion}')">
+    <tbody>${don.map(r=>`<tr onclick="openMod('don','${r.id_donacion}')">
       <td style="font-family:'DM Mono',monospace;font-size:9px;color:var(--muted)">${r.id_donacion}</td>
       <td style="font-weight:600">${r.fuente_cooperante||''}</td>
       <td>${r.tipo_bien||''}</td>
-      <td style="max-width:150px;white-space:normal;font-size:10px">${r.especificacion||''}</td>
+      <td style="max-width:140px;white-space:normal;font-size:10px">${r.especificacion||''}</td>
       <td style="font-family:'DM Mono',monospace;font-size:10px">${r.fecha||''}</td>
       <td>${r.red_beneficiada||''}</td>
       <td style="font-weight:700;font-family:'DM Mono',monospace">${parseFloat(r.valor_usd||0).toLocaleString()}</td>
@@ -898,223 +857,175 @@ function renderDonaciones(){
     </tr>`).join('')}</tbody></table>`:'';
 }
  
-// ══ BECAS ══
-function renderBecas(){
-  const fe=document.getElementById('filt-be')?.value||'';
-  const fm=document.getElementById('filt-bm')?.value||'';
-  const fo=document.getElementById('filt-bo')?.value||'';
-  const fq=(document.getElementById('filt-bq')?.value||'').toLowerCase();
-  let rows=ft(DATA.bec).filter(r=>
-    (!fe||r.estado===fe)&&(!fm||r.modalidad===fm)&&
-    (!fo||r.organismo_oferente===fo)&&(!fq||(r.nombre||'').toLowerCase().includes(fq))
-  );
-  const totalH=DATA.bec.reduce((s,r)=>s+(parseFloat(r.horas)||0),0);
-  const totalB=DATA.bec.reduce((s,r)=>s+(parseInt(r.n_beneficiados)||0),0);
-  document.getElementById('kpis-bec').innerHTML=
-    kpi('Total becas',DATA.bec.length,'captadas 2026','')+
-    kpi('Becados',totalB||'—','personas beneficiadas','g')+
-    kpi('Cerradas',DATA.bec.filter(r=>r.estado==='Cerrada').length,'completadas','g')+
-    kpi('Abiertas',DATA.bec.filter(r=>r.estado==='Abierta').length,'en curso','r')+
-    kpi('Horas totales',totalH.toLocaleString(),'formación acumulada','au');
-  document.getElementById('bec-cnt').textContent=`${rows.length} registro(s) filtrados`;
-  document.getElementById('tbl-bec').innerHTML=rows.length?`<table>
+// ── BECAS ──
+function rBecas(){
+  const fe=document.getElementById('fb-e')?.value||'';
+  const fm=document.getElementById('fb-m')?.value||'';
+  const fo=document.getElementById('fb-o')?.value||'';
+  const fq=(document.getElementById('fb-q')?.value||'').toLowerCase();
+  const rows=ft(D.bec).filter(r=>(!fe||r.estado===fe)&&(!fm||r.modalidad===fm)&&(!fo||r.organismo_oferente===fo)&&(!fq||(r.nombre||'').toLowerCase().includes(fq)));
+  const totalB=D.bec.reduce((s,r)=>s+(parseInt(r.n_beneficiados)||0),0);
+  const totalH=D.bec.reduce((s,r)=>s+(parseFloat(r.horas)||0),0);
+  document.getElementById('kbec').innerHTML=
+    kc('Total becas',D.bec.length,'captadas 2026','')+
+    kc('Becados',totalB||'—','personas beneficiadas','g')+
+    kc('Cerradas',D.bec.filter(r=>r.estado==='Cerrada').length,'completadas','g')+
+    kc('Abiertas',D.bec.filter(r=>r.estado==='Abierta').length,'en curso','r')+
+    kc('Horas totales',totalH.toLocaleString(),'formación acumulada','au');
+  document.getElementById('bec-c').textContent=rows.length+' registro(s) filtrados';
+  document.getElementById('tbec').innerHTML=rows.length?`<table>
     <thead><tr><th>ID</th><th>Modalidad</th><th>Nombre</th><th>Organismo</th><th>País</th><th>Horas</th><th>Becados</th><th>Cierre</th><th>Estado</th></tr></thead>
-    <tbody>${rows.map(r=>`<tr onclick="showMod('bec','${r.id_beca}')">
+    <tbody>${rows.map(r=>`<tr onclick="openMod('bec','${r.id_beca}')">
       <td style="font-family:'DM Mono',monospace;font-size:9px;color:var(--muted)">${r.id_beca}</td>
-      <td><span class="badge bb">${r.modalidad||''}</span></td>
-      <td style="max-width:180px;white-space:normal;font-size:10px;font-weight:600">${r.nombre||''}</td>
+      <td><span class="b bb">${r.modalidad||''}</span></td>
+      <td style="max-width:170px;white-space:normal;font-size:10px;font-weight:600">${r.nombre||''}</td>
       <td>${r.organismo_oferente||''}</td>
       <td>${r.pais_destino||''}</td>
       <td style="text-align:right;font-family:'DM Mono',monospace">${r.horas||''}</td>
-      <td style="text-align:center;font-weight:700;color:var(--navy)">${r.n_beneficiados||'—'}</td>
+      <td style="text-align:center;font-weight:700;font-family:'Syne',sans-serif;color:var(--navy)">${r.n_beneficiados||'—'}</td>
       <td style="font-family:'DM Mono',monospace;font-size:10px">${r.fecha_cierre||''}</td>
       <td>${bs(r.estado)}</td>
-    </tr>`).join('')}</tbody></table>`:'<div class="empty">Sin registros</div>';
+    </tr>`).join('')}</tbody></table>`:'<div class="empty">Sin registros para los filtros seleccionados</div>';
 }
  
-// ══ MEMBRESÍAS ══
-function renderMembresias(){
-  const total=DATA.mem.reduce((s,r)=>s+(parseFloat(r.costo_anual_usd)||0),0);
-  document.getElementById('kpis-mem').innerHTML=
-    kpi('Membresías activas',DATA.mem.length,'organismos internacionales','')+
-    kpi('Inversión anual','USD '+total.toLocaleString(),'costo total 2026','au')+
-    kpi('Cobertura','Global','AISS · América · Iberoamérica','g');
-  document.getElementById('cards-mem').innerHTML=DATA.mem.map(r=>`
-    <div class="memcard" onclick="showMod('mem','${r.id_membresia}')">
+// ── MEMBRESÍAS ──
+function rMembresias(){
+  const total=D.mem.reduce((s,r)=>s+(parseFloat(r.costo_anual_usd)||0),0);
+  document.getElementById('kmem').innerHTML=
+    kc('Membresías',D.mem.length,'activas','')+
+    kc('Inversión anual','USD '+total.toLocaleString(),'total 2026','au')+
+    kc('Cobertura','Global','AISS · América · Iberoamérica','g');
+  document.getElementById('cmem').innerHTML=D.mem.map(r=>`
+    <div class="memcard" onclick="openMod('mem','${r.id_membresia}')">
       <div>
         <div class="mem-nm">${r.organismo||''}</div>
         <div class="mem-mt">${r.tipo_membresia||''} · ${r.pais_sede||''} · desde ${r.anio_suscripcion||''}</div>
         <div style="margin-top:5px">${bs(r.estado)}</div>
       </div>
-      <div><div class="mem-cost">USD ${parseFloat(r.costo_anual_usd||0).toLocaleString()}</div><div class="mem-cl">por año</div></div>
+      <div>
+        <div class="mem-cost">USD ${parseFloat(r.costo_anual_usd||0).toLocaleString()}</div>
+        <div style="font-size:9px;color:var(--muted);text-align:right">por año</div>
+      </div>
     </div>`).join('');
-  const cols=['#0B1E35','#1B6CA8','#3B9EE0'];
-  document.getElementById('leg-mem').innerHTML=DATA.mem.map((r,i)=>
+  const cols=['#0B1E35','#1A6CB0','#3B9EE0'];
+  document.getElementById('leg-mem').innerHTML=D.mem.map((r,i)=>
     `<span><i style="background:${cols[i]}"></i>${r.organismo||r.id_membresia}</span>`).join('');
-  dc('chartMem');
-  CH.chartMem=new Chart(document.getElementById('chartMem'),{
+  dc('cMem');
+  CH.cMem=new Chart(document.getElementById('cMem'),{
     type:'doughnut',
-    data:{labels:DATA.mem.map(r=>r.organismo||r.id_membresia),datasets:[{
-      data:DATA.mem.map(r=>parseFloat(r.costo_anual_usd)||0),
-      backgroundColor:cols,borderWidth:0
+    data:{labels:D.mem.map(r=>r.organismo||r.id_membresia),datasets:[{
+      data:D.mem.map(r=>parseFloat(r.costo_anual_usd)||0),
+      backgroundColor:cols,borderWidth:2,borderColor:'#fff'
     }]},
     options:{responsive:true,maintainAspectRatio:false,cutout:'58%',
       plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>' USD '+ctx.raw.toLocaleString()}}}}
   });
 }
  
-// ══ MODAL ══
-function showMod(type,id){
+// ── VISITAS / EVENTOS / PREMIOS ──
+function genericTable(rows,cols,emptyMsg){
+  if(!rows.length)return`<div class="empty">${emptyMsg}<br><small>Agregá los datos en Google Sheets y se actualizarán aquí automáticamente.</small></div>`;
+  return`<table><thead><tr>${cols.map(c=>`<th>${c.label}</th>`).join('')}</tr></thead>
+    <tbody>${rows.map(r=>`<tr>${cols.map(c=>`<td ${c.style||''}>${c.fmt?c.fmt(r[c.key]):r[c.key]||'—'}</td>`).join('')}</tr>`).join('')}</tbody></table>`;
+}
+ 
+function rVisitas(){
+  const rows=ft(D.vis);
+  document.getElementById('kvis').innerHTML=
+    kc('Visitas registradas',rows.length,'2026','')+
+    kc('Meta anual',12,'visitas programadas','au')+
+    kc('Pendientes',Math.max(12-rows.length,0),'para cumplir meta',rows.length>=12?'g':'r');
+  document.getElementById('vis-c').textContent=rows.length+' registro(s)';
+  document.getElementById('tvis').innerHTML=genericTable(rows,[
+    {key:'id_visita',label:'ID',style:'style="font-family:\'DM Mono\',monospace;font-size:9px;color:var(--muted)"'},
+    {key:'tipo',label:'Tipo'},{key:'institucion_visitante',label:'Institución visitante',style:'style="font-weight:600"'},
+    {key:'pais_origen',label:'País'},{key:'fecha',label:'Fecha',style:'style="font-family:\'DM Mono\',monospace;font-size:10px"'},
+    {key:'red_asistencial',label:'Red asistencial'},{key:'n_profesionales',label:'Profesionales',style:'style="text-align:center"'},
+    {key:'estado',label:'Estado',fmt:e=>bs(e)},
+  ],'Sin visitas registradas aún');
+}
+ 
+function rEventos(){
+  const rows=ft(D.evt);
+  document.getElementById('kevt').innerHTML=
+    kc('Eventos registrados',rows.length,'2026','')+
+    kc('Meta anual',2,'eventos programados','au')+
+    kc('Pendientes',Math.max(2-rows.length,0),'para cumplir meta',rows.length>=2?'g':'r');
+  document.getElementById('evt-c').textContent=rows.length+' registro(s)';
+  document.getElementById('tevt').innerHTML=genericTable(rows,[
+    {key:'id_evento',label:'ID',style:'style="font-family:\'DM Mono\',monospace;font-size:9px;color:var(--muted)"'},
+    {key:'nombre_evento',label:'Nombre del evento',style:'style="font-weight:600;max-width:180px;white-space:normal"'},
+    {key:'tipo',label:'Tipo'},{key:'organizador',label:'Organizador'},
+    {key:'pais',label:'País'},{key:'fecha_inicio',label:'Fecha',style:'style="font-family:\'DM Mono\',monospace;font-size:10px"'},
+    {key:'participantes_essalud',label:'Participantes',style:'style="text-align:center"'},
+    {key:'estado',label:'Estado',fmt:e=>bs(e)},
+  ],'Sin eventos registrados aún');
+}
+ 
+function rPremios(){
+  const rows=ft(D.prm);
+  document.getElementById('kprm').innerHTML=
+    kc('Premios registrados',rows.length,'2026','')+
+    kc('Meta anual',2,'reconocimientos','au')+
+    kc('Pendientes',Math.max(2-rows.length,0),'para cumplir meta',rows.length>=2?'g':'r');
+  document.getElementById('prm-c').textContent=rows.length+' registro(s)';
+  document.getElementById('tprm').innerHTML=genericTable(rows,[
+    {key:'id_premio',label:'ID',style:'style="font-family:\'DM Mono\',monospace;font-size:9px;color:var(--muted)"'},
+    {key:'nombre_premio',label:'Premio',style:'style="font-weight:600;max-width:170px;white-space:normal"'},
+    {key:'organismo_otorgante',label:'Organismo otorgante'},
+    {key:'ambito',label:'Ámbito'},{key:'fecha',label:'Fecha',style:'style="font-family:\'DM Mono\',monospace;font-size:10px"'},
+    {key:'beneficiario',label:'Beneficiario'},{key:'estado',label:'Estado',fmt:e=>bs(e)},
+  ],'Sin premios registrados aún');
+}
+ 
+// ── MODAL ──
+function openMod(type,id){
   let r,title,body='';
+  const field=(lbl,val)=>`<div class="mf"><div class="mfl">${lbl}</div><div class="mfv">${val||'—'}</div></div>`;
+  const stat=(n,lbl,col='')=>`<div class="mst"><div class="msn"${col?` style="color:${col}"`:''}>${n}</div><div class="msl">${lbl}</div></div>`;
+ 
   if(type==='conv'){
-    r=DATA.conv.find(x=>x.id_instrumento===id); if(!r) return;
+    r=D.conv.find(x=>x.id_instrumento===id);if(!r)return;
     title=r.organismo_cooperante||'Convenio';
-    body=`<div class="mgrid">
-      <div class="mf"><div class="mfl">Tipo</div><div class="mfv">${r.tipo_instrumento||'—'}</div></div>
-      <div class="mf"><div class="mfl">País</div><div class="mfv">${r.pais||'—'}</div></div>
-      <div class="mf"><div class="mfl">Suscripción</div><div class="mfv">${r.fecha_suscripcion||'—'}</div></div>
-      <div class="mf"><div class="mfl">Vencimiento</div><div class="mfv">${r.fecha_vencimiento||'—'}</div></div>
-    </div>
-    <div class="mf"><div class="mfl">Estado</div><div class="mfv">${bs(r.estado)}</div></div>
-    <div class="mf"><div class="mfl">Red asistencial</div><div class="mfv">${r.red_asistencial||'—'}</div></div>
-    <div class="mf"><div class="mfl">Descripción</div><div class="mfv" style="color:var(--muted)">${r.descripcion||'—'}</div></div>`;
-  } else if(type==='mis'){
-    r=DATA.mis.find(x=>x.id_mision===id); if(!r) return;
+    body=`<div class="mg">${field('Tipo de instrumento',r.tipo_instrumento)}${field('País',r.pais)}${field('Suscripción',r.fecha_suscripcion)}${field('Vencimiento',r.fecha_vencimiento)}</div>
+    ${field('Estado',bs(r.estado))}${field('Red asistencial',r.red_asistencial)}${field('Descripción / Alcance',`<span style="color:var(--muted)">${r.descripcion||'—'}</span>`)}`;
+  }else if(type==='mis'){
+    r=D.mis.find(x=>x.id_mision===id);if(!r)return;
     title=r.fuente_cooperante||'Misión';
-    body=`<div class="mgrid" style="margin-bottom:14px">
-      <div class="mstat"><div class="msn">${r.n_profesionales||0}</div><div class="msl">Profesionales</div></div>
-      <div class="mstat"><div class="msn">${r.n_pacientes_atendidos||0}</div><div class="msl">Pacientes</div></div>
-    </div>
-    <div class="mgrid">
-      <div class="mf"><div class="mfl">Tipo</div><div class="mfv">${r.tipo_intervencion||'—'}</div></div>
-      <div class="mf"><div class="mfl">Trimestre</div><div class="mfv">${r.trimestre||'—'}</div></div>
-      <div class="mf"><div class="mfl">Inicio</div><div class="mfv">${r.fecha_inicio||'—'}</div></div>
-      <div class="mf"><div class="mfl">Fin</div><div class="mfv">${r.fecha_fin||'—'}</div></div>
-    </div>
-    <div class="mf"><div class="mfl">IPRESS destino</div><div class="mfv">${r.ipress_destino||'—'}</div></div>
-    <div class="mf"><div class="mfl">Línea de acción</div><div class="mfv" style="color:var(--muted)">${r.linea_accion||'—'}</div></div>
-    <div class="mf"><div class="mfl">Estado</div><div class="mfv">${bs(r.estado)}</div></div>`;
-  } else if(type==='don'){
-    r=DATA.don.find(x=>x.id_donacion===id); if(!r) return;
+    body=`<div class="mg" style="margin-bottom:12px">${stat(r.n_profesionales||0,'Profesionales')}${stat(r.n_pacientes_atendidos||0,'Pacientes','#00C9A7')}</div>
+    <div class="mg">${field('Tipo',r.tipo_intervencion)}${field('Trimestre',r.trimestre)}${field('Inicio',r.fecha_inicio)}${field('Fin',r.fecha_fin)}</div>
+    ${field('IPRESS destino',r.ipress_destino)}${field('Línea de acción',`<span style="color:var(--muted)">${r.linea_accion||'—'}</span>`)}${field('Estado',bs(r.estado))}`;
+  }else if(type==='don'){
+    r=D.don.find(x=>x.id_donacion===id);if(!r)return;
     title=r.fuente_cooperante||'Donación';
-    body=`<div class="mstat" style="margin-bottom:14px">
-      <div class="msn" style="color:var(--accent)">USD ${parseFloat(r.valor_usd||0).toLocaleString()}</div>
-      <div class="msl">Valor de la donación</div>
-    </div>
-    <div class="mgrid">
-      <div class="mf"><div class="mfl">Tipo de bien</div><div class="mfv">${r.tipo_bien||'—'}</div></div>
-      <div class="mf"><div class="mfl">Fecha</div><div class="mfv">${r.fecha||'—'}</div></div>
-    </div>
-    <div class="mf"><div class="mfl">Especificación</div><div class="mfv">${r.especificacion||'—'}</div></div>
-    <div class="mf"><div class="mfl">Red beneficiada</div><div class="mfv">${r.red_beneficiada||'—'}</div></div>
-    <div class="mf"><div class="mfl">Impacto asistencial</div><div class="mfv" style="color:var(--muted)">${r.impacto_asistencial||'—'}</div></div>
-    <div class="mf"><div class="mfl">Estado</div><div class="mfv">${bs(r.estado)}</div></div>`;
-  } else if(type==='bec'){
-    r=DATA.bec.find(x=>x.id_beca===id); if(!r) return;
+    body=`<div style="margin-bottom:12px">${stat('USD '+parseFloat(r.valor_usd||0).toLocaleString(),'Valor donación','#00C9A7')}</div>
+    <div class="mg">${field('Tipo de bien',r.tipo_bien)}${field('Fecha',r.fecha)}</div>
+    ${field('Especificación',r.especificacion)}${field('Red beneficiada',r.red_beneficiada)}${field('Impacto asistencial',`<span style="color:var(--muted)">${r.impacto_asistencial||'—'}</span>`)}${field('Estado',bs(r.estado))}`;
+  }else if(type==='bec'){
+    r=D.bec.find(x=>x.id_beca===id);if(!r)return;
     title=r.nombre||'Beca';
-    body=`<div class="mgrid" style="margin-bottom:14px">
-      <div class="mstat"><div class="msn">${r.horas||0}</div><div class="msl">Horas</div></div>
-      <div class="mstat"><div class="msn" style="color:var(--accent)">${r.n_beneficiados||'—'}</div><div class="msl">Becados</div></div>
-    </div>
-    <div class="mgrid">
-      <div class="mf"><div class="mfl">Modalidad</div><div class="mfv"><span class="badge bb">${r.modalidad||'—'}</span></div></div>
-      <div class="mf"><div class="mfl">Organismo</div><div class="mfv">${r.organismo_oferente||'—'}</div></div>
-      <div class="mf"><div class="mfl">País destino</div><div class="mfv">${r.pais_destino||'—'}</div></div>
-      <div class="mf"><div class="mfl">Cierre</div><div class="mfv">${r.fecha_cierre||'—'}</div></div>
-    </div>
-    <div class="mf"><div class="mfl">Estado</div><div class="mfv">${bs(r.estado)}</div></div>`;
-  } else if(type==='mem'){
-    r=DATA.mem.find(x=>x.id_membresia===id); if(!r) return;
+    body=`<div class="mg" style="margin-bottom:12px">${stat(r.horas||0,'Horas')}${stat(r.n_beneficiados||'—','Becados','#00C9A7')}</div>
+    <div class="mg">${field('Modalidad',`<span class="b bb">${r.modalidad||'—'}</span>`)}${field('Organismo',r.organismo_oferente)}${field('País destino',r.pais_destino)}${field('Cierre convocatoria',r.fecha_cierre)}</div>
+    ${field('Estado',bs(r.estado))}`;
+  }else if(type==='mem'){
+    r=D.mem.find(x=>x.id_membresia===id);if(!r)return;
     title=r.organismo||'Membresía';
-    body=`<div class="mstat" style="margin-bottom:14px">
-      <div class="msn" style="color:var(--gold)">USD ${parseFloat(r.costo_anual_usd||0).toLocaleString()}</div>
-      <div class="msl">Costo anual</div>
-    </div>
-    <div class="mgrid">
-      <div class="mf"><div class="mfl">Tipo membresía</div><div class="mfv">${r.tipo_membresia||'—'}</div></div>
-      <div class="mf"><div class="mfl">Ámbito</div><div class="mfv">${r.ambito||'—'}</div></div>
-      <div class="mf"><div class="mfl">País sede</div><div class="mfv">${r.pais_sede||'—'}</div></div>
-      <div class="mf"><div class="mfl">Año suscripción</div><div class="mfv">${r.anio_suscripcion||'—'}</div></div>
-    </div>
-    <div class="mf"><div class="mfl">Estado</div><div class="mfv">${bs(r.estado)}</div></div>`;
+    body=`<div style="margin-bottom:12px">${stat('USD '+parseFloat(r.costo_anual_usd||0).toLocaleString(),'Costo anual','#F0A500')}</div>
+    <div class="mg">${field('Tipo membresía',r.tipo_membresia)}${field('Ámbito',r.ambito)}${field('País sede',r.pais_sede)}${field('Año suscripción',r.anio_suscripcion)}</div>
+    ${field('Estado',bs(r.estado))}`;
   }
  
-  document.getElementById('m-title').textContent=title;
-  document.getElementById('m-id').textContent=id;
-  document.getElementById('m-body').innerHTML=body;
-  document.getElementById('moverlay').classList.add('open');
+  document.getElementById('mod-t').textContent=title;
+  document.getElementById('mod-i').textContent=id;
+  document.getElementById('mod-b').innerHTML=body;
+  document.getElementById('mov').classList.add('on');
 }
  
 function closeMod(e){
-  if(!e||e.target===document.getElementById('moverlay'))
-    document.getElementById('moverlay').classList.remove('open');
+  if(!e||e.target===document.getElementById('mov'))
+    document.getElementById('mov').classList.remove('on');
 }
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeMod();});
- 
-// ══ VISITAS ══
-function renderVisitas(){
-  const rows=ft(DATA.vis);
-  document.getElementById('kpis-vis').innerHTML=
-    kpi('Visitas registradas',rows.length,'2026','')+
-    kpi('Meta anual',12,'visitas programadas','au')+
-    kpi('Pendientes',Math.max(12-rows.length,0),'para completar meta',rows.length>=12?'g':'r');
-  document.getElementById('vis-cnt').textContent=rows.length+' registro(s)';
-  document.getElementById('tbl-vis').innerHTML=rows.length?`<table>
-    <thead><tr><th>ID</th><th>Tipo</th><th>Institución visitante</th><th>País origen</th><th>Fecha</th><th>Red asistencial</th><th>Profesionales</th><th>Estado</th></tr></thead>
-    <tbody>${rows.map(r=>`<tr>
-      <td style="font-family:'DM Mono',monospace;font-size:9px;color:var(--muted)">${r.id_visita||'—'}</td>
-      <td>${r.tipo||'—'}</td>
-      <td style="font-weight:600">${r.institucion_visitante||'—'}</td>
-      <td>${r.pais_origen||'—'}</td>
-      <td style="font-family:'DM Mono',monospace;font-size:10px">${r.fecha||'—'}</td>
-      <td>${r.red_asistencial||'—'}</td>
-      <td style="text-align:center;font-weight:700">${r.n_profesionales||'—'}</td>
-      <td>${bs(r.estado)}</td>
-    </tr>`).join('')}</tbody></table>`:'<div class="empty">Sin visitas registradas aún — agregá datos en Google Sheets</div>';
-}
- 
-// ══ EVENTOS ══
-function renderEventos(){
-  const rows=ft(DATA.evt);
-  document.getElementById('kpis-evt').innerHTML=
-    kpi('Eventos registrados',rows.length,'2026','')+
-    kpi('Meta anual',2,'eventos programados','au')+
-    kpi('Pendientes',Math.max(2-rows.length,0),'para completar meta',rows.length>=2?'g':'r');
-  document.getElementById('evt-cnt').textContent=rows.length+' registro(s)';
-  document.getElementById('tbl-evt').innerHTML=rows.length?`<table>
-    <thead><tr><th>ID</th><th>Nombre del evento</th><th>Tipo</th><th>Organizador</th><th>País</th><th>Fecha inicio</th><th>Participantes EsSalud</th><th>Estado</th></tr></thead>
-    <tbody>${rows.map(r=>`<tr>
-      <td style="font-family:'DM Mono',monospace;font-size:9px;color:var(--muted)">${r.id_evento||'—'}</td>
-      <td style="font-weight:600;max-width:180px;white-space:normal">${r.nombre_evento||'—'}</td>
-      <td>${r.tipo||'—'}</td>
-      <td>${r.organizador||'—'}</td>
-      <td>${r.pais||'—'}</td>
-      <td style="font-family:'DM Mono',monospace;font-size:10px">${r.fecha_inicio||'—'}</td>
-      <td style="text-align:center;font-weight:700">${r.participantes_essalud||'—'}</td>
-      <td>${bs(r.estado)}</td>
-    </tr>`).join('')}</tbody></table>`:'<div class="empty">Sin eventos registrados aún — agregá datos en Google Sheets</div>';
-}
- 
-// ══ PREMIOS ══
-function renderPremios(){
-  const rows=ft(DATA.prm);
-  document.getElementById('kpis-prm').innerHTML=
-    kpi('Premios registrados',rows.length,'2026','')+
-    kpi('Meta anual',2,'reconocimientos','au')+
-    kpi('Pendientes',Math.max(2-rows.length,0),'para completar meta',rows.length>=2?'g':'r');
-  document.getElementById('prm-cnt').textContent=rows.length+' registro(s)';
-  document.getElementById('tbl-prm').innerHTML=rows.length?`<table>
-    <thead><tr><th>ID</th><th>Nombre del premio</th><th>Organismo otorgante</th><th>Ámbito</th><th>Fecha</th><th>Beneficiario</th><th>Estado</th></tr></thead>
-    <tbody>${rows.map(r=>`<tr>
-      <td style="font-family:'DM Mono',monospace;font-size:9px;color:var(--muted)">${r.id_premio||'—'}</td>
-      <td style="font-weight:600;max-width:180px;white-space:normal">${r.nombre_premio||'—'}</td>
-      <td>${r.organismo_otorgante||'—'}</td>
-      <td>${r.ambito||'—'}</td>
-      <td style="font-family:'DM Mono',monospace;font-size:10px">${r.fecha||'—'}</td>
-      <td>${r.beneficiario||'—'}</td>
-      <td>${bs(r.estado)}</td>
-    </tr>`).join('')}</tbody></table>`:'<div class="empty">Sin premios registrados aún — agregá datos en Google Sheets</div>';
-}
  
 loadAll();
 setInterval(loadAll,60000);
