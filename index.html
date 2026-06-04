@@ -24,17 +24,17 @@
   --sidebar-w: 240px;
   --topbar-h:  60px;
 }
-
+ 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
+ 
 body {
-  font-family: 'Lato', sans-serif;
+  font-family: 'Lato', 'Segoe UI', system-ui, -apple-system, sans-serif;
   background: var(--bg);
   color: var(--text);
   min-height: 100vh;
   overflow-x: hidden;
 }
-
+ 
 /* ══ SIDEBAR ══ */
 .sidebar {
   position: fixed; top: 0; left: 0;
@@ -54,12 +54,12 @@ body {
   padding: 6px 12px; margin-bottom: 8px;
 }
 .logo-badge span {
-  font-family: 'Syne', sans-serif;
+  font-family: 'Syne', 'Segoe UI', system-ui, sans-serif;
   font-weight: 800; font-size: 13px; color: #fff;
   letter-spacing: .08em;
 }
 .logo-title { font-size: 11px; color: rgba(255,255,255,.45); letter-spacing: .04em; line-height: 1.4; }
-
+ 
 .sidebar-section { padding: 16px 12px 4px; }
 .sidebar-section-label {
   font-size: 9px; font-weight: 700; letter-spacing: .12em;
@@ -79,9 +79,9 @@ body {
 .nav-item .ni-badge {
   margin-left: auto; background: var(--accent);
   color: var(--navy); font-size: 9px; font-weight: 700;
-  padding: 2px 6px; border-radius: 10px; font-family: 'DM Mono', monospace;
+  padding: 2px 6px; border-radius: 10px; font-family: 'DM Mono', 'Consolas', 'Courier New', monospace;
 }
-
+ 
 .sidebar-footer {
   margin-top: auto; padding: 14px 16px;
   border-top: 1px solid rgba(255,255,255,.08);
@@ -97,8 +97,8 @@ body {
 }
 .sync-dot.live { background: var(--accent); box-shadow: 0 0 0 3px rgba(0,201,167,.2); }
 .sync-dot.err  { background: var(--danger); }
-#sync-time { font-family: 'DM Mono', monospace; }
-
+#sync-time { font-family: 'DM Mono', 'Consolas', 'Courier New', monospace; }
+ 
 /* ══ TOPBAR ══ */
 .topbar {
   position: fixed; top: 0; left: var(--sidebar-w);
@@ -110,34 +110,34 @@ body {
   z-index: 100;
 }
 .topbar-title {
-  font-family: 'Syne', sans-serif;
+  font-family: 'Syne', 'Segoe UI', system-ui, sans-serif;
   font-size: 15px; font-weight: 700; color: var(--navy);
   flex: 1;
 }
 .topbar-title span { color: var(--blue); }
-
+ 
 .filter-bar { display: flex; align-items: center; gap: 8px; }
 .filter-label { font-size: 11px; color: var(--muted); font-weight: 700; letter-spacing: .04em; }
 .chip {
   padding: 5px 12px; border-radius: 20px;
   font-size: 11px; font-weight: 700; cursor: pointer;
   border: 1.5px solid var(--border); background: transparent;
-  color: var(--muted); transition: all .15s; font-family: 'Lato', sans-serif;
+  color: var(--muted); transition: all .15s; font-family: 'Lato', 'Segoe UI', system-ui, -apple-system, sans-serif;
 }
 .chip:hover { border-color: var(--blue); color: var(--blue); }
 .chip.active { background: var(--navy); border-color: var(--navy); color: #fff; }
-
+ 
 .btn-refresh {
   display: flex; align-items: center; gap: 6px;
   padding: 7px 14px; border-radius: 8px;
   background: var(--navy); color: #fff;
   font-size: 12px; font-weight: 700; cursor: pointer;
-  border: none; transition: all .15s; font-family: 'Lato', sans-serif;
+  border: none; transition: all .15s; font-family: 'Lato', 'Segoe UI', system-ui, -apple-system, sans-serif;
 }
 .btn-refresh:hover { background: var(--blue); }
 .btn-refresh.spinning svg { animation: spin .7s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
-
+ 
 /* ══ MAIN ══ */
 .main {
   margin-left: var(--sidebar-w);
@@ -150,9 +150,9 @@ body {
   from { opacity: 0; transform: translateY(10px); }
   to   { opacity: 1; transform: translateY(0); }
 }
-
+ 
 /* ══ KPI GRID ══ */
-.kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 14px; margin-bottom: 24px; }
+.kpi-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px; margin-bottom: 24px; }
 .kpi {
   background: var(--surface); border-radius: 12px;
   border: 1px solid var(--border); padding: 16px 18px;
@@ -168,16 +168,16 @@ body {
 .kpi.danger::before{ background: var(--danger); }
 .kpi:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,.08); border-color: rgba(0,0,0,.12); }
 .kpi-label { font-size: 10px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
-.kpi-value { font-family: 'Syne', sans-serif; font-size: 26px; font-weight: 800; color: var(--navy); line-height: 1; }
+.kpi-value { font-family: 'Syne', 'Segoe UI', system-ui, sans-serif; font-size: 26px; font-weight: 800; color: var(--navy); line-height: 1; }
 .kpi-sub { font-size: 11px; color: var(--muted); margin-top: 4px; }
 .kpi-icon { position: absolute; right: 14px; top: 14px; font-size: 20px; color: rgba(0,0,0,.07); }
-
+ 
 /* ══ GRID LAYOUTS ══ */
 .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 18px; }
 .grid3 { display: grid; grid-template-columns: 2fr 1fr; gap: 18px; margin-bottom: 18px; }
 .grid-full { margin-bottom: 18px; }
 @media(max-width:900px) { .grid2,.grid3 { grid-template-columns: 1fr; } }
-
+ 
 /* ══ CARD ══ */
 .card {
   background: var(--surface); border-radius: 14px;
@@ -188,11 +188,11 @@ body {
   border-bottom: 1px solid var(--border);
   display: flex; align-items: center; justify-content: space-between;
 }
-.card-title { font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700; color: var(--navy); }
+.card-title { font-family: 'Syne', 'Segoe UI', system-ui, sans-serif; font-size: 13px; font-weight: 700; color: var(--navy); }
 .card-sub { font-size: 11px; color: var(--muted); margin-top: 2px; }
 .card-body { padding: 18px 20px; }
 .card-actions { display: flex; gap: 8px; align-items: center; }
-
+ 
 /* ══ TABLE ══ */
 .tbl-wrap { overflow-x: auto; }
 table { width: 100%; border-collapse: collapse; font-size: 12px; }
@@ -210,7 +210,7 @@ tbody tr {
 tbody tr:hover { background: #F0F6FF; }
 tbody td { padding: 10px 14px; vertical-align: middle; }
 tbody tr:last-child { border-bottom: none; }
-
+ 
 /* ══ BADGES ══ */
 .badge {
   display: inline-block; padding: 3px 9px; border-radius: 5px;
@@ -222,17 +222,17 @@ tbody tr:last-child { border-bottom: none; }
 .b-red    { background: #FDEAEA; color: #9A1F1F; }
 .b-gray   { background: #F0F0F0; color: #444; }
 .b-sky    { background: #E3F4FF; color: #0B5E9C; }
-
+ 
 /* ══ FILTROS INLINE ══ */
 .inline-filters { display: flex; gap: 8px; flex-wrap: wrap; }
 select, input[type="text"] {
   border: 1px solid var(--border); border-radius: 7px;
   padding: 6px 10px; font-size: 12px;
-  font-family: 'Lato', sans-serif; color: var(--text);
+  font-family: 'Lato', 'Segoe UI', system-ui, -apple-system, sans-serif; color: var(--text);
   background: var(--surface); outline: none;
 }
 select:focus, input:focus { border-color: var(--blue); }
-
+ 
 /* ══ MODAL ══ */
 .modal-overlay {
   display: none; position: fixed; inset: 0;
@@ -255,8 +255,8 @@ select:focus, input:focus { border-color: var(--blue); }
   border-bottom: 1px solid var(--border);
   display: flex; align-items: flex-start; justify-content: space-between;
 }
-.modal-title { font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 800; color: var(--navy); }
-.modal-id { font-size: 11px; color: var(--muted); font-family: 'DM Mono', monospace; margin-top: 3px; }
+.modal-title { font-family: 'Syne', 'Segoe UI', system-ui, sans-serif; font-size: 15px; font-weight: 800; color: var(--navy); }
+.modal-id { font-size: 11px; color: var(--muted); font-family: 'DM Mono', 'Consolas', 'Courier New', monospace; margin-top: 3px; }
 .modal-close {
   background: #F4F7FC; border: none; border-radius: 8px;
   width: 32px; height: 32px; cursor: pointer; font-size: 16px;
@@ -273,25 +273,25 @@ select:focus, input:focus { border-color: var(--blue); }
   background: #F8FAFD; border-radius: 10px; padding: 14px 16px;
   text-align: center;
 }
-.modal-stat-num { font-family: 'Syne', sans-serif; font-size: 28px; font-weight: 800; color: var(--navy); }
+.modal-stat-num { font-family: 'Syne', 'Segoe UI', system-ui, sans-serif; font-size: 28px; font-weight: 800; color: var(--navy); }
 .modal-stat-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; margin-top: 3px; }
-
+ 
 /* ══ TIMELINE TRIMESTRAL ══ */
 .trim-bar { display: flex; gap: 0; border-radius: 10px; overflow: hidden; border: 1px solid var(--border); }
 .trim-q { flex: 1; text-align: center; padding: 10px 4px; font-size: 10px; font-weight: 700; color: var(--muted); background: #F8FAFD; border-right: 1px solid var(--border); }
 .trim-q:last-child { border-right: none; }
 .trim-q.done { background: var(--navy); color: #fff; }
 .trim-q.active { background: var(--blue); color: #fff; }
-.trim-q span { display: block; font-size: 18px; font-weight: 800; font-family: 'Syne', sans-serif; margin-bottom: 2px; }
-
+.trim-q span { display: block; font-size: 18px; font-weight: 800; font-family: 'Syne', 'Segoe UI', system-ui, sans-serif; margin-bottom: 2px; }
+ 
 /* ══ PROGRESO ══ */
 .progress-row { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
 .progress-label { font-size: 12px; color: var(--text); min-width: 130px; font-weight: 700; }
 .progress-bar { flex: 1; height: 8px; background: #EEF2F8; border-radius: 4px; overflow: hidden; }
 .progress-fill { height: 100%; border-radius: 4px; background: var(--blue); transition: width .6s ease; }
 .progress-fill.green { background: var(--accent); }
-.progress-val { font-size: 11px; color: var(--muted); min-width: 32px; text-align: right; font-family: 'DM Mono', monospace; }
-
+.progress-val { font-size: 11px; color: var(--muted); min-width: 32px; text-align: right; font-family: 'DM Mono', 'Consolas', 'Courier New', monospace; }
+ 
 /* ══ MISIÓN CARD ══ */
 .mission-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
 .mcard {
@@ -301,14 +301,14 @@ select:focus, input:focus { border-color: var(--blue); }
 }
 .mcard:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,.08); }
 .mcard-head { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
-.mcard-id { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted); }
-.mcard-org { font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700; color: var(--navy); margin-bottom: 4px; }
+.mcard-id { font-family: 'DM Mono', 'Consolas', 'Courier New', monospace; font-size: 10px; color: var(--muted); }
+.mcard-org { font-family: 'Syne', 'Segoe UI', system-ui, sans-serif; font-size: 13px; font-weight: 700; color: var(--navy); margin-bottom: 4px; }
 .mcard-loc { font-size: 11px; color: var(--muted); margin-bottom: 12px; }
 .mcard-stats { display: flex; gap: 20px; padding-top: 12px; border-top: 1px solid var(--border); }
 .mcard-stat { text-align: center; }
-.mcard-num { font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 800; color: var(--navy); }
+.mcard-num { font-family: 'Syne', 'Segoe UI', system-ui, sans-serif; font-size: 22px; font-weight: 800; color: var(--navy); }
 .mcard-lbl { font-size: 9px; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
-
+ 
 /* ══ MEM CARDS ══ */
 .mem-cards { display: flex; flex-direction: column; gap: 12px; }
 .mem-card {
@@ -318,25 +318,25 @@ select:focus, input:focus { border-color: var(--blue); }
   cursor: pointer; transition: all .15s;
 }
 .mem-card:hover { border-color: var(--blue); background: #F8FBFF; }
-.mem-name { font-family: 'Syne', sans-serif; font-size: 12px; font-weight: 700; color: var(--navy); }
+.mem-name { font-family: 'Syne', 'Segoe UI', system-ui, sans-serif; font-size: 12px; font-weight: 700; color: var(--navy); }
 .mem-meta { font-size: 11px; color: var(--muted); margin-top: 2px; }
-.mem-cost { font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 800; color: var(--navy); text-align: right; }
+.mem-cost { font-family: 'Syne', 'Segoe UI', system-ui, sans-serif; font-size: 16px; font-weight: 800; color: var(--navy); text-align: right; }
 .mem-cost-label { font-size: 9px; color: var(--muted); text-align: right; }
-
+ 
 /* ══ LOADING ══ */
 .skeleton { background: linear-gradient(90deg, #F0F4FA 25%, #E4EAF4 50%, #F0F4FA 75%); background-size: 200%; animation: shimmer 1.2s infinite; border-radius: 8px; }
 @keyframes shimmer { to { background-position: -200% 0; } }
 .spinner-center { display: flex; align-items: center; justify-content: center; padding: 40px; gap: 10px; color: var(--muted); font-size: 13px; }
 .spin-ring { width: 20px; height: 20px; border: 2px solid #E0E8F4; border-top-color: var(--blue); border-radius: 50%; animation: spin .7s linear infinite; }
-
+ 
 /* ══ EMPTY ══ */
 .empty { text-align: center; padding: 40px; color: var(--muted); font-size: 13px; }
-
+ 
 /* ══ SECTION HEADER ══ */
 .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
-.section-title { font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 800; color: var(--navy); }
+.section-title { font-family: 'Syne', 'Segoe UI', system-ui, sans-serif; font-size: 18px; font-weight: 800; color: var(--navy); }
 .section-sub { font-size: 12px; color: var(--muted); margin-top: 2px; }
-
+ 
 /* ══ DON CARD ══ */
 .don-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
 .don-card {
@@ -345,17 +345,17 @@ select:focus, input:focus { border-color: var(--blue); }
   background: var(--surface);
 }
 .don-card:hover { border-color: var(--accent); background: #F4FFFB; }
-.don-org { font-family: 'Syne', sans-serif; font-size: 12px; font-weight: 700; color: var(--navy); margin-bottom: 4px; }
+.don-org { font-family: 'Syne', 'Segoe UI', system-ui, sans-serif; font-size: 12px; font-weight: 700; color: var(--navy); margin-bottom: 4px; }
 .don-tipo { font-size: 11px; color: var(--muted); margin-bottom: 10px; }
-.don-value { font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 800; color: var(--accent); }
+.don-value { font-family: 'Syne', 'Segoe UI', system-ui, sans-serif; font-size: 22px; font-weight: 800; color: var(--accent); }
 .don-value-label { font-size: 10px; color: var(--muted); }
-
+ 
 /* ══ CHART WRAP ══ */
 .chart-wrap { position: relative; width: 100%; }
 </style>
 </head>
 <body>
-
+ 
 <!-- ══ SIDEBAR ══ -->
 <aside class="sidebar">
   <div class="sidebar-logo">
@@ -365,14 +365,14 @@ select:focus, input:focus { border-color: var(--blue); }
     </div>
     <div class="logo-title">EsSalud · Cooperación Internacional<br>Plan Operativo 2026</div>
   </div>
-
+ 
   <div class="sidebar-section">
     <div class="sidebar-section-label">Visión general</div>
     <button class="nav-item active" onclick="showPage('resumen', this)">
       <span class="ni-icon">◈</span> Resumen POI
     </button>
   </div>
-
+ 
   <div class="sidebar-section">
     <div class="sidebar-section-label">Procesos MS-01</div>
     <button class="nav-item" onclick="showPage('convenios', this)">
@@ -388,7 +388,7 @@ select:focus, input:focus { border-color: var(--blue); }
       <span class="ni-badge" id="nb-don">—</span>
     </button>
   </div>
-
+ 
   <div class="sidebar-section">
     <div class="sidebar-section-label">Procesos MS-03</div>
     <button class="nav-item" onclick="showPage('becas', this)">
@@ -400,7 +400,7 @@ select:focus, input:focus { border-color: var(--blue); }
       <span class="ni-badge" id="nb-mem">—</span>
     </button>
   </div>
-
+ 
   <div class="sidebar-footer">
     <div class="sync-status">
       <span class="sync-dot" id="sync-dot"></span>
@@ -408,7 +408,7 @@ select:focus, input:focus { border-color: var(--blue); }
     </div>
   </div>
 </aside>
-
+ 
 <!-- ══ TOPBAR ══ -->
 <header class="topbar">
   <div class="topbar-title">POI 2026 · <span id="page-title">Resumen</span></div>
@@ -425,10 +425,10 @@ select:focus, input:focus { border-color: var(--blue); }
     Actualizar
   </button>
 </header>
-
+ 
 <!-- ══ MAIN ══ -->
 <main class="main">
-
+ 
   <!-- ┌── RESUMEN ──┐ -->
   <section id="page-resumen" class="page active">
     <div class="section-header">
@@ -437,7 +437,7 @@ select:focus, input:focus { border-color: var(--blue); }
         <div class="section-sub">Vista consolidada de todos los procesos de cooperación internacional</div>
       </div>
     </div>
-
+ 
     <div class="kpi-grid" id="kpis-resumen">
       <div class="skeleton" style="height:90px"></div>
       <div class="skeleton" style="height:90px"></div>
@@ -445,7 +445,7 @@ select:focus, input:focus { border-color: var(--blue); }
       <div class="skeleton" style="height:90px"></div>
       <div class="skeleton" style="height:90px"></div>
     </div>
-
+ 
     <div class="grid2">
       <div class="card">
         <div class="card-head">
@@ -468,7 +468,7 @@ select:focus, input:focus { border-color: var(--blue); }
         </div>
       </div>
     </div>
-
+ 
     <div class="card grid-full">
       <div class="card-head"><div class="card-title">Progreso de ejecución trimestral</div></div>
       <div class="card-body">
@@ -477,7 +477,7 @@ select:focus, input:focus { border-color: var(--blue); }
       </div>
     </div>
   </section>
-
+ 
   <!-- ┌── CONVENIOS ──┐ -->
   <section id="page-convenios" class="page">
     <div class="section-header">
@@ -503,7 +503,7 @@ select:focus, input:focus { border-color: var(--blue); }
       <div class="tbl-wrap" id="tbl-convenios"><div class="spinner-center"><div class="spin-ring"></div>Cargando…</div></div>
     </div>
   </section>
-
+ 
   <!-- ┌── MISIONES ──┐ -->
   <section id="page-misiones" class="page">
     <div class="section-header">
@@ -525,7 +525,7 @@ select:focus, input:focus { border-color: var(--blue); }
       </div>
     </div>
   </section>
-
+ 
   <!-- ┌── DONACIONES ──┐ -->
   <section id="page-donaciones" class="page">
     <div class="section-header">
@@ -541,7 +541,7 @@ select:focus, input:focus { border-color: var(--blue); }
       <div class="tbl-wrap" id="tbl-don"></div>
     </div>
   </section>
-
+ 
   <!-- ┌── BECAS ──┐ -->
   <section id="page-becas" class="page">
     <div class="section-header">
@@ -598,7 +598,7 @@ select:focus, input:focus { border-color: var(--blue); }
       </div>
     </div>
   </section>
-
+ 
   <!-- ┌── MEMBRESÍAS ──┐ -->
   <section id="page-membresias" class="page">
     <div class="section-header">
@@ -620,9 +620,9 @@ select:focus, input:focus { border-color: var(--blue); }
       </div>
     </div>
   </section>
-
+ 
 </main>
-
+ 
 <!-- ══ MODAL ══ -->
 <div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
   <div class="modal" id="modal">
@@ -636,10 +636,10 @@ select:focus, input:focus { border-color: var(--blue); }
     <div class="modal-body" id="modal-body"></div>
   </div>
 </div>
-
+ 
 <script>
 const BASE_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSq4jVuP0QbyGHNYWN2dbH67bFBsmQayQ4fUEAWfkUhD6TzFwG0kPT12kGD9WpX0pGJ6ETX3va7lwqz/pub';
-
+ 
 const URLS = {
   conv: BASE_URL + '?gid=0&single=true&output=csv',
   mis:  BASE_URL + '?gid=367800634&single=true&output=csv',
@@ -647,11 +647,11 @@ const URLS = {
   bec:  BASE_URL + '?gid=1020970410&single=true&output=csv',
   mem:  BASE_URL + '?gid=2056939474&single=true&output=csv',
 };
-
+ 
 let DATA = { conv:[], mis:[], don:[], bec:[], mem:[] };
 let TRIM = 'todos';
 let charts = {};
-
+ 
 function parseCSV(txt) {
   const lines = txt.trim().split('\n');
   const headers = lines[0].split(',').map(h => h.trim().replace(/^"|"$/g,''));
@@ -668,7 +668,7 @@ function parseCSV(txt) {
     return obj;
   });
 }
-
+ 
 async function fetchSheet(url, key) {
   try {
     const r = await fetch(url + '&_=' + Date.now());
@@ -677,49 +677,65 @@ async function fetchSheet(url, key) {
     return true;
   } catch(e) { return false; }
 }
-
+ 
 async function loadAll() {
   const btn = document.getElementById('btn-refresh');
   btn.classList.add('spinning');
   document.getElementById('sync-dot').className = 'sync-dot';
   document.getElementById('sync-time').textContent = 'Actualizando…';
-
+ 
   const res = await Promise.all([
     fetchSheet(URLS.conv,'conv'), fetchSheet(URLS.mis,'mis'),
     fetchSheet(URLS.don,'don'),  fetchSheet(URLS.bec,'bec'),
     fetchSheet(URLS.mem,'mem'),
   ]);
-
+ 
   btn.classList.remove('spinning');
   const ok = res.every(r=>r);
   document.getElementById('sync-dot').className = 'sync-dot ' + (ok ? 'live' : 'err');
   document.getElementById('sync-time').textContent =
     new Date().toLocaleTimeString('es-PE',{hour:'2-digit',minute:'2-digit'});
-
+ 
   updateBadges();
   renderAll();
 }
-
+ 
 function filterByTrim(arr, campo='trimestre') {
   if (TRIM === 'todos') return arr;
   return arr.filter(r => (r[campo]||'').includes(TRIM));
 }
-
+ 
 function setTrim(t, el) {
   TRIM = t;
   document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
   el.classList.add('active');
   renderAll();
 }
-
+ 
 function updateBadges() {
   document.getElementById('nb-conv').textContent = DATA.conv.length;
   document.getElementById('nb-mis').textContent  = DATA.mis.length;
   document.getElementById('nb-don').textContent  = DATA.don.length;
   document.getElementById('nb-bec').textContent  = DATA.bec.length;
   document.getElementById('nb-mem').textContent  = DATA.mem.length;
+  updateChipCounts();
 }
-
+ 
+function countTrim(t) {
+  const all = [...DATA.conv, ...DATA.mis, ...DATA.don, ...DATA.bec];
+  return all.filter(r => (r.trimestre||'').includes(t)).length;
+}
+ 
+function updateChipCounts() {
+  const total = DATA.conv.length + DATA.mis.length + DATA.don.length + DATA.bec.length;
+  document.getElementById('ct-todos').textContent = total ? ' '+total : '';
+  ['T1','T2','T3','T4'].forEach(t => {
+    const n = countTrim(t);
+    const el = document.getElementById('ct-'+t);
+    if (el) el.textContent = n ? ' '+n : '';
+  });
+}
+ 
 function showPage(name, el) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
@@ -730,7 +746,7 @@ function showPage(name, el) {
   const renders = {resumen:renderResumen,convenios:renderConvenios,misiones:renderMisiones,donaciones:renderDonaciones,becas:renderBecas,membresias:renderMembresias};
   if(renders[name]) renders[name]();
 }
-
+ 
 function renderAll() {
   renderResumen();
   renderConvenios();
@@ -739,14 +755,14 @@ function renderAll() {
   renderBecas();
   renderMembresias();
 }
-
+ 
 function badgeEstado(e) {
   if (!e) return '';
   const m = {'vigente':'b-green','activa':'b-green','finalizada':'b-green','finalizado':'b-green','cerrada':'b-blue','cerrado':'b-blue','abierta':'b-sky','suspendido':'b-red','observado':'b-amber'};
   const key = Object.keys(m).find(k => e.toLowerCase().includes(k));
   return `<span class="badge ${key?m[key]:'b-gray'}">${e}</span>`;
 }
-
+ 
 function kpi(label, val, sub, type='', icon='') {
   return `<div class="kpi ${type}" style="cursor:default">
     <div class="kpi-label">${label}</div>
@@ -755,22 +771,22 @@ function kpi(label, val, sub, type='', icon='') {
     ${icon?`<div class="kpi-icon">${icon}</div>`:''}
   </div>`;
 }
-
+ 
 function dc(id) { if(charts[id]){charts[id].destroy();delete charts[id];} }
-
+ 
 // ══ RESUMEN ══
 function renderResumen() {
   const conv = filterByTrim(DATA.conv,'trimestre')||DATA.conv;
   const mis  = filterByTrim(DATA.mis);
   const don  = filterByTrim(DATA.don);
   const bec  = filterByTrim(DATA.bec);
-
+ 
   const totalPac   = DATA.mis.reduce((s,r)=>s+(parseInt(r.n_pacientes_atendidos)||0),0);
   const totalProf  = DATA.mis.reduce((s,r)=>s+(parseInt(r.n_profesionales)||0),0);
   const totalBenef = DATA.bec.reduce((s,r)=>s+(parseInt(r.n_beneficiados)||0),0);
   const totalDon   = DATA.don.reduce((s,r)=>s+(parseFloat(r.valor_usd)||0),0);
   const totalMem   = DATA.mem.reduce((s,r)=>s+(parseFloat(r.costo_anual_usd)||0),0);
-
+ 
   document.getElementById('kpis-resumen').innerHTML =
     kpi('Convenios suscritos', DATA.conv.length, '2026', '', '📋') +
     kpi('Misiones ejecutadas', DATA.mis.length, 'humanitarias', '', '🌍') +
@@ -779,7 +795,7 @@ function renderResumen() {
     kpi('Donaciones recibidas', DATA.don.length, `USD ${totalDon.toLocaleString()}`, 'gold', '🎁') +
     kpi('Membresías activas', DATA.mem.length, `USD ${totalMem.toLocaleString()} / año`, '', '🏛') +
     kpi('Profesionales enviados', totalProf, 'voluntarios en misiones', '', '👨‍⚕️');
-
+ 
   // Gráfico trimestral
   dc('chartTrim');
   charts.chartTrim = new Chart(document.getElementById('chartTrim'), {
@@ -802,7 +818,7 @@ function renderResumen() {
       }
     }
   });
-
+ 
   // Dona procesos
   dc('chartProcesos');
   charts.chartProcesos = new Chart(document.getElementById('chartProcesos'), {
@@ -822,7 +838,7 @@ function renderResumen() {
       }
     }
   });
-
+ 
   // Timeline visual
   const tqs = [
     {label:'T1 · Ene–Mar', n:20, cls:'done'},
@@ -833,7 +849,7 @@ function renderResumen() {
   document.getElementById('trim-visual').innerHTML = tqs.map(q =>
     `<div class="trim-q ${q.cls}"><span>${q.n}</span>${q.label}</div>`
   ).join('');
-
+ 
   // Barras de progreso
   const procesos = [
     {label:'Convenios', val:DATA.conv.length, max:5, color:''},
@@ -851,7 +867,7 @@ function renderResumen() {
     </div>`;
   }).join('');
 }
-
+ 
 // ══ CONVENIOS ══
 function renderConvenios() {
   const filtE = document.getElementById('filt-conv-estado')?.value||'';
@@ -860,16 +876,16 @@ function renderConvenios() {
     (!filtE || r.estado===filtE) &&
     (!filtQ || (r.organismo_cooperante||'').toLowerCase().includes(filtQ) || (r.titulo||'').toLowerCase().includes(filtQ))
   );
-
+ 
   document.getElementById('kpis-conv').innerHTML =
     kpi('Total convenios', DATA.conv.length, '2026', '') +
     kpi('Vigentes', DATA.conv.filter(r=>r.estado==='Vigente').length, 'activos', 'green') +
     kpi('Países', [...new Set(DATA.conv.map(r=>r.pais).filter(Boolean))].length, 'distintos');
-
+ 
   document.getElementById('conv-count').textContent = `${rows.length} registro(s)`;
-
+ 
   if (!rows.length) { document.getElementById('tbl-convenios').innerHTML = '<div class="empty">Sin registros para los filtros seleccionados</div>'; return; }
-
+ 
   document.getElementById('tbl-convenios').innerHTML = `<table>
     <thead><tr><th>ID</th><th>Tipo</th><th>Organismo cooperante</th><th>País</th><th>Suscripción</th><th>Vencimiento</th><th>Estado</th></tr></thead>
     <tbody>
@@ -884,19 +900,19 @@ function renderConvenios() {
     </tr>`).join('')}
     </tbody></table>`;
 }
-
+ 
 // ══ MISIONES ══
 function renderMisiones() {
   const mis = filterByTrim(DATA.mis);
   const totalPac  = mis.reduce((s,r)=>s+(parseInt(r.n_pacientes_atendidos)||0),0);
   const totalProf = mis.reduce((s,r)=>s+(parseInt(r.n_profesionales)||0),0);
-
+ 
   document.getElementById('kpis-mis').innerHTML =
     kpi('Misiones', mis.length, 'ejecutadas', '') +
     kpi('Pacientes atendidos', totalPac, 'total acumulado', 'green') +
     kpi('Profesionales', totalProf, 'voluntarios enviados', '') +
     kpi('Tipo', 'Quirúrgica', 'modalidad predominante', 'gold');
-
+ 
   document.getElementById('cards-misiones').innerHTML = mis.map(r=>`
     <div class="mcard" onclick="showModal('mis','${r.id_mision}')">
       <div class="mcard-head">
@@ -914,7 +930,7 @@ function renderMisiones() {
         </div>
       </div>
     </div>`).join('') || '<div class="empty">Sin misiones para este filtro</div>';
-
+ 
   dc('chartMis');
   charts.chartMis = new Chart(document.getElementById('chartMis'), {
     type: 'bar',
@@ -935,17 +951,17 @@ function renderMisiones() {
     }
   });
 }
-
+ 
 // ══ DONACIONES ══
 function renderDonaciones() {
   const don = filterByTrim(DATA.don);
   const total = don.reduce((s,r)=>s+(parseFloat(r.valor_usd)||0),0);
-
+ 
   document.getElementById('kpis-don').innerHTML =
     kpi('Donaciones', don.length, '2026', '') +
     kpi('Valor total', 'USD '+total.toLocaleString(), 'acumulado 2026', 'green') +
     kpi('Bienes distintos', [...new Set(don.map(r=>r.tipo_bien).filter(Boolean))].length, 'tipos de bien');
-
+ 
   document.getElementById('cards-don').innerHTML = don.map(r=>`
     <div class="don-card" onclick="showModal('don','${r.id_donacion}')">
       <div class="don-org">${r.fuente_cooperante||''}</div>
@@ -956,7 +972,7 @@ function renderDonaciones() {
         ${badgeEstado(r.estado)}
       </div>
     </div>`).join('') || '<div class="empty">Sin donaciones para este filtro</div>';
-
+ 
   document.getElementById('tbl-don').innerHTML = don.length ? `<table>
     <thead><tr><th>ID</th><th>Fuente cooperante</th><th>Tipo</th><th>Especificación</th><th>Fecha</th><th>Red</th><th>Valor (USD)</th><th>Estado</th></tr></thead>
     <tbody>${don.map(r=>`<tr onclick="showModal('don','${r.id_donacion}')">
@@ -970,14 +986,14 @@ function renderDonaciones() {
       <td>${badgeEstado(r.estado)}</td>
     </tr>`).join('')}</tbody></table>` : '';
 }
-
+ 
 // ══ BECAS ══
 function renderBecas() {
   const filtE = document.getElementById('filt-bec-estado')?.value||'';
   const filtM = document.getElementById('filt-bec-modal')?.value||'';
   const filtO = document.getElementById('filt-bec-org')?.value||'';
   const filtQ = (document.getElementById('filt-bec-q')?.value||'').toLowerCase();
-
+ 
   let rows = filterByTrim(DATA.bec);
   rows = rows.filter(r =>
     (!filtE || r.estado===filtE) &&
@@ -985,21 +1001,21 @@ function renderBecas() {
     (!filtO || r.organismo_oferente===filtO) &&
     (!filtQ || (r.nombre||'').toLowerCase().includes(filtQ))
   );
-
+ 
   const totalH = DATA.bec.reduce((s,r)=>s+(parseFloat(r.horas)||0),0);
   const totalB = DATA.bec.reduce((s,r)=>s+(parseInt(r.n_beneficiados)||0),0);
   const cerradas = DATA.bec.filter(r=>r.estado==='Cerrada').length;
   const abiertas = DATA.bec.filter(r=>r.estado==='Abierta').length;
-
+ 
   document.getElementById('kpis-bec').innerHTML =
     kpi('Total becas', DATA.bec.length, '2026', '') +
     kpi('Beneficiados', totalB||'—', 'personas capacitadas', 'green') +
     kpi('Horas formación', totalH.toLocaleString(), 'total acumulado', 'gold') +
     kpi('Cerradas', cerradas, 'completadas', 'green') +
     kpi('Abiertas', abiertas, 'en curso', 'danger');
-
+ 
   document.getElementById('bec-count').textContent = `${rows.length} registro(s) filtrados`;
-
+ 
   document.getElementById('tbl-becas').innerHTML = rows.length ? `<table>
     <thead><tr><th>ID</th><th>Modalidad</th><th>Nombre</th><th>Organismo</th><th>Horas</th><th>Beneficiados</th><th>Cierre</th><th>Estado</th></tr></thead>
     <tbody>${rows.map(r=>`<tr onclick="showModal('bec','${r.id_beca}')">
@@ -1013,7 +1029,7 @@ function renderBecas() {
       <td>${badgeEstado(r.estado)}</td>
     </tr>`).join('')}</tbody></table>` :
     '<div class="empty">Sin registros para los filtros seleccionados</div>';
-
+ 
   const modalCount = {};
   DATA.bec.forEach(r=>{ modalCount[r.modalidad]=(modalCount[r.modalidad]||0)+1; });
   dc('chartModal');
@@ -1022,7 +1038,7 @@ function renderBecas() {
     data:{ labels:Object.keys(modalCount), datasets:[{data:Object.values(modalCount),backgroundColor:'#1B6CA8',borderRadius:5}] },
     options:{ indexAxis:'y', responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{ x:{grid:{color:'#F0F4FA'},ticks:{font:{size:10},color:'#667A90'}}, y:{grid:{display:false},ticks:{font:{size:10},color:'#0B1E35'}} } }
   });
-
+ 
   const orgCount = {};
   DATA.bec.forEach(r=>{ orgCount[r.organismo_oferente]=(orgCount[r.organismo_oferente]||0)+1; });
   dc('chartOrg');
@@ -1032,17 +1048,17 @@ function renderBecas() {
     options:{ responsive:true, maintainAspectRatio:false, cutout:'55%', plugins:{ legend:{position:'right',labels:{font:{size:11},color:'#0D1B2A',boxWidth:10,padding:6}} } }
   });
 }
-
+ 
 // ══ MEMBRESÍAS ══
 function renderMembresias() {
   const total = DATA.mem.reduce((s,r)=>s+(parseFloat(r.costo_anual_usd)||0),0);
-
+ 
   document.getElementById('kpis-mem').innerHTML =
     kpi('Membresías activas', DATA.mem.length, 'organismos internacionales', '') +
     kpi('Inversión anual', 'USD '+total.toLocaleString(), 'costo total 2026', 'gold') +
     kpi('Cobertura', 'Global', 'AISS · América · Iberoamérica', 'green') +
     kpi('Más antigua', '1942', 'CISS — Miembro Fundador');
-
+ 
   document.getElementById('cards-mem').innerHTML = DATA.mem.map(r=>`
     <div class="mem-card" onclick="showModal('mem','${r.id_membresia}')">
       <div>
@@ -1055,7 +1071,7 @@ function renderMembresias() {
         <div class="mem-cost-label">por año</div>
       </div>
     </div>`).join('');
-
+ 
   dc('chartMem');
   charts.chartMem = new Chart(document.getElementById('chartMem'), {
     type:'doughnut',
@@ -1072,11 +1088,11 @@ function renderMembresias() {
     }
   });
 }
-
+ 
 // ══ MODAL ══
 function showModal(type, id) {
   let r, title, body='';
-
+ 
   if (type==='conv') {
     r = DATA.conv.find(x=>x.id_instrumento===id);
     if(!r) return;
@@ -1093,7 +1109,7 @@ function showModal(type, id) {
       <div class="modal-field"><div class="modal-field-label">Descripción / Alcance</div><div class="modal-field-value" style="color:#667A90">${r.descripcion||'—'}</div></div>
       ${r.monto_comprometido?`<div class="modal-field"><div class="modal-field-label">Monto comprometido</div><div class="modal-field-value" style="font-family:'DM Mono',monospace">USD ${parseFloat(r.monto_comprometido).toLocaleString()}</div></div>`:''}`;
   }
-
+ 
   else if (type==='mis') {
     r = DATA.mis.find(x=>x.id_mision===id);
     if(!r) return;
@@ -1114,7 +1130,7 @@ function showModal(type, id) {
       <div class="modal-field"><div class="modal-field-label">Línea de acción</div><div class="modal-field-value" style="color:#667A90">${r.linea_accion||'—'}</div></div>
       <div class="modal-field"><div class="modal-field-label">Estado</div><div class="modal-field-value">${badgeEstado(r.estado)}</div></div>`;
   }
-
+ 
   else if (type==='don') {
     r = DATA.don.find(x=>x.id_donacion===id);
     if(!r) return;
@@ -1133,7 +1149,7 @@ function showModal(type, id) {
       <div class="modal-field"><div class="modal-field-label">Impacto asistencial</div><div class="modal-field-value" style="color:#667A90">${r.impacto_asistencial||'—'}</div></div>
       <div class="modal-field"><div class="modal-field-label">Estado</div><div class="modal-field-value">${badgeEstado(r.estado)}</div></div>`;
   }
-
+ 
   else if (type==='bec') {
     r = DATA.bec.find(x=>x.id_beca===id);
     if(!r) return;
@@ -1154,7 +1170,7 @@ function showModal(type, id) {
       <div class="modal-field"><div class="modal-field-label">Estado</div><div class="modal-field-value">${badgeEstado(r.estado)}</div></div>
       <div class="modal-field"><div class="modal-field-label">Trimestre</div><div class="modal-field-value">${r.trimestre||'—'}</div></div>`;
   }
-
+ 
   else if (type==='mem') {
     r = DATA.mem.find(x=>x.id_membresia===id);
     if(!r) return;
@@ -1172,23 +1188,24 @@ function showModal(type, id) {
       </div>
       <div class="modal-field"><div class="modal-field-label">Estado</div><div class="modal-field-value">${badgeEstado(r.estado)}</div></div>`;
   }
-
+ 
   document.getElementById('modal-title').textContent = title;
   document.getElementById('modal-id').textContent = id;
   document.getElementById('modal-body').innerHTML = body;
   document.getElementById('modal-overlay').classList.add('open');
 }
-
+ 
 function closeModal(e) {
   if (!e || e.target === document.getElementById('modal-overlay')) {
     document.getElementById('modal-overlay').classList.remove('open');
   }
 }
-
+ 
 document.addEventListener('keydown', e => { if(e.key==='Escape') closeModal(); });
-
+ 
 loadAll();
 setInterval(loadAll, 60000);
 </script>
 </body>
 </html>
+ 
