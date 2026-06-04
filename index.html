@@ -66,7 +66,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);font-
 .kc::after{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;border-radius:3px 0 0 3px;background:var(--blue)}
 .kc.g::after{background:var(--accent)}.kc.au::after{background:var(--gold)}.kc.r::after{background:var(--red)}
 .kc-lbl{font-size:9px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
-.kc-val{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:var(--navy);line-height:1.1}
+.kc-val{font-family:'Inter',sans-serif;font-size:20px;font-weight:700;color:var(--navy);line-height:1.1;letter-spacing:-.02em}
 .kc-sub{font-size:10px;color:var(--muted);margin-top:3px}
 .kc-ico{position:absolute;right:11px;top:11px;font-size:16px;opacity:.1}
  
@@ -118,7 +118,7 @@ select:focus,input:focus{border-color:var(--blue)}
 .mfv{font-size:12px;color:var(--text);line-height:1.5}
 .mg{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:12px}
 .mst{background:#F8FAFD;border-radius:9px;padding:11px 13px;text-align:center}
-.msn{font-family:'Syne',sans-serif;font-size:26px;font-weight:800;color:var(--navy)}
+.msn{font-family:'Inter',sans-serif;font-size:24px;font-weight:700;color:var(--navy);letter-spacing:-.02em}
 .msl{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-top:2px}
 .mf{margin-bottom:11px}
  
@@ -130,7 +130,7 @@ select:focus,input:focus{border-color:var(--blue)}
 .tq.done{background:var(--navy);color:rgba(255,255,255,.6)}
 .tq.cur{background:var(--blue);color:#fff}
 .tq.sel{background:var(--accent);color:var(--navy);font-weight:700}
-.tq-n{display:block;font-family:'Syne',sans-serif;font-size:19px;font-weight:800;line-height:1.1;margin-bottom:2px}
+.tq-n{display:block;font-family:'Inter',sans-serif;font-size:17px;font-weight:700;line-height:1.1;margin-bottom:2px;letter-spacing:-.02em}
 .tq-n.done-n{color:#fff}
 .tq-n.muted-n{color:#C5CFD8}
  
@@ -147,7 +147,7 @@ select:focus,input:focus{border-color:var(--blue)}
 .poi-bar{height:100%;border-radius:3px;transition:width .5s ease}
 .poi-bar.c-ok{background:var(--accent)}.poi-bar.c-md{background:var(--gold)}.poi-bar.c-lo{background:var(--red)}
 .poi-pct{font-family:'DM Mono',monospace;font-size:9.5px;color:var(--muted);margin-left:6px}
-.falta{font-family:'Syne',sans-serif;font-size:11px;font-weight:700}
+.falta{font-family:'Inter',sans-serif;font-size:11px;font-weight:700;letter-spacing:-.01em}
 .falta.ok{color:var(--accent)}.falta.md{color:var(--gold)}.falta.lo{color:var(--red)}
  
 /* ─── MISSION CARDS ─── */
@@ -160,7 +160,7 @@ select:focus,input:focus{border-color:var(--blue)}
 .mc-loc{font-size:10px;color:var(--muted);margin-bottom:9px}
 .mc-stats{display:flex;gap:14px;padding-top:9px;border-top:1px solid var(--border)}
 .mc-s{text-align:center}
-.mc-n{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:var(--navy)}
+.mc-n{font-family:'Inter',sans-serif;font-size:18px;font-weight:700;color:var(--navy);letter-spacing:-.02em}
 .mc-l{font-size:8.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
  
 /* ─── DON CARDS ─── */
@@ -169,7 +169,7 @@ select:focus,input:focus{border-color:var(--blue)}
 .dcard:hover{border-color:var(--accent);background:#F4FFFB}
 .dc-org{font-family:'Syne',sans-serif;font-size:11px;font-weight:700;color:var(--navy);margin-bottom:2px}
 .dc-tipo{font-size:10px;color:var(--muted);margin-bottom:7px}
-.dc-val{font-family:'Syne',sans-serif;font-size:19px;font-weight:800;color:var(--accent)}
+.dc-val{font-family:'Inter',sans-serif;font-size:18px;font-weight:700;color:var(--accent);letter-spacing:-.02em}
  
 /* ─── MEM CARDS ─── */
 .memcards{display:flex;flex-direction:column;gap:9px}
@@ -177,7 +177,7 @@ select:focus,input:focus{border-color:var(--blue)}
 .memcard:hover{border-color:var(--blue);background:#F8FBFF}
 .mem-nm{font-family:'Syne',sans-serif;font-size:11px;font-weight:700;color:var(--navy)}
 .mem-mt{font-size:10px;color:var(--muted);margin-top:1px}
-.mem-cost{font-family:'Syne',sans-serif;font-size:14px;font-weight:800;color:var(--navy);text-align:right}
+.mem-cost{font-family:'Inter',sans-serif;font-size:14px;font-weight:700;color:var(--navy);text-align:right;letter-spacing:-.01em}
  
 /* ─── MISC ─── */
 .sh{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px;gap:12px}
@@ -882,7 +882,7 @@ function rBecas(){
       <td>${r.organismo_oferente||''}</td>
       <td>${r.pais_destino||''}</td>
       <td style="text-align:right;font-family:'DM Mono',monospace">${r.horas||''}</td>
-      <td style="text-align:center;font-weight:700;font-family:'Syne',sans-serif;color:var(--navy)">${r.n_beneficiados||'—'}</td>
+      <td style="text-align:center;font-weight:700;font-family:'DM Mono',monospace;color:var(--navy)">${r.n_beneficiados||'—'}</td>
       <td style="font-family:'DM Mono',monospace;font-size:10px">${r.fecha_cierre||''}</td>
       <td>${bs(r.estado)}</td>
     </tr>`).join('')}</tbody></table>`:'<div class="empty">Sin registros para los filtros seleccionados</div>';
